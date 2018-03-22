@@ -24,3 +24,4 @@ erl_crash.dump
 /config/prod.secret.exs
 mix.lock
 package-lock.json
+/config/dev.secret.exs
