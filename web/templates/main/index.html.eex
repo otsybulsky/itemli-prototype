@@ -1,9 +1,3 @@
-<%= if @conn.assigns[:user] do %>
-    <h5>
-        <%= @conn.assigns.user.name %>
-    </h5> 
-<% else %>
-    <h5>
-        Welcome
-    </h5>
-<% end %>  
+<h5>
+    Welcome to your items manager
+</h5>

@@ -20,7 +20,7 @@ defmodule Itemli.AuthController do
             {:ok, user} ->
                 conn
                 |> put_session(:user_id, user.id)
-                |> redirect(to: main_path(conn, :index))
+                |> redirect(to: react_path(conn, :index))
             {:error, _reason} ->
                 conn
                 |> put_flash(:error, "Error signing in")
