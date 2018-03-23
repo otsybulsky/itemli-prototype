@@ -13,7 +13,7 @@
   </head>
 
   <body>
-    <nav class="light-blue darken-4">
+    <nav class=" light-blue">
       <div class="nav-wrapper container">
         <a href="/" class="brand-logo">
           Itemli
