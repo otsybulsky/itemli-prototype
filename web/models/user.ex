@@ -3,6 +3,7 @@ defmodule Itemli.User do
 
     schema "users" do
         field :email, :string
+        field :name, :string
         field :provider, :string
         field :token, :string
 
@@ -11,7 +12,7 @@ defmodule Itemli.User do
 
     def changeset(struct, params \\ %{}) do
         struct
-        |> cast(params, [:email, :provider, :token])
+        |> cast(params, [:email, :name, :provider, :token])
         |> validate_required([:email, :provider, :token])
     end
 end
