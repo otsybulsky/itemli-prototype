@@ -18,6 +18,13 @@
         <a href="/" class="brand-logo">
           Itemli
         </a>
+        <ul class="right">
+         
+            <li>
+              <%= link "Sign in with Github", to: auth_path(@conn, :request, "github") %>
+            </li>
+           
+        </ul>
       </div>
     </nav>
 

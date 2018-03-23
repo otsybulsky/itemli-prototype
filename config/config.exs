@@ -24,10 +24,11 @@ config :logger, :console,
 
 config :ueberauth, Ueberauth,
   providers: [
-    facebook: {Ueberauth.Strategy.Facebook, []}
+    facebook: {Ueberauth.Strategy.Facebook, []},
+    github: {Ueberauth.Strategy.Github, []}
   ]
 
-#add the code to dev.secret.exs
+#add the code to dev.secret.exs (github or other)
 # config :ueberauth, Ueberauth.Strategy.Facebook.OAuth,
 #   client_id: "FACEBOOK_CLIENT_ID",
 #   client_secret: "FACEBOOK_CLIENT_SECRET"
