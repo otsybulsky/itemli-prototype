@@ -1,3 +1,4 @@
-<h5>
-    <%= @conn.assigns.user.name %>
-</h5> 
+<h5><%= @conn.assigns.user.name %></h5>
+
+<div class="application"></div>
+<script src="<%= static_path(@conn, "/js/app.js") %>"></script>
