@@ -2,7 +2,7 @@ exports.config = {
   // See http://brunch.io/#documentation for docs.
   files: {
     javascripts: {
-      joinTo: "js/app.js"
+      joinTo: "js/index.js"
 
       // To use a separate vendor.js bundle, specify two files path
       // http://brunch.io/docs/config#-files-
@@ -26,7 +26,7 @@ exports.config = {
       }
     },
     templates: {
-      joinTo: "js/app.js"
+      joinTo: "js/index.js"
     }
   },
 
@@ -60,7 +60,7 @@ exports.config = {
 
   modules: {
     autoRequire: {
-      "js/app.js": ["web/static/js/app"]
+      "js/index.js": ["web/static/js/index"]
     }
   },
 
