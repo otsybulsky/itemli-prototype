@@ -24,7 +24,7 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 
 const App = () => {
-    return <div><h3>Hello from React!</h3></div>
+    return <div><h4>Hello from React !</h4></div>
 }
 
 ReactDOM.render(<App />, document.querySelector('.application'))
