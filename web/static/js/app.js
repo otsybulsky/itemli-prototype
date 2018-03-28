@@ -2,29 +2,24 @@
 // watched paths. Those paths can be configured at
 // config.paths.watched in "brunch-config.js".
 //
-// However, those files will only be executed if
-// explicitly imported. The only exception are files
-// in vendor, which are never wrapped in imports and
-// therefore are always executed.
-
-// Import dependencies
-//
-// If you no longer want to use a dependency, remember
-// to also remove its path from "config.paths.watched".
-//import "phoenix_html"
-
-// Import local files
-//
-// Local files can be imported directly using relative
-// paths "./socket" or full ones "web/static/js/socket".
-
-// import socket from "./socket"
-
 import React from 'react'
 import ReactDOM from 'react-dom'
+import { Provider } from 'react-redux'
+import { createStore, applyMiddleware} from 'redux'
+import reducers from './reducers'
+
+const createStoreWithMiddleware = applyMiddleware()(createStore)
 
 const App = () => {
     return <div><h4>Hello from React !</h4></div>
 }
 
-ReactDOM.render(<App />, document.querySelector('.application'))
+ReactDOM.render(
+    <Provider store={
+            createStoreWithMiddleware(reducers,
+            window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__() //for dev only
+        )}>
+        <App />
+    </Provider>
+    , document.querySelector('.application')
+)
