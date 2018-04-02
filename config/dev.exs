@@ -55,6 +55,11 @@ config :itemli, Itemli.Repo,
   hostname: "localhost",
   pool_size: 10
 
-  import_config "dev.secret.exs"
+config :cors_plug,
+  origin: ~r/^.*-extension:/,
+  max_age: 86400,
+  methods: ["GET", "POST"]
+
+import_config "dev.secret.exs"
 
   

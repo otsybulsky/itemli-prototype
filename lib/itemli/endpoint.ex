@@ -38,5 +38,7 @@ defmodule Itemli.Endpoint do
     key: "_itemli_key",
     signing_salt: "ylSQzPzx"
 
+  plug CORSPlug
+  
   plug Itemli.Router
 end
