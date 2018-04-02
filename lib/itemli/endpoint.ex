@@ -38,7 +38,7 @@ defmodule Itemli.Endpoint do
     key: "_itemli_key",
     signing_salt: "ylSQzPzx"
 
-  plug CORSPlug
+  plug CORSPlug #for access web-ext addon from browser, see config :cors_plug
   
   plug Itemli.Router
 end

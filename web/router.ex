@@ -30,7 +30,9 @@ defmodule Itemli.Router do
   end
 
   # Other scopes may use custom stacks.
-  # scope "/api", Itemli do
-  #   pipe_through :api
-  # end
+  scope "/api", Itemli do
+    pipe_through :api
+
+    get "/check", ApiController, :check
+  end
 end
