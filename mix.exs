@@ -43,7 +43,8 @@ defmodule Itemli.Mixfile do
       {:cowboy, "~> 1.0"},
       {:ueberauth, "~> 0.4"},
       {:ueberauth_facebook, "~> 0.7"},
-      {:ueberauth_github, "~> 0.7"}
+      {:ueberauth_github, "~> 0.7"},
+      {:cors_plug, "~> 1.5"}
     ]
   end
 
