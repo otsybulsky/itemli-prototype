@@ -1,0 +1,2 @@
+<h5>Sign in</h5>
+<%= link "Sign in with Github" , to: auth_path(@conn, :request, "github"), class: "btn-large blue darken-4" %></li>

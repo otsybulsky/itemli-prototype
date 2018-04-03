@@ -23,6 +23,7 @@ defmodule Itemli.Router do
     pipe_through :browser # Use the default browser stack
 
     get "/", MainController, :index
+    get "/signin", MainController, :signin
     get "/app", ReactController, :index
   end
 
