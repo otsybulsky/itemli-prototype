@@ -5,7 +5,7 @@ defmodule Itemli.Plugs.RequireAuth do
     alias Itemli.Router.Helpers
 
     def init(_params) do
-        
+          
     end
 
     def call(conn, _from_init) do

@@ -16,7 +16,7 @@ defmodule Itemli.Router do
     plug :fetch_flash
     plug :protect_from_forgery
     plug :put_secure_browser_headers
-    plug Itemli.Plugs.SetUser
+    plug Itemli.Plugs.SetUser 
   end
 
   scope "/", Itemli do
@@ -39,5 +39,6 @@ defmodule Itemli.Router do
     pipe_through :api
 
     get "/check", ApiController, :check
+    get "/need_auth", ApiController, :need_auth
   end
 end
