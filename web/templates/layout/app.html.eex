@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <script>
       <%= if @conn.assigns.user do %>
-        window.userToken = "<%= Phoenix.Token.sign(Itemli.Endpoint, "key", @conn.assigns.user.id) %>" 
+        window.userToken = "<%= Phoenix.Token.sign(Itemli.Endpoint, Application.get_env(:itemli, :token_secret), @conn.assigns.user.id) %>" 
         window.channelId = "<%= @conn.assigns.user.id %>"  
       <% end %>
     </script>
