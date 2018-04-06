@@ -1,9 +1,7 @@
 import { combineReducers } from 'redux'
-
-const testReducer = () => { return null }
-
+import TabsReducer from './tabs'
 const rootReducer = combineReducers({
-    test: testReducer
+  tabs: TabsReducer
 })
 
 export default rootReducer
