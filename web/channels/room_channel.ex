@@ -7,22 +7,35 @@ defmodule Itemli.RoomChannel do
   end
 
   def handle_in("tabs:add", %{"content" => content}, socket) do
+
     user = Repo.get(User, socket.assigns.user_id)
 
-    changeset = user
-    |> build_assoc(:articles)
-    |> Article.changeset(%{description: "test"})
-    
-    case Repo.insert(changeset) do
-      {:ok, article} ->
-        broadcast! socket, "tabs:added", %{content: content}
-        {:reply, {:ok, %{content: content}}, socket}
-      {:error, _reason} -> 
-         {:reply, {:error, %{errors: changeset}}, socket}     
+    changesets = for %{"title" => title, "url" => url, "favIconUrl" => favicon} <- content do
+      user
+      |> build_assoc(:articles)
+      |> Article.changeset(%{title: title, url: url, favicon: favicon})
     end
 
+    batch = changesets
+    |> Enum.with_index()
+    |> Enum.reduce(Ecto.Multi.new(), 
+        fn ({changeset, index}, multi) ->
+          Ecto.Multi.insert(multi, Integer.to_string(index), changeset)
+        end)
     
-    
+    case Repo.transaction(batch) do
+        {:ok, articles} ->
+          
+          result = articles
+          |> Map.values
+          |> Enum.map fn(article) -> %{title: article.title, id: article.id} end
+
+          broadcast! socket, "tabs:added", %{content: result}
+          {:reply, {:ok, %{content: result}}, socket}
+        {:error, _reason} ->
+          {:reply, {:error, %{errors: _reason}}, socket}     
+    end
+
   end
   
 end
