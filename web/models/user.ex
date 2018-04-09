@@ -8,6 +8,7 @@ defmodule Itemli.User do
         field :token, :string
 
         has_many :articles, Itemli.Article
+        has_many :tags, Itemli.Tag
 
         timestamps()
     end

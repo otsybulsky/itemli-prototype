@@ -1,6 +1,7 @@
 defmodule Itemli.RoomChannel do
   use Itemli.Web, :channel
-  alias Itemli.{Article, User}
+  alias Itemli.{Article, Tag, TagArticle}
+  alias Ecto.Multi
 
   def join("room:" <> _room_id, _params, socket) do
     {:ok, socket}
@@ -8,32 +9,33 @@ defmodule Itemli.RoomChannel do
 
   def handle_in("tabs:add", %{"content" => content}, socket) do
 
-    user = Repo.get(User, socket.assigns.user_id)
+    user = socket.assigns.user
 
-    changesets = for %{"title" => title, "url" => url, "favIconUrl" => favicon} <- content do
-      user
-      |> build_assoc(:articles)
-      |> Article.changeset(%{title: title, url: url, favicon: favicon})
-    end
-
-    batch = changesets
-    |> Enum.with_index()
-    |> Enum.reduce(Ecto.Multi.new(), 
-        fn ({changeset, index}, multi) ->
-          Ecto.Multi.insert(multi, Integer.to_string(index), changeset)
-        end)
+    new_tag = user
+    |> build_assoc(:tags)
+    |> Tag.changeset(%{title: DateTime.to_string(DateTime.utc_now())})
+    
+    batch = Multi.new()
+    |> Multi.insert(:tag, new_tag) 
+    |> Multi.run(:save_articles, fn %{tag: tag} ->
+      articles = for %{"title" => title, "url" => url, "favIconUrl" => favicon} <- content do
+        article = user
+        |> build_assoc(:articles)
+        |> Article.changeset(%{tag: [tag], title: title, url: url, favicon: favicon})
+        |> Repo.insert
+      end
+      {:ok, tag }
+    end)
     
     case Repo.transaction(batch) do
-        {:ok, articles} ->
-          
-          result = articles
-          |> Map.values
-          |> Enum.map fn(article) -> %{title: article.title, id: article.id} end
-
+        {:ok, tag} ->
+          result = tag.save_articles
           broadcast! socket, "tabs:added", %{content: result}
-          {:reply, {:ok, %{content: result}}, socket}
-        {:error, _reason} ->
-          {:reply, {:error, %{errors: _reason}}, socket}     
+          {:reply, {:ok, %{content: result}},socket}
+
+
+        {:error, reason} ->
+          {:reply, {:error, %{errors: reason}}, socket}     
     end
 
   end

@@ -20,7 +20,7 @@ export function createSocket() {
         console.log('Unable to join', resp)
       })
     channel.on('tabs:added', msg =>
-      dispatch({ type: TABS_ADDED, payload: msg.content })
+      dispatch({ type: TABS_ADDED, payload: [msg.content] })
     )
   }
 }
