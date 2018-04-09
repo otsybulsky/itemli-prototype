@@ -3,11 +3,16 @@ import {
   TABS_ADDED,
   SOCKET_CONNECTED,
   SOCKET_ERROR,
-  TAGS_FETCH_ALL
+  TAGS_FETCH_ALL,
+  TAGS_FETCH_ALL_OK
 } from './constants'
 
 let socket = null
 let channel = null
+
+function socketError(err) {
+  return { type: SOCKET_ERROR, payload: { error: err } }
+}
 
 export function fetchAllTags() {
   return dispatch => {
@@ -16,13 +21,10 @@ export function fetchAllTags() {
       channel
         .push('tags:fetch')
         .receive('ok', tags => {
-          console.log(tags)
+          dispatch({ type: TAGS_FETCH_ALL_OK, payload: tags })
         })
         .receive('error', err => {
-          dispatch({
-            type: SOCKET_ERROR,
-            payload: err
-          })
+          dispatch(socketError(err))
         })
     }
   }
@@ -41,17 +43,11 @@ export function createSocket() {
         dispatch({ type: SOCKET_CONNECTED })
       })
       .receive('error', err => {
-        dispatch({
-          type: SOCKET_ERROR,
-          payload: err
-        })
+        dispatch(socketError(err))
       })
 
     channel.onError(err => {
-      dispatch({
-        type: SOCKET_ERROR,
-        payload: err
-      })
+      dispatch(socketError(err))
     })
 
     channel.on('tabs:added', msg =>

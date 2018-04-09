@@ -17,12 +17,16 @@ class App extends Component {
     }
   }
 
-  renderTabs() {
+  renderTags() {
     if (!this.props.socketConnected) {
       return <div />
     }
-    return this.props.tabs.map(tab => {
-      return <li key={uuidv1()}>{tab.title}</li>
+    return this.props.tags.map(tag => {
+      return (
+        <li className="tag" key={tag.id}>
+          {tag.title}
+        </li>
+      )
     })
   }
 
@@ -30,7 +34,7 @@ class App extends Component {
     return (
       <div>
         <h4>Hello from React !</h4>
-        <ul>{this.renderTabs()}</ul>
+        <ul>{this.renderTags()}</ul>
       </div>
     )
   }
@@ -38,7 +42,8 @@ class App extends Component {
 
 function mapStateToProps(state) {
   return {
-    tabs: state.tabs.tab_items,
+    tabs: state.data.tab_items,
+    tags: state.data.tags,
     socketConnected: state.channel.socketConnected
   }
 }

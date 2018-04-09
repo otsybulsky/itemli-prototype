@@ -10,7 +10,7 @@ export default function(store = INIT_STATE, { type, payload }) {
     case SOCKET_CONNECTED:
       return { ...store, socketConnected: true }
     case SOCKET_ERROR:
-      return { ...store, socketConnected: false, lastError: payload }
+      return { ...store, socketConnected: false, lastError: payload.error }
     default:
       return store
   }

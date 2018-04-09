@@ -1,9 +1,9 @@
 import { combineReducers } from 'redux'
-import TabsReducer from './tabs'
+import DataReducer from './data'
 import ChannelReducer from './channel'
 
 const rootReducer = combineReducers({
-  tabs: TabsReducer,
+  data: DataReducer,
   channel: ChannelReducer
 })
 
