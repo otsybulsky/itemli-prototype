@@ -7,6 +7,15 @@ defmodule Itemli.RoomChannel do
     {:ok, socket}
   end
 
+  def handle_in("tags:fetch", _params, socket) do
+    user = socket.assigns.user
+
+    roots = Tag.roots
+    |> Repo.all where: user_id = user.id
+
+    {:reply, {:ok, %{tags: roots}}, socket}
+  end
+
   def handle_in("tabs:add", %{"content" => content}, socket) do
 
     user = socket.assigns.user

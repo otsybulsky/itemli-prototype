@@ -2,15 +2,23 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import uuidv1 from 'uuid/v1'
 
-import { createSocket } from '../socket'
+import { createSocket, fetchAllTags } from '../socket'
 
 class App extends Component {
   componentDidMount() {
     this.props.createSocket()
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (!this.props.socketConnected) {
+      if (nextProps.socketConnected) {
+        this.props.fetchAllTags()
+      }
+    }
+  }
+
   renderTabs() {
-    if (!this.props.tabs) {
+    if (!this.props.socketConnected) {
       return <div />
     }
     return this.props.tabs.map(tab => {
@@ -19,7 +27,6 @@ class App extends Component {
   }
 
   render() {
-    console.log(this.props)
     return (
       <div>
         <h4>Hello from React !</h4>
@@ -31,8 +38,9 @@ class App extends Component {
 
 function mapStateToProps(state) {
   return {
-    tabs: state.tabs.tab_items
+    tabs: state.tabs.tab_items,
+    socketConnected: state.channel.socketConnected
   }
 }
 
-export default connect(mapStateToProps, { createSocket })(App)
+export default connect(mapStateToProps, { createSocket, fetchAllTags })(App)

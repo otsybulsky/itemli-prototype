@@ -2,3 +2,5 @@ export const TABS_ADDED = 'TABS_ADDED'
 
 export const SOCKET_CONNECTED = 'SOCKET_CONNECTED'
 export const SOCKET_ERROR = 'SOCKET_ERROR'
+
+export const TAGS_FETCH_ALL = 'TAGS_FETCH_ALL'
