@@ -1,6 +1,6 @@
 defmodule Itemli.Plugs.SetUser do
     import Plug.Conn
-    import Phoenix.Controller
+    #import Phoenix.Controller
 
     alias Itemli.{Repo, User}
 
