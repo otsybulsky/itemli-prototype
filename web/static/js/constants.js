@@ -1,1 +1,4 @@
 export const TABS_ADDED = 'TABS_ADDED'
+
+export const SOCKET_CONNECTED = 'SOCKET_CONNECTED'
+export const SOCKET_ERROR = 'SOCKET_ERROR'

@@ -1,5 +1,5 @@
 import { Socket } from 'phoenix'
-import { TABS_ADDED } from './constants'
+import { TABS_ADDED, SOCKET_CONNECTED, SOCKET_ERROR } from './constants'
 
 let socket = null
 let channel = null
@@ -14,11 +14,22 @@ export function createSocket() {
     channel
       .join()
       .receive('ok', resp => {
-        console.log('Joined successfully', resp)
+        dispatch({ type: SOCKET_CONNECTED })
       })
-      .receive('error', resp => {
-        console.log('Unable to join', resp)
+      .receive('error', err => {
+        dispatch({
+          type: SOCKET_ERROR,
+          payload: err
+        })
       })
+
+    channel.onError(err => {
+      dispatch({
+        type: SOCKET_ERROR,
+        payload: err
+      })
+    })
+
     channel.on('tabs:added', msg =>
       dispatch({ type: TABS_ADDED, payload: [msg.content] })
     )
