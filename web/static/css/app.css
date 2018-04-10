@@ -2,10 +2,8 @@
 .tag {
   margin: 10px;
   padding: 5px;
-  border: 1px solid;
 }
 
 .tag:hover {
-  background: lightgray;
-  font-weight: bold;
+  border: 1px dashed red;
 }
