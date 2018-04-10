@@ -4,6 +4,7 @@ import { findDOMNode } from 'react-dom'
 import { DragSource, DropTarget } from 'react-dnd'
 
 import { dragElementStart, dragElementEnd } from '../actions'
+import DropInterfaceTag from './drop_interface_tag'
 
 const style = {
   border: '1px dashed gray',
@@ -14,52 +15,25 @@ const style = {
 }
 
 const itemSource = {
-  beginDrag(props) {
-    console.log('---begin drag from', props.tag, props)
-    return {}
+  beginDrag(props, monitor, component) {
+    //console.log('---begin drag from', props.tag, props)
+    const item = { tag: props.tag }
+    return item
   },
   endDrag(props, monitor) {
     const item = monitor.getItem()
     const dropResult = monitor.getDropResult()
 
     if (dropResult) {
-      console.log('---end drag', props.tag)
+      //console.log('---end drag', props.tag)
     }
   }
 }
 
 const itemTarget = {
   drop(props, monitor, component) {
-    console.log('drop', props.tag, props)
-  },
-  hover(props, monitor, component) {
-    const dragIndex = monitor.getItem().index || 0
-    const hoverIndex = props.index
-
-    const dragGroup = monitor.getItem().groupId
-    const hoverGroup = props.groupId
-
-    if (dragGroup !== hoverGroup) {
-      return
-    }
-
-    if (dragIndex === hoverIndex && dragGroup === hoverGroup) {
-      return
-    }
-
-    const hoverBoundingRect = findDOMNode(component).getBoundingClientRect()
-    const hoverMiddleY = (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2
-    const clientOffset = monitor.getClientOffset()
-    const hoverClientY = clientOffset.y - hoverBoundingRect.top
-    if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) {
-      return
-    }
-    if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) {
-      return
-    }
-
-    monitor.getItem().index = hoverIndex
-    monitor.getItem().groupId = hoverGroup
+    const source = monitor.getItem()
+    console.log('drop target', props.tag, source.tag)
   }
 }
 
@@ -86,22 +60,25 @@ class Tag extends Component {
   }
 
   renderDropInterface() {
-    const { renderDropInterface } = this.props
+    const { tag, renderDropInterface } = this.props
     if (!renderDropInterface) {
       return <div />
     }
 
-    return <div>DROP INTERFACE</div>
+    return <DropInterfaceTag key={tag.id + '_1'} tag={tag} />
   }
 
   render() {
     const { tag, isDragging, connectDragSource, connectDropTarget } = this.props
     const opacity = isDragging ? 0 : 1
+
     return connectDragSource(
       connectDropTarget(
         <div>
           <div style={{ ...style, opacity }} className="tag">
-            <h6>the tag - {tag.title}</h6>
+            <div>
+              <h6>the tag - {tag.title}</h6>
+            </div>
             {this.renderDropInterface()}
           </div>
         </div>

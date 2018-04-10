@@ -2,12 +2,19 @@
 .tags {
   padding: 5px;
   border: 1px dashed blue;
+  width: 40%;
 }
-
 .tag {
   padding: 3px;
 }
-
 .tag:hover {
   border: 1px dashed red;
+}
+.drop-interface-tag {
+  width: 40%;
+  margin-bottom: 10px;
+  background: gray;
+}
+.drop-interface-tag:hover {
+  background: orange;
 }
