@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import uuidv1 from 'uuid/v1'
+import Tags from './tags'
 
 import { createSocket, fetchAllTags } from '../socket'
 
@@ -17,24 +17,10 @@ class App extends Component {
     }
   }
 
-  renderTags() {
-    if (!this.props.socketConnected) {
-      return <div />
-    }
-    return this.props.tags.map(tag => {
-      return (
-        <li className="tag" key={tag.id}>
-          {tag.title}
-        </li>
-      )
-    })
-  }
-
   render() {
     return (
       <div>
-        <h4>Hello from React !</h4>
-        <ul>{this.renderTags()}</ul>
+        <Tags />
       </div>
     )
   }
@@ -42,8 +28,6 @@ class App extends Component {
 
 function mapStateToProps(state) {
   return {
-    tabs: state.data.tab_items,
-    tags: state.data.tags,
     socketConnected: state.channel.socketConnected
   }
 }
