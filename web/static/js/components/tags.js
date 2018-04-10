@@ -1,5 +1,10 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+
+import { DragDropContext } from 'react-dnd'
+import MultiBackend from 'react-dnd-multi-backend'
+import HTML5toTouch from 'react-dnd-multi-backend/lib/HTML5toTouch'
+
 import Tag from './tag'
 
 class Tags extends Component {
@@ -23,6 +28,8 @@ class Tags extends Component {
     )
   }
 }
+
+Tags = DragDropContext(MultiBackend(HTML5toTouch))(Tags)
 
 function mapStateToProps(state) {
   return {
