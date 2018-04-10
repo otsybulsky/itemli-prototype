@@ -1,7 +1,11 @@
 /* This file is for your main application css. */
-.tag {
-  margin: 10px;
+.tags {
   padding: 5px;
+  border: 1px dashed blue;
+}
+
+.tag {
+  padding: 3px;
 }
 
 .tag:hover {
