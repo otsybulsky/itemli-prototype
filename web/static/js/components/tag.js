@@ -42,9 +42,16 @@ const itemTarget = {
 }))
 @DragSource('TAG', itemSource, (connect, monitor) => ({
   connectDragSource: connect.dragSource(),
+  connectDragPreview: connect.dragPreview(),
   isDragging: monitor.isDragging()
 }))
 class Tag extends Component {
+  componentDidMount() {
+    const img = new Image()
+    img.src = 'images/icons8-add-tag-48.png'
+    img.onload = () => this.props.connectDragPreview(img)
+  }
+
   componentWillReceiveProps(nextProps) {
     const { isDragging } = this.props
     if (nextProps.isDragging != isDragging) {

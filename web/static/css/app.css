@@ -7,14 +7,9 @@
 .tag {
   padding: 3px;
 }
-.tag:hover {
-  border: 1px dashed red;
-}
 .drop-interface-tag {
-  width: 40%;
+  height: 3vh;
+  width: 10vh;
   margin-bottom: 10px;
   background: gray;
-}
-.drop-interface-tag:hover {
-  background: orange;
 }

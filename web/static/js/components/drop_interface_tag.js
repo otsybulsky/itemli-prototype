@@ -15,9 +15,7 @@ const itemTarget = {
 class DropInterfaceTag extends Component {
   render() {
     const { connectDropTarget } = this.props
-    return connectDropTarget(
-      <div className="drop-interface-tag">{this.props.tag.title}</div>
-    )
+    return connectDropTarget(<div className="drop-interface-tag">add sub</div>)
   }
 }
 
