@@ -1,6 +1,6 @@
 defmodule Itemli.RoomChannel do
   use Itemli.Web, :channel
-  alias Itemli.{Article, Tag, TagArticle}
+  alias Itemli.{Article, Tag, TagArticle, Interface}
   alias Ecto.Multi
 
   def join("room:" <> _room_id, _params, socket) do
@@ -16,7 +16,14 @@ defmodule Itemli.RoomChannel do
     {:reply, {:ok, %{tags: roots}}, socket}
   end
 
-  def handle_in("interface:save", _params, socket) do
+  def handle_in("interface:save", %{"hash" => hash, "interface" => interface}, socket) do
+    user = socket.assigns.user
+
+    user
+    |> build_assoc(:interfaces)
+    |> Interface.changeset(%{hash: hash, store: interface})
+    |> Repo.insert
+
     {:reply, {:ok, %{}}, socket}
   end
 
