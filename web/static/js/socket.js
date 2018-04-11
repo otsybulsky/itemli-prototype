@@ -14,6 +14,14 @@ function socketError(err) {
   return { type: SOCKET_ERROR, payload: { error: err } }
 }
 
+export function saveInterface(params) {
+  return dispatch => {
+    if (channel) {
+      channel.push('interface:save', params)
+    }
+  }
+}
+
 export function fetchAllTags() {
   return dispatch => {
     if (channel) {

@@ -16,6 +16,10 @@ defmodule Itemli.RoomChannel do
     {:reply, {:ok, %{tags: roots}}, socket}
   end
 
+  def handle_in("interface:save", _params, socket) do
+    {:reply, {:ok, %{}}, socket}
+  end
+
   def handle_in("tabs:add", %{"content" => content}, socket) do
 
     user = socket.assigns.user
