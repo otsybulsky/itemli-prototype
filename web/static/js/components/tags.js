@@ -11,7 +11,7 @@ class Tags extends Component {
   renderTags() {
     const { tags } = this.props
     if (!tags) {
-      return <div />
+      return null
     }
 
     return tags.map(tag => {

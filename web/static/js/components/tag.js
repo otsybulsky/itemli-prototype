@@ -69,7 +69,7 @@ class Tag extends Component {
   renderDropInterface() {
     const { tag, renderDropInterface } = this.props
     if (!renderDropInterface) {
-      return <div />
+      return null
     }
 
     return <DropInterfaceTag key={tag.id + '_1'} tag={tag} />
