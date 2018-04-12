@@ -4,7 +4,8 @@ import {
   SOCKET_CONNECTED,
   SOCKET_ERROR,
   TAGS_FETCH_ALL,
-  TAGS_FETCH_ALL_OK
+  TAGS_FETCH_ALL_OK,
+  SAVE_INTERFACE
 } from './constants'
 
 let socket = null
@@ -17,6 +18,7 @@ function socketError(err) {
 export function saveInterface(params) {
   return dispatch => {
     if (channel) {
+      dispatch({ type: SAVE_INTERFACE, payload: params })
       channel.push('interface:save', params)
     }
   }
