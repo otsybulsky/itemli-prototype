@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { findDOMNode } from 'react-dom'
 import { DragSource, DropTarget } from 'react-dnd'
 
-import { dragElementStart, dragElementEnd } from '../actions'
+import { dragElementStart, dragElementEnd, dropTag } from '../actions'
 import DropInterfaceTag from './drop_interface_tag'
 
 const style = {
@@ -16,24 +16,56 @@ const style = {
 
 const itemSource = {
   beginDrag(props, monitor, component) {
-    //console.log('---begin drag from', props.tag, props)
-    const item = { tag: props.tag }
-    return item
-  },
-  endDrag(props, monitor) {
-    const item = monitor.getItem()
-    const dropResult = monitor.getDropResult()
-
-    if (dropResult) {
-      //console.log('---end drag', props.tag)
+    return {
+      id: props.tag.id,
+      index: props.index
     }
   }
+  // endDrag(props, monitor) {
+  //   const item = monitor.getItem()
+  //   const dropResult = monitor.getDropResult()
+
+  //   if (dropResult) {
+  //     //console.log('---end drag', props.tag)
+  //   }
+  // }
 }
 
 const itemTarget = {
+  hover(props, monitor, component) {
+    //return
+    const source = monitor.getItem()
+    const { id: source_id, index: dragIndex } = source
+    const { tag: { id: target_id }, index: hoverIndex, dropTag } = props
+
+    if (dragIndex === hoverIndex) {
+      return
+    }
+
+    const hoverBoundingRect = findDOMNode(component).getBoundingClientRect()
+    const hoverMiddleY = (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2
+    const clientOffset = monitor.getClientOffset()
+    const hoverClientY = clientOffset.y - hoverBoundingRect.top
+    if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) {
+      return
+    }
+    if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) {
+      return
+    }
+
+    dropTag({ start_index: dragIndex, end_index: hoverIndex })
+    monitor.getItem().index = hoverIndex
+  },
+
   drop(props, monitor, component) {
     const source = monitor.getItem()
-    console.log('drop target', props.tag, source.tag)
+    const { id: source_id, index: start_index } = source
+    const { tag: { id: target_id }, index: end_index, dropTag } = props
+
+    if (target_id !== source_id) {
+      //change items position
+      dropTag({ start_index, end_index })
+    }
   }
 }
 
@@ -84,7 +116,7 @@ class Tag extends Component {
         <div>
           <div style={{ ...style, opacity }} className="tag">
             <div>
-              <h6>the tag - {tag.title}</h6>
+              <h6>the tag - {tag.id}</h6>
             </div>
             {this.renderDropInterface()}
           </div>
@@ -100,6 +132,8 @@ function mapStateToProps(state) {
   }
 }
 
-export default connect(mapStateToProps, { dragElementStart, dragElementEnd })(
-  Tag
-)
+export default connect(mapStateToProps, {
+  dragElementStart,
+  dragElementEnd,
+  dropTag
+})(Tag)

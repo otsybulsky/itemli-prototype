@@ -1,5 +1,6 @@
 import _ from 'lodash'
-import { TABS_ADDED, TAGS_FETCH_ALL_OK } from '../constants'
+import { reorderList } from '../helpers'
+import { TABS_ADDED, TAGS_FETCH_ALL_OK, DROP_TAG } from '../constants'
 
 const INIT_STATE = {
   saveLayout: null,
@@ -17,8 +18,15 @@ export default function(store = INIT_STATE, { type, payload }) {
         ...store,
         tag_ids: payload.tag_ids,
         tags: _.mapKeys(payload.tags, 'id'),
-        saveLayout: true
+        saveLayout: false
       }
+    case DROP_TAG:
+      const { start_index, end_index } = payload
+      return {
+        ...store,
+        tag_ids: reorderList([...store.tag_ids], start_index, end_index)
+      }
+
     default:
       return store
   }

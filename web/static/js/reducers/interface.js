@@ -7,7 +7,7 @@ const INIT_STATE = {
 export default function(store = INIT_STATE, { type, payload }) {
   switch (type) {
     case DRAG_ELEMENT_START:
-      return { ...store, renderDropInterface: true }
+      return { ...store, renderDropInterface: false }
     case DRAG_ELEMENT_END:
       return { ...store, renderDropInterface: false }
     default:

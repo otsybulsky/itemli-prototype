@@ -14,8 +14,8 @@ class Tags extends Component {
     if (!tags) {
       return null
     }
-    return tag_ids.map(tag => {
-      return <Tag key={tag.id} tag={tags[tag.id]} />
+    return tag_ids.map((tag, i) => {
+      return <Tag key={tag.id} index={i} tag={tags[tag.id]} />
     })
   }
 
