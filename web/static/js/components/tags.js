@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 
@@ -9,13 +10,12 @@ import Tag from './tag'
 
 class Tags extends Component {
   renderTags() {
-    const { tags } = this.props
+    const { tag_ids, tags } = this.props
     if (!tags) {
       return null
     }
-
-    return tags.map(tag => {
-      return <Tag key={tag.id} tag={tag} />
+    return tag_ids.map(tag => {
+      return <Tag key={tag.id} tag={tags[tag.id]} />
     })
   }
 
@@ -33,7 +33,8 @@ Tags = DragDropContext(MultiBackend(HTML5toTouch))(Tags)
 
 function mapStateToProps(state) {
   return {
-    tags: state.data.tags
+    tags: state.data.tags,
+    tag_ids: state.data.tag_ids
   }
 }
 

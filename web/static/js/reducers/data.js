@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import { TABS_ADDED, TAGS_FETCH_ALL_OK } from '../constants'
 
 const INIT_STATE = {
@@ -15,7 +16,7 @@ export default function(store = INIT_STATE, { type, payload }) {
       return {
         ...store,
         tag_ids: payload.tag_ids,
-        tags: payload.tags,
+        tags: _.mapKeys(payload.tags, 'id'),
         saveLayout: true
       }
     default:
