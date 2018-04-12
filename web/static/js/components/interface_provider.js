@@ -5,13 +5,15 @@ import { saveInterface } from '../socket'
 
 class InterfaceProvider extends Component {
   componentWillReceiveProps(nextProps) {
-    const { tags } = nextProps
-    const hash_new = hash(tags)
-    if (hash(this.props.tags) !== hash_new) {
-      this.props.saveInterface({
-        interface: tags,
-        hash: hash_new
-      })
+    const { saveLayout, layout } = nextProps
+    if (saveLayout) {
+      const hash_new = hash(layout)
+      if (hash(this.props.layout) !== hash_new) {
+        this.props.saveInterface({
+          interface: layout,
+          hash: hash_new
+        })
+      }
     }
   }
   render() {
@@ -21,7 +23,10 @@ class InterfaceProvider extends Component {
 
 function mapStateToProps(state) {
   return {
-    tags: state.data.tags_three
+    saveLayout: state.data.saveLayout,
+    layout: {
+      tags: state.data.tags
+    }
   }
 }
 
