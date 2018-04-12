@@ -10,10 +10,13 @@ defmodule Itemli.RoomChannel do
   def handle_in("tags:fetch", _params, socket) do
     user = socket.assigns.user
 
-    roots = Tag.roots
+    tags = Tag.roots
     |> Repo.all where: user_id = user.id
 
-    {:reply, {:ok, %{tags: roots}}, socket}
+    tags_ids = tags
+    |> Enum.map(fn(%{"id": tag_id}) -> %{id: tag_id} end)
+
+    {:reply, {:ok, %{tag_ids: tags_ids, tags: tags}}, socket}
   end
 
   def handle_in("interface:save", %{"hash" => hash, "interface" => interface}, socket) do

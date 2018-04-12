@@ -25,7 +25,7 @@ function mapStateToProps(state) {
   return {
     saveLayout: state.data.saveLayout,
     layout: {
-      tags: state.data.tags
+      tag_ids: state.data.tag_ids
     }
   }
 }
