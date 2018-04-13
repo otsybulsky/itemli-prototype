@@ -82,6 +82,11 @@ defmodule Itemli.RoomChannel do
 
   end
 
+  def handle_in("layout:fetch", %{}, socket) do
+    
+    {:noreply, socket}
+  end
+
   def handle_in("tabs:add", %{"content" => content}, socket) do
 
     user = socket.assigns.user

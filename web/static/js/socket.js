@@ -34,6 +34,7 @@ export function fetchLayout() {
   return dispatch => {
     if (channel) {
       dispatch({ type: FETCH_LAYOUT })
+      channel.push('layout:fetch')
     }
   }
 }
