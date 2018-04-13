@@ -19,15 +19,59 @@ defmodule Itemli.RoomChannel do
     {:reply, {:ok, %{tag_ids: tags_ids, tags: tags}}, socket}
   end
 
+  defp hash_exist(user, new_hash) do
+    
+    ly = Layout
+    |> select([:hash])
+    |> where(user_id: ^user.id)
+    |> order_by(desc: :inserted_at)
+    |> limit(1)
+    |> Repo.one
+
+    case ly do
+      %{"hash": current_hash} ->
+        cond do
+          current_hash !== new_hash -> :false
+          :true -> :true
+        end
+      _ -> :false
+    end
+    
+  end
+
   def handle_in("layout:save", %{"hash" => hash, "layout" => layout}, socket) do
     user = socket.assigns.user
 
-    user
-    |> build_assoc(:layouts)
-    |> Layout.changeset(%{hash: hash, layout: layout})
-    |> Repo.insert
+    case hash_exist(user, hash) do
+      :false ->
+        user
+        |> build_assoc(:layouts)
+        |> Layout.changeset(%{hash: hash, layout: layout})
+        |> Repo.insert 
 
-    {:reply, {:ok, %{}}, socket}
+        recs_count = Repo.one(from ly in "layouts", select: count(ly.id), where: ly.user_id == type(^user.id, :binary_id) )
+
+        max_layout_count = 3 # feature plan - create users options
+
+        cond do
+          recs_count > max_layout_count ->
+            count_delete = recs_count - max_layout_count
+            for_delete = Layout
+            |> where(user_id: ^user.id)
+            |> order_by(asc: :inserted_at)
+            |> limit(^count_delete)
+            |> Repo.all
+            
+            Enum.map(for_delete, fn(ly) -> Repo.delete(ly) end )
+          :true ->
+            
+        end
+          
+        {:reply, {:ok, %{message: "Layout saved."}}, socket}
+      _ ->
+        {:reply, {:ok, %{message: "Layout exist."}}, socket}
+    end
+
   end
 
   def handle_in("tabs:add", %{"content" => content}, socket) do
