@@ -12,3 +12,4 @@ export const DROP_TAG = 'DROP_TAG'
 
 export const SAVE_LAYOUT = 'SAVE_LAYOUT'
 export const FETCH_LAYOUT = 'FETCH_LAYOUT'
+export const FETCH_LAYOUT_OK = 'FETCH_LAYOUT_OK'

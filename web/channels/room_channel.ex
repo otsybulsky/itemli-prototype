@@ -100,11 +100,16 @@ defmodule Itemli.RoomChannel do
     |> Repo.all
     |> Enum.map(fn %{"id": id} -> id end )
 
-    full_layout = new_tags ++ stored_layout
-
+    full_tags = new_tags ++ stored_layout
+    
     tags = Tag
-    |> where([t], t.id in ^full_layout)
+    |> where([t], t.id in ^full_tags)
     |> Repo.all
+
+    full_layout = %{tag_ids: 
+      Enum.map(full_tags,
+        fn(id) -> %{id: id} end)
+    }
     
     {:reply, {:ok, %{layout: full_layout, tags: tags}}, socket}
   end

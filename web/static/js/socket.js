@@ -6,7 +6,8 @@ import {
   TAGS_FETCH_ALL,
   TAGS_FETCH_ALL_OK,
   SAVE_LAYOUT,
-  FETCH_LAYOUT
+  FETCH_LAYOUT,
+  FETCH_LAYOUT_OK
 } from './constants'
 
 let socket = null
@@ -34,7 +35,9 @@ export function fetchLayout() {
   return dispatch => {
     if (channel) {
       dispatch({ type: FETCH_LAYOUT })
-      channel.push('layout:fetch')
+      channel.push('layout:fetch').receive('ok', response => {
+        dispatch({ type: FETCH_LAYOUT_OK, payload: response })
+      })
     }
   }
 }

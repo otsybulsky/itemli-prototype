@@ -116,7 +116,7 @@ class Tag extends Component {
         <div>
           <div style={{ ...style, opacity }} className="tag">
             <div>
-              <h6>the tag - {tag.id}</h6>
+              <h6>the tag - {tag.title}</h6>
             </div>
             {this.renderDropInterface()}
           </div>
