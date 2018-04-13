@@ -5,7 +5,8 @@ import {
   SOCKET_ERROR,
   TAGS_FETCH_ALL,
   TAGS_FETCH_ALL_OK,
-  SAVE_LAYOUT
+  SAVE_LAYOUT,
+  FETCH_LAYOUT
 } from './constants'
 
 let socket = null
@@ -25,6 +26,14 @@ export function saveLayoutToServer(params) {
         .receive('error', err => {
           dispatch(socketError(err))
         })
+    }
+  }
+}
+
+export function fetchLayout() {
+  return dispatch => {
+    if (channel) {
+      dispatch({ type: FETCH_LAYOUT })
     }
   }
 }

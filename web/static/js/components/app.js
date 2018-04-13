@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import Tags from './tags'
 
-import { createSocket, fetchAllTags } from '../socket'
+import { createSocket, fetchLayout } from '../socket'
 
 class App extends Component {
   componentDidMount() {
@@ -12,7 +12,7 @@ class App extends Component {
   componentWillReceiveProps(nextProps) {
     if (!this.props.socketConnected) {
       if (nextProps.socketConnected) {
-        this.props.fetchAllTags()
+        this.props.fetchLayout()
       }
     }
   }
@@ -32,4 +32,4 @@ function mapStateToProps(state) {
   }
 }
 
-export default connect(mapStateToProps, { createSocket, fetchAllTags })(App)
+export default connect(mapStateToProps, { createSocket, fetchLayout })(App)
