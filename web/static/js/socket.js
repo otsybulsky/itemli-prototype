@@ -5,7 +5,7 @@ import {
   SOCKET_ERROR,
   TAGS_FETCH_ALL,
   TAGS_FETCH_ALL_OK,
-  SAVE_INTERFACE
+  SAVE_LAYOUT
 } from './constants'
 
 let socket = null
@@ -15,11 +15,11 @@ function socketError(err) {
   return { type: SOCKET_ERROR, payload: { error: err } }
 }
 
-export function saveInterface(params) {
+export function saveLayoutToServer(params) {
   return dispatch => {
     if (channel) {
-      dispatch({ type: SAVE_INTERFACE, payload: params })
-      channel.push('interface:save', params)
+      dispatch({ type: SAVE_LAYOUT, payload: params })
+      channel.push('layout:save', params)
     }
   }
 }

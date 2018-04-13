@@ -1,15 +1,15 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import hash from 'object-hash'
-import { saveInterface } from '../socket'
+import { saveLayoutToServer } from '../socket'
 
-class InterfaceProvider extends Component {
+class LayoutProvider extends Component {
   componentWillReceiveProps(nextProps) {
     const { saveLayout, layout } = nextProps
 
     if (!this.props.saveLayout && saveLayout) {
-      this.props.saveInterface({
-        interface: layout,
+      this.props.saveLayoutToServer({
+        layout: layout,
         hash: hash(layout)
       })
     }
@@ -28,4 +28,4 @@ function mapStateToProps(state) {
   }
 }
 
-export default connect(mapStateToProps, { saveInterface })(InterfaceProvider)
+export default connect(mapStateToProps, { saveLayoutToServer })(LayoutProvider)

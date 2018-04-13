@@ -10,4 +10,4 @@ export const DRAG_ELEMENT_START = 'DRAG_ELEMENT_START'
 export const DRAG_ELEMENT_END = 'DRAG_ELEMENT_END'
 export const DROP_TAG = 'DROP_TAG'
 
-export const SAVE_INTERFACE = 'SAVE_INTERFACE'
+export const SAVE_LAYOUT = 'SAVE_LAYOUT'

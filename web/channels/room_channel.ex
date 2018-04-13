@@ -19,12 +19,12 @@ defmodule Itemli.RoomChannel do
     {:reply, {:ok, %{tag_ids: tags_ids, tags: tags}}, socket}
   end
 
-  def handle_in("interface:save", %{"hash" => hash, "interface" => interface}, socket) do
+  def handle_in("layout:save", %{"hash" => hash, "layout" => layout}, socket) do
     user = socket.assigns.user
 
     user
     |> build_assoc(:interfaces)
-    |> Interface.changeset(%{hash: hash, store: interface})
+    |> Interface.changeset(%{hash: hash, store: layout})
     |> Repo.insert
 
     {:reply, {:ok, %{}}, socket}
