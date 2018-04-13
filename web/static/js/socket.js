@@ -19,7 +19,12 @@ export function saveLayoutToServer(params) {
   return dispatch => {
     if (channel) {
       dispatch({ type: SAVE_LAYOUT, payload: params })
-      channel.push('layout:save', params)
+      channel
+        .push('layout:save', params)
+        .receive('ok', message => {})
+        .receive('error', err => {
+          dispatch(socketError(err))
+        })
     }
   }
 }

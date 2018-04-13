@@ -19,8 +19,7 @@ defmodule Itemli.RoomChannel do
     {:reply, {:ok, %{tag_ids: tags_ids, tags: tags}}, socket}
   end
 
-  defp hash_exist(user, new_hash) do
-    
+  defp hash_exist(user, new_hash) do    
     ly = Layout
     |> select([:hash])
     |> where(user_id: ^user.id)
@@ -35,27 +34,21 @@ defmodule Itemli.RoomChannel do
           :true -> :true
         end
       _ -> :false
-    end
-    
+    end    
   end
 
-  def handle_in("layout:save", %{"hash" => hash, "layout" => layout}, socket) do
-    user = socket.assigns.user
+  defp restrict_layouts_history(user) do
+    recs_count = Repo.one(
+      from ly in "layouts",
+      select: count(ly.id), 
+      where: ly.user_id == type(^user.id, :binary_id) 
+    )
+    
+    max_layout_count = 3 # feature plan - create users options
 
-    case hash_exist(user, hash) do
-      :false ->
-        user
-        |> build_assoc(:layouts)
-        |> Layout.changeset(%{hash: hash, layout: layout})
-        |> Repo.insert 
-
-        recs_count = Repo.one(from ly in "layouts", select: count(ly.id), where: ly.user_id == type(^user.id, :binary_id) )
-
-        max_layout_count = 3 # feature plan - create users options
-
-        cond do
-          recs_count > max_layout_count ->
-            count_delete = recs_count - max_layout_count
+      cond do
+        recs_count > max_layout_count ->
+          count_delete = recs_count - max_layout_count
             for_delete = Layout
             |> where(user_id: ^user.id)
             |> order_by(asc: :inserted_at)
@@ -63,13 +56,28 @@ defmodule Itemli.RoomChannel do
             |> Repo.all
             
             Enum.map(for_delete, fn(ly) -> Repo.delete(ly) end )
-          :true ->
-            
+        :true ->
+      end
+  end
+
+  def handle_in("layout:save", %{"hash" => hash, "layout" => layout}, socket) do
+    user = socket.assigns.user
+
+    case hash_exist(user, hash) do
+      :false ->
+        ly = user
+        |> build_assoc(:layouts)
+        |> Layout.changeset(%{hash: hash, layout: layout})
+
+        case Repo.insert(ly) do
+          {:ok, _layout} ->
+            restrict_layouts_history(user)
+            {:reply, {:ok, %{message: "Layout saved"}}, socket}
+          {:error, changeset} ->
+            {:reply, {:error, %{message: "Error save layout"}}, socket}
         end
-          
-        {:reply, {:ok, %{message: "Layout saved."}}, socket}
       _ ->
-        {:reply, {:ok, %{message: "Layout exist."}}, socket}
+        {:reply, {:ok, %{message: "Layout exist"}}, socket}
     end
 
   end
