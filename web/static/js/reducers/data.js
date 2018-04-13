@@ -1,5 +1,4 @@
 import _ from 'lodash'
-import hash from 'object-hash'
 
 import { reorderList } from '../helpers'
 import {
@@ -12,7 +11,6 @@ import {
 
 const INIT_STATE = {
   saveLayout: null,
-  hash_layout_source: null,
   tag_ids: [],
   tags: {},
   tab_items: []
@@ -31,8 +29,7 @@ export default function(store = INIT_STATE, { type, payload }) {
     case DRAG_ELEMENT_START:
       return {
         ...store,
-        saveLayout: false,
-        hash_layout_source: hash({ tag_ids: store.tag_ids })
+        saveLayout: false
       }
     case DRAG_ELEMENT_END:
       return { ...store, saveLayout: true }
