@@ -9,7 +9,7 @@ defmodule Itemli.User do
 
         has_many :articles, Itemli.Article
         has_many :tags, Itemli.Tag
-        has_many :interfaces, Itemli.Interface
+        has_many :layouts, Itemli.Layout
 
         timestamps()
     end

@@ -1,9 +1,9 @@
-defmodule Itemli.Interface do
+defmodule Itemli.Layout do
   use Itemli.Web, :model
 
-  schema "interfaces" do
+  schema "layouts" do
     field :hash, :string
-    field :store, :map
+    field :layout, :map
 
     belongs_to :user, Itemli.User 
 
@@ -12,7 +12,7 @@ defmodule Itemli.Interface do
 
   def changeset(struct, params \\ %{}) do
     struct
-    |> cast(params, [:hash, :store ]) 
+    |> cast(params, [:hash, :layout ]) 
   end
 
 end
