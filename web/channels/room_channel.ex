@@ -19,15 +19,16 @@ defmodule Itemli.RoomChannel do
     {:reply, {:ok, %{tag_ids: tags_ids, tags: tags}}, socket}
   end
 
-  defp hash_exist(user, new_hash) do    
-    ly = Layout
-    |> select([:hash])
+  defp get_layout(user) do
+    Layout
     |> where(user_id: ^user.id)
     |> order_by(desc: :inserted_at)
     |> limit(1)
     |> Repo.one
+  end
 
-    case ly do
+  defp hash_exist(user, new_hash) do    
+    case get_layout(user) do
       %{"hash": current_hash} ->
         cond do
           current_hash !== new_hash -> :false
@@ -83,8 +84,29 @@ defmodule Itemli.RoomChannel do
   end
 
   def handle_in("layout:fetch", %{}, socket) do
+    user = socket.assigns.user
     
-    {:noreply, socket}
+    case get_layout(user) do
+      %{"layout": layout} ->
+        %{"tag_ids" => tag_ids} = layout 
+        stored_layout = Enum.map(tag_ids, fn %{"id" => id} -> id end)
+      _ ->
+        stored_layout = []
+    end
+    
+    new_tags = Tag.roots
+    |> where([t], not(t.id in ^stored_layout) and (t.user_id == ^user.id))
+    |> order_by(desc: :inserted_at)
+    |> Repo.all
+    |> Enum.map(fn %{"id": id} -> id end )
+
+    full_layout = new_tags ++ stored_layout
+
+    tags = Tag
+    |> where([t], t.id in ^full_layout)
+    |> Repo.all
+    
+    {:reply, {:ok, %{layout: full_layout, tags: tags}}, socket}
   end
 
   def handle_in("tabs:add", %{"content" => content}, socket) do
