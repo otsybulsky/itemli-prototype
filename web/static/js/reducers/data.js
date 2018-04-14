@@ -1,6 +1,6 @@
 import _ from 'lodash'
 
-import { reorderList } from '../helpers'
+import { reorderTagsList } from '../helpers'
 import {
   TABS_ADDED,
   TAGS_FETCH_ALL_OK,
@@ -36,10 +36,14 @@ export default function(store = INIT_STATE, { type, payload }) {
     case DRAG_ELEMENT_END:
       return { ...store, saveLayout: false } //temporary
     case DROP_TAG:
-      const { start_index, end_index } = payload
+      const { start_level_index, end_level_index } = payload
       return {
         ...store,
-        tag_ids: reorderList([...store.tag_ids], start_index, end_index)
+        tag_ids: reorderTagsList(
+          [...store.tag_ids],
+          start_level_index,
+          end_level_index
+        )
       }
 
     default:

@@ -20,7 +20,8 @@ const itemSource = {
   beginDrag(props, monitor, component) {
     return {
       id: props.tag.id,
-      index: props.index
+      index: props.index,
+      level_index: props.level_index
     }
   }
   // endDrag(props, monitor) {
@@ -61,12 +62,21 @@ const itemTarget = {
 
   drop(props, monitor, component) {
     const source = monitor.getItem()
-    const { id: source_id, index: start_index } = source
-    const { tag: { id: target_id }, index: end_index, dropTag } = props
+    const {
+      id: source_id,
+      index: start_index,
+      level_index: start_level_index
+    } = source
+    const {
+      tag: { id: target_id },
+      index: end_index,
+      level_index: end_level_index,
+      dropTag
+    } = props
 
     if (target_id !== source_id) {
       //change items position
-      dropTag({ start_index, end_index })
+      dropTag({ start_level_index, end_level_index })
     }
   }
 }
@@ -101,12 +111,19 @@ class Tag extends Component {
   }
 
   renderDropInterface() {
-    const { tag, renderDropInterface } = this.props
+    return null //temporary disable
+    const { tag, renderDropInterface, level_index } = this.props
     if (!renderDropInterface) {
       return null
     }
 
-    return <DropInterfaceTag key={tag.id + '_add_subtag'} tag={tag} />
+    return (
+      <DropInterfaceTag
+        key={tag.id + '_add_subtag'}
+        tag={tag}
+        level_index={level_index}
+      />
+    )
   }
 
   renderSubTags() {
@@ -120,6 +137,8 @@ class Tag extends Component {
   render() {
     const { tag, isDragging, connectDragSource, connectDropTarget } = this.props
     const opacity = isDragging ? 0 : 1
+
+    //console.log('level index - ', this.props.level_index)
 
     return connectDragSource(
       connectDropTarget(

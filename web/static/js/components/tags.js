@@ -5,7 +5,7 @@ import Tag from './tag'
 
 class Tags extends Component {
   renderTags() {
-    const { tag_ids, tags } = this.props
+    const { tag_ids, tags, level_index } = this.props
     if (!tags) {
       return null
     }
@@ -16,12 +16,14 @@ class Tags extends Component {
           index={i}
           tag={tags[tag_meta.id]}
           sub_tags={tag_meta.sub_tags}
+          level_index={[...level_index, i]}
         />
       )
     })
   }
 
   render() {
+    console.log('TAGS level index - ', this.props.level_index)
     return (
       <div className="tags">
         <h5>Current tags</h5>

@@ -11,7 +11,7 @@ class TagsProvider extends Component {
   render() {
     return (
       <div>
-        <Tags tag_ids={this.props.tag_ids} />
+        <Tags tag_ids={this.props.tag_ids} level_index={[]} />
       </div>
     )
   }

@@ -5,7 +5,20 @@ import { DropTarget } from 'react-dnd'
 const itemTarget = {
   drop(props, monitor, component) {
     const source = monitor.getItem()
-    console.log('drop target for create subtag', props.tag, source.tag)
+    const { id: source_id, index: start_index } = source
+    const {
+      tag: { id: target_id },
+      index: end_index,
+      dropTag,
+      level_index
+    } = props
+    console.log(
+      'drop target for create subtag in',
+      props.tag,
+      level_index,
+      'source  - ',
+      source
+    )
   }
 }
 
