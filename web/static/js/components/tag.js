@@ -35,7 +35,7 @@ const itemSource = {
 
 const itemTarget = {
   hover(props, monitor, component) {
-    //return
+    return
     const source = monitor.getItem()
     const { id: source_id, index: dragIndex } = source
     const { tag: { id: target_id }, index: hoverIndex, dropTag } = props
