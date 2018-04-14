@@ -36,13 +36,14 @@ export default function(store = INIT_STATE, { type, payload }) {
     case DRAG_ELEMENT_END:
       return { ...store, saveLayout: false } //temporary
     case DROP_TAG:
-      const { start_level_index, end_level_index } = payload
+      const { start_level_index, end_level_index, createSubTag } = payload
       return {
         ...store,
         tag_ids: reorderTagsList(
           [...store.tag_ids],
           start_level_index,
-          end_level_index
+          end_level_index,
+          createSubTag
         )
       }
 

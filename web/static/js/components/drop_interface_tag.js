@@ -1,24 +1,32 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { DropTarget } from 'react-dnd'
+import { dropTag } from '../actions'
 
 const itemTarget = {
   drop(props, monitor, component) {
     const source = monitor.getItem()
-    const { id: source_id, index: start_index } = source
+    const {
+      id: source_id,
+      index: start_index,
+      level_index: start_level_index
+    } = source
     const {
       tag: { id: target_id },
       index: end_index,
-      dropTag,
-      level_index
+      level_index: end_level_index,
+      dropTag
     } = props
-    console.log(
-      'drop target for create subtag in',
-      props.tag,
-      level_index,
-      'source  - ',
-      source
-    )
+    // console.log(
+    //   'drop target for create subtag in',
+    //   start_level_index,
+    //   end_level_index
+    // )
+    if (target_id !== source_id) {
+      //change items position
+      const createSubTag = true
+      dropTag({ start_level_index, end_level_index, createSubTag })
+    }
   }
 }
 
@@ -32,4 +40,4 @@ class DropInterfaceTag extends Component {
   }
 }
 
-export default connect()(DropInterfaceTag)
+export default connect(null, { dropTag })(DropInterfaceTag)

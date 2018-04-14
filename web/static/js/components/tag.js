@@ -111,7 +111,6 @@ class Tag extends Component {
   }
 
   renderDropInterface() {
-    return null //temporary disable
     const { tag, renderDropInterface, level_index } = this.props
     if (!renderDropInterface) {
       return null
@@ -127,11 +126,17 @@ class Tag extends Component {
   }
 
   renderSubTags() {
-    const { tag, sub_tags } = this.props
+    const { tag, sub_tags, level_index } = this.props
     if (!sub_tags || !sub_tags[0]) {
       return null
     }
-    return <Tags key={tag.id + '_sub_tags'} tag_ids={sub_tags} />
+    return (
+      <Tags
+        key={tag.id + '_sub_tags'}
+        tag_ids={sub_tags}
+        level_index={level_index}
+      />
+    )
   }
 
   render() {
