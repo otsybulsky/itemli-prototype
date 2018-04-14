@@ -1,10 +1,5 @@
-import _ from 'lodash'
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-
-import { DragDropContext } from 'react-dnd'
-import MultiBackend from 'react-dnd-multi-backend'
-import HTML5toTouch from 'react-dnd-multi-backend/lib/HTML5toTouch'
 
 import Tag from './tag'
 
@@ -14,8 +9,15 @@ class Tags extends Component {
     if (!tags) {
       return null
     }
-    return tag_ids.map((tag, i) => {
-      return <Tag key={tag.id} index={i} tag={tags[tag.id]} />
+    return tag_ids.map((tag_meta, i) => {
+      return (
+        <Tag
+          key={tag_meta.id}
+          index={i}
+          tag={tags[tag_meta.id]}
+          sub_tags={tag_meta.sub_tags}
+        />
+      )
     })
   }
 
@@ -29,12 +31,9 @@ class Tags extends Component {
   }
 }
 
-Tags = DragDropContext(MultiBackend(HTML5toTouch))(Tags)
-
 function mapStateToProps(state) {
   return {
-    tags: state.data.tags,
-    tag_ids: state.data.tag_ids
+    tags: state.data.tags
   }
 }
 

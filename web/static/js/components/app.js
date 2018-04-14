@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import Tags from './tags'
+import Tags from './tags_provider'
 
 import { createSocket, fetchLayout } from '../socket'
 

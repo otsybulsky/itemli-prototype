@@ -6,6 +6,8 @@ import { DragSource, DropTarget } from 'react-dnd'
 import { dragElementStart, dragElementEnd, dropTag } from '../actions'
 import DropInterfaceTag from './drop_interface_tag'
 
+import Tags from './tags'
+
 const style = {
   border: '1px dashed gray',
   padding: '0.5rem 1rem',
@@ -104,7 +106,15 @@ class Tag extends Component {
       return null
     }
 
-    return <DropInterfaceTag key={tag.id + '_1'} tag={tag} />
+    return <DropInterfaceTag key={tag.id + '_add_subtag'} tag={tag} />
+  }
+
+  renderSubTags() {
+    const { tag, sub_tags } = this.props
+    if (!sub_tags || !sub_tags[0]) {
+      return null
+    }
+    return <Tags key={tag.id + '_sub_tags'} tag_ids={sub_tags} />
   }
 
   render() {
@@ -119,6 +129,7 @@ class Tag extends Component {
               <h6>the tag - {tag.title}</h6>
             </div>
             {this.renderDropInterface()}
+            {this.renderSubTags()}
           </div>
         </div>
       )

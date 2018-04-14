@@ -108,7 +108,7 @@ defmodule Itemli.RoomChannel do
 
     full_layout = %{tag_ids: 
       Enum.map(full_tags,
-        fn(id) -> %{id: id} end)
+        fn(id) -> %{id: id, sub_tags: []} end)
     }
     
     {:reply, {:ok, %{layout: full_layout, tags: tags}}, socket}
