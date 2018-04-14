@@ -21,7 +21,8 @@ const itemSource = {
     return {
       id: props.tag.id,
       index: props.index,
-      level_index: props.level_index
+      level_index: props.level_index,
+      createSubTag: false
     }
   }
   // endDrag(props, monitor) {
@@ -35,29 +36,33 @@ const itemSource = {
 }
 
 const itemTarget = {
+  // hover(props, monitor, component) {
+  //   return
+  //   const source = monitor.getItem()
+  //   const { id: source_id, index: dragIndex } = source
+  //   const { tag: { id: target_id }, index: hoverIndex, dropTag } = props
+
+  //   if (dragIndex === hoverIndex) {
+  //     return
+  //   }
+
+  //   const hoverBoundingRect = findDOMNode(component).getBoundingClientRect()
+  //   const hoverMiddleY = (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2
+  //   const clientOffset = monitor.getClientOffset()
+  //   const hoverClientY = clientOffset.y - hoverBoundingRect.top
+  //   if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) {
+  //     return
+  //   }
+  //   if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) {
+  //     return
+  //   }
+
+  //   dropTag({ start_index: dragIndex, end_index: hoverIndex })
+  //   monitor.getItem().index = hoverIndex
+  // },
+
   hover(props, monitor, component) {
-    return
-    const source = monitor.getItem()
-    const { id: source_id, index: dragIndex } = source
-    const { tag: { id: target_id }, index: hoverIndex, dropTag } = props
-
-    if (dragIndex === hoverIndex) {
-      return
-    }
-
-    const hoverBoundingRect = findDOMNode(component).getBoundingClientRect()
-    const hoverMiddleY = (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2
-    const clientOffset = monitor.getClientOffset()
-    const hoverClientY = clientOffset.y - hoverBoundingRect.top
-    if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) {
-      return
-    }
-    if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) {
-      return
-    }
-
-    dropTag({ start_index: dragIndex, end_index: hoverIndex })
-    monitor.getItem().index = hoverIndex
+    monitor.getItem().createSubTag = false
   },
 
   drop(props, monitor, component) {
@@ -65,7 +70,8 @@ const itemTarget = {
     const {
       id: source_id,
       index: start_index,
-      level_index: start_level_index
+      level_index: start_level_index,
+      createSubTag
     } = source
     const {
       tag: { id: target_id },
@@ -76,7 +82,9 @@ const itemTarget = {
 
     if (target_id !== source_id) {
       //change items position
-      dropTag({ start_level_index, end_level_index })
+      if (!createSubTag) {
+        dropTag({ start_level_index, end_level_index })
+      }
     }
   }
 }
@@ -111,7 +119,13 @@ class Tag extends Component {
   }
 
   renderDropInterface() {
-    const { tag, renderDropInterface, level_index } = this.props
+    const {
+      tag,
+      renderDropInterface,
+      level_index,
+      isDragging,
+      dragElementEnd
+    } = this.props
     if (!renderDropInterface) {
       return null
     }
@@ -121,6 +135,8 @@ class Tag extends Component {
         key={tag.id + '_add_subtag'}
         tag={tag}
         level_index={level_index}
+        isDragging={isDragging}
+        dragElementEnd={dragElementEnd}
       />
     )
   }
@@ -142,8 +158,6 @@ class Tag extends Component {
   render() {
     const { tag, isDragging, connectDragSource, connectDropTarget } = this.props
     const opacity = isDragging ? 0 : 1
-
-    //console.log('level index - ', this.props.level_index)
 
     return connectDragSource(
       connectDropTarget(

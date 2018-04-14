@@ -35,13 +35,18 @@ export function reorderTagsList(
   const source = searchTagsList(list, start_level_index)
   //search array and index for insert tag
   const target = searchTagsList(list, end_level_index, create_sub_tag)
-  if (create_sub_tag) {
-    target.list.splice(target.index, 0, source.list[source.index])
-  }
-  const [removed] = source.list.splice(source.index, 1)
-  if (!create_sub_tag) {
-    target.list.splice(target.index, 0, removed)
-  }
 
+  // if (create_sub_tag) {
+  //   target.list.splice(target.index, 0, source.list[source.index])
+  // }
+  // const [removed] = source.list.splice(source.index, 1)
+  // if (!create_sub_tag) {
+  //   target.list.splice(target.index, 0, removed)
+  // }
+
+  // return list
+
+  const [removed] = source.list.splice(source.index, 1)
+  target.list.splice(target.index, 0, removed)
   return list
 }
