@@ -83,7 +83,7 @@ const itemTarget = {
     if (target_id !== source_id) {
       //change items position
       if (!createSubTag) {
-        dropTag({ start_level_index, end_level_index })
+        dropTag({ source_id, target_id, start_level_index, end_level_index })
       }
     }
   }
@@ -156,15 +156,23 @@ class Tag extends Component {
   }
 
   render() {
-    const { tag, isDragging, connectDragSource, connectDropTarget } = this.props
+    const {
+      tag,
+      isDragging,
+      connectDragSource,
+      connectDropTarget,
+      level_index
+    } = this.props
     const opacity = isDragging ? 0 : 1
+
+    //console.log(tag.title, level_index)
 
     return connectDragSource(
       connectDropTarget(
         <div>
           <div style={{ ...style, opacity }} className="tag">
             <div>
-              <h6>the tag - {tag.title}</h6>
+              <h5>{tag.title}</h5>
             </div>
             {this.renderDropInterface()}
             {this.renderSubTags()}

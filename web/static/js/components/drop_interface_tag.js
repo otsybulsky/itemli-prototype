@@ -31,7 +31,13 @@ const itemTarget = {
     // )
     if (target_id !== source_id) {
       //change items position
-      dropTag({ start_level_index, end_level_index, createSubTag })
+      dropTag({
+        source_id,
+        target_id,
+        start_level_index,
+        end_level_index,
+        createSubTag
+      })
     }
     dragElementEnd()
   }

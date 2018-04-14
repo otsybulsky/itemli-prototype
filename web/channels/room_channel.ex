@@ -111,13 +111,13 @@ defmodule Itemli.RoomChannel do
     {:reply, {:ok, %{layout: full_layout, tags: tags}}, socket}
   end
 
-  def handle_in("tabs:add", %{"content" => content}, socket) do
+  def handle_in("tabs:add", %{"tabs" => content, "tag_title" => tag_title}, socket) do
 
     user = socket.assigns.user
 
     new_tag = user
     |> build_assoc(:tags)
-    |> Tag.changeset(%{title: DateTime.to_string(DateTime.utc_now())})
+    |> Tag.changeset(%{title: tag_title})
     
     batch = Multi.new()
     |> Multi.insert(:tag, new_tag) 
