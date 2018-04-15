@@ -10,9 +10,11 @@ function removeTag(list, id) {
     if (list[i].id === id) {
       const [removed] = list.splice(i, 1)
       return { removed, i }
-      break
     } else {
-      removeTag(list[i].sub_tags, id)
+      const removed = removeTag(list[i].sub_tags, id)
+      if (removed) {
+        return removed
+      }
     }
   }
 }
@@ -22,16 +24,16 @@ function insertTag(list, target_id, buf_tag, create_sub_tag) {
     if (list[i].id === target_id) {
       if (!create_sub_tag) {
         const ind = i >= buf_tag.i ? i + 1 : i
-        console.log('insert to', ind)
         list.splice(ind, 0, buf_tag.removed)
       } else {
         list[i].sub_tags.splice(0, 0, buf_tag.removed)
       }
-
-      return
-      break
+      return true
     } else {
-      insertTag(list[i].sub_tags, target_id, buf_tag)
+      const isInsert = insertTag(list[i].sub_tags, target_id, buf_tag)
+      if (isInsert) {
+        return isInsert
+      }
     }
   }
 }
@@ -62,22 +64,12 @@ export function reorderTagsList(
   target_id,
   start_level_index,
   end_level_index,
-  create_sub_tag
+  create_sub_tag,
+  tags
 ) {
-  //search array and index for remove tag
-  //const source = searchTagsList([...list], start_level_index)
-  //search array and index for insert tag
-  //const target = searchTagsList([...list], end_level_index, create_sub_tag)
-
-  //console.log('SOURCE', source, 'TARGET', target)
-  let result = list
-  console.log([...result])
-  const buf_tag = removeTag(result, source_id)
-  console.log(buf_tag, [...result])
+  console.log('REORDER', tags[source_id], tags[target_id])
+  let result = [...list]
+  const buf_tag = removeTag(result, source_id, list)
   insertTag(result, target_id, buf_tag, create_sub_tag)
-  console.log([...result])
-
-  // const [removed] = source.list.splice(source.index, 1)
-  // target.list.splice(target.index, 0, removed)
   return result
 }

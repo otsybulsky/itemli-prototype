@@ -51,7 +51,8 @@ export default function(store = INIT_STATE, { type, payload }) {
           target_id,
           start_level_index,
           end_level_index,
-          createSubTag
+          createSubTag,
+          store.tags
         )
       }
 
