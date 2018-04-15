@@ -103,13 +103,10 @@ class Tag extends Component {
       return null
     }
 
+    // time for force render, react view change props for 1 objects level
     return (
       <div style={style_sub_tags}>
-        <Tags
-          key={tag.id + '_sub_tags'}
-          tag_ids={sub_tags}
-          tab_ids_size={sub_tags.length}
-        />
+        <Tags key={tag.id + '_sub_tags'} tag_ids={sub_tags} time={Date.now()} />
       </div>
     )
   }
