@@ -3,53 +3,50 @@ import { connect } from 'react-redux'
 import { DropTarget } from 'react-dnd'
 import { dropTag } from '../actions'
 
+const style = {
+  backgroundColor: 'gray',
+  cursor: 'move'
+}
+
 const itemTarget = {
-  hover(props, monitor, component) {
-    monitor.getItem().createSubTag = true
-  },
-
   drop(props, monitor, component) {
-    const source = monitor.getItem()
+    const hasDroppedOnChild = monitor.didDrop()
+    if (hasDroppedOnChild) {
+      return
+    }
 
-    const {
-      id: source_id,
-      index: start_index,
-      level_index: start_level_index,
-      createSubTag
-    } = source
+    const source = monitor.getItem()
+    const { id: source_id } = source
     const {
       tag: { id: target_id },
-      index: end_index,
-      level_index: end_level_index,
       dropTag,
       dragElementEnd
     } = props
-    // console.log(
-    //   'drop target for create subtag in',
-    //   start_level_index,
-    //   end_level_index
-    // )
     if (target_id !== source_id) {
       //change items position
       dropTag({
         source_id,
         target_id,
-        start_level_index,
-        end_level_index,
-        createSubTag
+        createSubTag: true
       })
     }
     dragElementEnd()
   }
 }
 
-@DropTarget('TAG', itemTarget, connect => ({
-  connectDropTarget: connect.dropTarget()
+@DropTarget('TAG', itemTarget, (connect, monitor) => ({
+  connectDropTarget: connect.dropTarget(),
+  isOverCurrent: monitor.isOver({ shallow: true })
 }))
 class DropInterfaceTag extends Component {
   render() {
-    const { connectDropTarget } = this.props
-    return connectDropTarget(<div className="drop-interface-tag">add sub</div>)
+    const { connectDropTarget, isOverCurrent } = this.props
+    const backgroundColor = isOverCurrent ? 'red' : 'gray'
+    return connectDropTarget(
+      <div style={{ ...style, backgroundColor }} className="drop-interface-tag">
+        add sub
+      </div>
+    )
   }
 }
 

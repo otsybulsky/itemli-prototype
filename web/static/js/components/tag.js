@@ -9,88 +9,47 @@ import DropInterfaceTag from './drop_interface_tag'
 import Tags from './tags'
 
 const style = {
-  border: '1px dashed gray',
-  padding: '0.5rem 1rem',
-  marginBottom: '.5rem',
+  color: 'black',
   backgroundColor: 'white',
   cursor: 'move'
+}
+const style_sub_tags = {
+  marginLeft: '20px'
 }
 
 const itemSource = {
   beginDrag(props, monitor, component) {
     return {
-      id: props.tag.id,
-      index: props.index,
-      level_index: props.level_index,
-      createSubTag: false
+      id: props.tag.id
     }
   }
-  // endDrag(props, monitor) {
-  //   const item = monitor.getItem()
-  //   const dropResult = monitor.getDropResult()
-
-  //   if (dropResult) {
-  //     //console.log('---end drag', props.tag)
-  //   }
-  // }
 }
 
 const itemTarget = {
-  // hover(props, monitor, component) {
-  //   return
-  //   const source = monitor.getItem()
-  //   const { id: source_id, index: dragIndex } = source
-  //   const { tag: { id: target_id }, index: hoverIndex, dropTag } = props
-
-  //   if (dragIndex === hoverIndex) {
-  //     return
-  //   }
-
-  //   const hoverBoundingRect = findDOMNode(component).getBoundingClientRect()
-  //   const hoverMiddleY = (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2
-  //   const clientOffset = monitor.getClientOffset()
-  //   const hoverClientY = clientOffset.y - hoverBoundingRect.top
-  //   if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) {
-  //     return
-  //   }
-  //   if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) {
-  //     return
-  //   }
-
-  //   dropTag({ start_index: dragIndex, end_index: hoverIndex })
-  //   monitor.getItem().index = hoverIndex
-  // },
-
-  hover(props, monitor, component) {
-    monitor.getItem().createSubTag = false
-  },
-
   drop(props, monitor, component) {
+    const hasDroppedOnChild = monitor.didDrop()
+    if (hasDroppedOnChild) {
+      return
+    }
     const source = monitor.getItem()
-    const {
-      id: source_id,
-      index: start_index,
-      level_index: start_level_index,
-      createSubTag
-    } = source
+    const { id: source_id } = source
     const {
       tag: { id: target_id },
-      index: end_index,
-      level_index: end_level_index,
-      dropTag
+      dropTag,
+      dragElementEnd
     } = props
 
     if (target_id !== source_id) {
       //change items position
-      if (!createSubTag) {
-        dropTag({ source_id, target_id, start_level_index, end_level_index })
-      }
+      dropTag({ source_id, target_id, createSubTag: false })
     }
+    dragElementEnd()
   }
 }
 
-@DropTarget('TAG', itemTarget, connect => ({
-  connectDropTarget: connect.dropTarget()
+@DropTarget('TAG', itemTarget, (connect, monitor) => ({
+  connectDropTarget: connect.dropTarget(),
+  isOverCurrent: monitor.isOver({ shallow: true })
 }))
 @DragSource('TAG', itemSource, (connect, monitor) => ({
   connectDragSource: connect.dragSource(),
@@ -107,13 +66,8 @@ class Tag extends Component {
   componentWillReceiveProps(nextProps) {
     const { isDragging } = this.props
     if (nextProps.isDragging != isDragging) {
-      switch (nextProps.isDragging) {
-        case true:
-          this.props.dragElementStart()
-          break
-        default:
-          this.props.dragElementEnd()
-          break
+      if (nextProps.isDragging) {
+        this.props.dragElementStart()
       }
     }
   }
@@ -122,19 +76,21 @@ class Tag extends Component {
     const {
       tag,
       renderDropInterface,
-      level_index,
       isDragging,
-      dragElementEnd
+      dragElementEnd,
+      isOverCurrent
     } = this.props
     if (!renderDropInterface) {
       return null
     }
+    // if (!isOverCurrent) {
+    //   return null
+    // }
 
     return (
       <DropInterfaceTag
         key={tag.id + '_add_subtag'}
         tag={tag}
-        level_index={level_index}
         isDragging={isDragging}
         dragElementEnd={dragElementEnd}
       />
@@ -142,16 +98,19 @@ class Tag extends Component {
   }
 
   renderSubTags() {
-    const { tag, sub_tags, level_index } = this.props
+    const { tag, sub_tags } = this.props
     if (!sub_tags || !sub_tags[0]) {
       return null
     }
+
     return (
-      <Tags
-        key={tag.id + '_sub_tags'}
-        tag_ids={sub_tags}
-        level_index={level_index}
-      />
+      <div style={style_sub_tags}>
+        <Tags
+          key={tag.id + '_sub_tags'}
+          tag_ids={sub_tags}
+          tab_ids_size={sub_tags.length}
+        />
+      </div>
     )
   }
 
@@ -159,23 +118,23 @@ class Tag extends Component {
     const {
       tag,
       isDragging,
+      isOverCurrent,
       connectDragSource,
       connectDropTarget,
-      level_index
+      sub_tags
     } = this.props
-    const opacity = isDragging ? 0 : 1
-
-    //console.log(tag.title, level_index)
+    const opacity = isDragging ? 0.5 : 1
+    const backgroundColor = isOverCurrent ? 'lightgreen' : 'white'
 
     return connectDragSource(
       connectDropTarget(
         <div>
-          <div style={{ ...style, opacity }} className="tag">
+          <div style={{ ...style, opacity, backgroundColor }} className="tag">
             <div>
               <h5>{tag.title}</h5>
             </div>
-            {this.renderDropInterface()}
             {this.renderSubTags()}
+            {this.renderDropInterface()}
           </div>
         </div>
       )

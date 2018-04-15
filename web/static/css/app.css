@@ -1,11 +1,6 @@
 /* This file is for your main application css. */
 .tags {
-  padding: 5px;
-  border: 1px dashed blue;
   width: 100%;
-}
-.tag {
-  padding: 3px;
 }
 .drop-interface-tag {
   height: 3vh;
