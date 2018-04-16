@@ -34,7 +34,7 @@ export default function(store = INIT_STATE, { type, payload }) {
         saveLayout: false
       }
     case DRAG_ELEMENT_END:
-      return { ...store, saveLayout: false }
+      return { ...store, saveLayout: true }
     case DROP_TAG:
       const { source_id, target_id, createSubTag } = payload
       return {
