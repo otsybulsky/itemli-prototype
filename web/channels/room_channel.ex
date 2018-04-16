@@ -25,6 +25,7 @@ defmodule Itemli.RoomChannel do
     |> order_by(desc: :inserted_at)
     |> limit(1)
     |> Repo.one
+
   end
 
   defp hash_exist(user, new_hash) do    
@@ -83,32 +84,44 @@ defmodule Itemli.RoomChannel do
 
   end
 
+
+  defp get_tag_ids(tag_list) do
+    tag_list
+    |> Enum.map(fn %{"id" => id, "sub_tags" => sub_tags } -> 
+      t_ids = sub_tags
+      |> get_tag_ids
+
+     [id] ++ t_ids end) 
+  end
+
   def handle_in("layout:fetch", %{}, socket) do
     user = socket.assigns.user
-    
-    case get_layout(user) do
-      %{"layout": layout} ->
-        %{"tag_ids" => tag_ids} = layout 
-        stored_layout = Enum.map(tag_ids, fn %{"id" => id} -> id end)
-      _ ->
-        stored_layout = []
-    end
-    
-    new_tags = Tag.roots
-    |> where([t], not(t.id in ^stored_layout) and (t.user_id == ^user.id))
-    |> order_by(desc: :inserted_at)
-    |> Repo.all
-    |> Enum.map(fn %{"id": id} -> id end )
-
-    full_tags = new_tags ++ stored_layout
+    %{"layout": layout} = get_layout(user)
     
     tags = Tag
-    |> where([t], t.id in ^full_tags)
+    |> where([t], t.user_id == type(^user.id, :binary_id))
     |> Repo.all
 
-    full_layout = %{tag_ids: Enum.map(full_tags, fn(id) -> %{id: id, sub_tags: []} end)}
+    %{"tag_ids" => tag_list} = layout
     
-    {:reply, {:ok, %{layout: full_layout, tags: tags}}, socket}
+    tag_ids = tag_list
+    |> get_tag_ids
+    |> List.flatten
+
+    new_tags = Tag
+    |> where([t], not(t.id in ^tag_ids) and (t.user_id == ^user.id))
+    |> order_by(desc: :inserted_at)
+    |> Repo.all
+    |> Enum.map(fn(%{"id": id}) -> %{"id" => id, "sub_tags" => []} end)
+
+    # IO.inspect layout["tag_ids"]
+    # IO.inspect new_tags
+    # IO.inspect new_tags ++ layout["tag_ids"]
+    actual_layout = layout
+    |> Map.put("tag_ids", new_tags ++ layout["tag_ids"])
+
+
+    {:reply, {:ok, %{layout: actual_layout, tags: tags}}, socket}
   end
 
   def handle_in("tabs:add", %{"tabs" => content, "tag_title" => tag_title}, socket) do
