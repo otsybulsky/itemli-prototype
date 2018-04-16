@@ -74,7 +74,7 @@ defmodule Itemli.RoomChannel do
         case Repo.insert(ly) do
           {:ok, _layout} ->
             restrict_layouts_history(user)
-            broadcast! socket, "layout:updated", %{}
+            broadcast_from! socket, "layout:updated", %{}
             {:reply, {:ok, %{message: "Layout saved"}}, socket}
           {:error, changeset} ->
             {:reply, {:error, %{message: "Error save layout"}}, socket}
