@@ -4,3 +4,5 @@ room_channel.ex 54
 remove warnings mix.phx.server
 
 if socket error - block all interface in client
+
+bug - dnd in subtag crasch
