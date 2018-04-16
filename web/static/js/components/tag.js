@@ -92,7 +92,6 @@ class Tag extends Component {
         key={tag.id + '_add_subtag'}
         tag={tag}
         isDragging={isDragging}
-        dragElementEnd={dragElementEnd}
       />
     )
   }
@@ -125,13 +124,13 @@ class Tag extends Component {
 
     return connectDragSource(
       connectDropTarget(
-        <div>
+        <div className="tag-container">
+          {this.renderDropInterface()}
           <div style={{ ...style, opacity, backgroundColor }} className="tag">
             <div>
               <h5>{tag.title}</h5>
             </div>
             {this.renderSubTags()}
-            {this.renderDropInterface()}
           </div>
         </div>
       )

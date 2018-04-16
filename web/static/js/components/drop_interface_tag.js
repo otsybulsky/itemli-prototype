@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { DropTarget } from 'react-dnd'
-import { dropTag } from '../actions'
+import { dragElementEnd, dropTag } from '../actions'
 
 const style = {
   backgroundColor: 'gray',
@@ -44,10 +44,10 @@ class DropInterfaceTag extends Component {
     const backgroundColor = isOverCurrent ? 'red' : 'gray'
     return connectDropTarget(
       <div style={{ ...style, backgroundColor }} className="drop-interface-tag">
-        add sub
+        ++
       </div>
     )
   }
 }
 
-export default connect(null, { dropTag })(DropInterfaceTag)
+export default connect(null, { dragElementEnd, dropTag })(DropInterfaceTag)
