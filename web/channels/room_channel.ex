@@ -74,6 +74,7 @@ defmodule Itemli.RoomChannel do
         case Repo.insert(ly) do
           {:ok, _layout} ->
             restrict_layouts_history(user)
+            broadcast! socket, "layout:updated", %{}
             {:reply, {:ok, %{message: "Layout saved"}}, socket}
           {:error, changeset} ->
             {:reply, {:error, %{message: "Error save layout"}}, socket}
@@ -94,8 +95,11 @@ defmodule Itemli.RoomChannel do
      [id] ++ t_ids end) 
   end
 
+ 
+
   def handle_in("layout:fetch", %{}, socket) do
     user = socket.assigns.user
+    
     %{"layout": layout} = get_layout(user)
     
     tags = Tag
@@ -114,9 +118,6 @@ defmodule Itemli.RoomChannel do
     |> Repo.all
     |> Enum.map(fn(%{"id": id}) -> %{"id" => id, "sub_tags" => []} end)
 
-    # IO.inspect layout["tag_ids"]
-    # IO.inspect new_tags
-    # IO.inspect new_tags ++ layout["tag_ids"]
     actual_layout = layout
     |> Map.put("tag_ids", new_tags ++ layout["tag_ids"])
 

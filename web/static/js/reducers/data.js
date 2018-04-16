@@ -20,7 +20,13 @@ const INIT_STATE = {
 export default function(store = INIT_STATE, { type, payload }) {
   switch (type) {
     case TABS_ADDED:
-      return { ...store, tab_items: [...payload, ...store.tab_items] }
+      return {
+        ...store,
+        tag_ids: [{ id: payload.id, sub_tags: [] }, ...store.tag_ids],
+        tags: { ...{ [payload.id]: payload }, ...store.tags },
+        saveLayout: true
+      }
+
     case FETCH_LAYOUT_OK:
       return {
         ...store,

@@ -79,7 +79,12 @@ export function createSocket() {
     })
 
     channel.on('tabs:added', msg =>
-      dispatch({ type: TABS_ADDED, payload: [msg.content] })
+      dispatch({ type: TABS_ADDED, payload: msg.content })
     )
+
+    channel.on('layout:updated', () => {
+      console.log('LY updated')
+      dispatch(fetchLayout())
+    })
   }
 }
