@@ -51,7 +51,8 @@ exports.config = {
     babel: {
       presets: ['react', 'es2015', 'stage-2'],
       // Do not use ES6 compiler in vendor code
-      ignore: [/web\/static\/vendor/]
+      ignore: [/web\/static\/vendor/],
+      plugins: ['transform-decorators-legacy']
     }
   },
 

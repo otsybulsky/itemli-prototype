@@ -1,7 +1,12 @@
 import { combineReducers } from 'redux'
-import TabsReducer from './tabs'
+import DataReducer from './data'
+import ChannelReducer from './channel'
+import InterfaceReducer from './interface'
+
 const rootReducer = combineReducers({
-  tabs: TabsReducer
+  data: DataReducer,
+  channel: ChannelReducer,
+  interface: InterfaceReducer
 })
 
 export default rootReducer

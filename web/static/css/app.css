@@ -1,1 +1,15 @@
-/* This file is for your main application css. */
+.drop-interface-tag {
+  width: auto;
+  padding: 3px;
+  background: gray;
+  float: left;
+  margin-right: 10px;
+}
+
+.tag-container {
+  height: auto;
+  width: 40vh;
+}
+.tag {
+  height: auto;
+}

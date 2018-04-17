@@ -10,6 +10,7 @@ import logger from 'redux-logger'
 import thunk from 'redux-thunk'
 import reducers from './reducers'
 import App from './components/app'
+import LayoutProvider from './components/layout_provider'
 
 const createStoreWithMiddleware = applyMiddleware(thunk, logger)(createStore)
 
@@ -21,7 +22,9 @@ ReactDOM.render(
         window.__REDUX_DEVTOOLS_EXTENSION__() //for dev only
     )}
   >
-    <App />
+    <LayoutProvider>
+      <App />
+    </LayoutProvider>
   </Provider>,
   document.querySelector('.application')
 )

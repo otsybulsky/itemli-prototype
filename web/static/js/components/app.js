@@ -1,29 +1,26 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import uuidv1 from 'uuid/v1'
+import Tags from './tags_provider'
 
-import { createSocket } from '../socket'
+import { createSocket, fetchLayout } from '../socket'
 
 class App extends Component {
   componentDidMount() {
     this.props.createSocket()
   }
 
-  renderTabs() {
-    if (!this.props.tabs) {
-      return <div />
+  componentWillReceiveProps(nextProps) {
+    if (!this.props.socketConnected) {
+      if (nextProps.socketConnected) {
+        this.props.fetchLayout()
+      }
     }
-    return this.props.tabs.map(tab => {
-      return <li key={uuidv1()}>{tab.title}</li>
-    })
   }
 
   render() {
-    console.log(this.props)
     return (
       <div>
-        <h4>Hello from React !</h4>
-        <ul>{this.renderTabs()}</ul>
+        <Tags />
       </div>
     )
   }
@@ -31,8 +28,8 @@ class App extends Component {
 
 function mapStateToProps(state) {
   return {
-    tabs: state.tabs.tab_items
+    socketConnected: state.channel.socketConnected
   }
 }
 
-export default connect(mapStateToProps, { createSocket })(App)
+export default connect(mapStateToProps, { createSocket, fetchLayout })(App)

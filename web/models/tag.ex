@@ -2,7 +2,7 @@ defmodule Itemli.Tag do
   use Itemli.Web, :model
   use Arbor.Tree, foreign_key_type: :binary_id
 
-  @derive {Poison.Encoder, only: [:title]}
+  @derive {Poison.Encoder, only: [:id, :parent_id, :title, :description]}
 
   schema "tags" do
     field :title, :string
