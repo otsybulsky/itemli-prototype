@@ -11,6 +11,7 @@ defmodule Itemli.Tag do
 
     belongs_to :user, Itemli.User
     belongs_to :parent, __MODULE__  
+    many_to_many :articles, Itemli.Article, join_through: "tags_articles"
     
     timestamps()
   end

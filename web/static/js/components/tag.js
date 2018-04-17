@@ -7,8 +7,8 @@ import { dragElementStart, dragElementEnd, dropTag } from '../actions'
 import DropInterfaceTag from './drop_interface_tag'
 
 import { searchTagInSubTags } from '../helpers'
-
 import Tags from './tags'
+import { fetchArticles } from '../socket'
 
 const style = {
   color: 'black',
@@ -126,7 +126,8 @@ class Tag extends Component {
   }
 
   showArticles(event) {
-    const { tag } = this.props
+    const { tag, fetchArticles } = this.props
+    fetchArticles({ tag_id: tag.id })
     event.stopPropagation()
   }
 
@@ -169,5 +170,6 @@ function mapStateToProps(state) {
 export default connect(mapStateToProps, {
   dragElementStart,
   dragElementEnd,
-  dropTag
+  dropTag,
+  fetchArticles
 })(Tag)

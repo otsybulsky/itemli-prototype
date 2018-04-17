@@ -125,6 +125,20 @@ defmodule Itemli.RoomChannel do
     {:reply, {:ok, %{layout: actual_layout, tags: tags}}, socket}
   end
 
+  def handle_in("articles:fetch", %{"tag_id" => tag_id}, socket) do
+    user = socket.assigns.user
+
+    tag = Tag
+    |> where([t], (t.id == ^tag_id) and (t.user_id == ^user.id))    
+    |> Repo.one
+    |> Repo.preload([:articles])
+    
+    articles = tag.articles
+    |> Enum.map(fn (article) -> %{"id" => article.id, "title" => article.title, "url" => article.url, "favicon" => article.favicon, "description" => article.description  } end)
+
+    {:reply, {:ok, %{articles: articles, tag_id: tag.id}}, socket}
+  end
+
   def handle_in("tabs:add", %{"tabs" => content, "tag_title" => tag_title}, socket) do
 
     user = socket.assigns.user

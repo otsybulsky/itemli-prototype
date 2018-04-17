@@ -25,7 +25,7 @@
 }
 .articles-container {
   border: 1px solid red;
-  min-width: 70%;
+  max-width: 70%;
   float: right;
   padding-left: 25px;
 }

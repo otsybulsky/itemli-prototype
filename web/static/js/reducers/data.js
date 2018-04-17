@@ -7,18 +7,24 @@ import {
   DROP_TAG,
   DRAG_ELEMENT_START,
   DRAG_ELEMENT_END,
-  FETCH_LAYOUT_OK
+  FETCH_LAYOUT_OK,
+  FETCH_ARTICLES_OK
 } from '../constants'
 
 const INIT_STATE = {
   saveLayout: null,
   tag_ids: [],
   tags: {},
-  tab_items: []
+  articles: []
 }
 
 export default function(store = INIT_STATE, { type, payload }) {
   switch (type) {
+    case FETCH_ARTICLES_OK:
+      return {
+        ...store,
+        articles: payload.articles
+      }
     case TABS_ADDED:
       return {
         ...store,
