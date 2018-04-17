@@ -6,6 +6,8 @@ import { DragSource, DropTarget } from 'react-dnd'
 import { dragElementStart, dragElementEnd, dropTag } from '../actions'
 import DropInterfaceTag from './drop_interface_tag'
 
+import { searchTagInSubTags } from '../helpers'
+
 import Tags from './tags'
 
 const style = {
@@ -20,28 +22,40 @@ const style_sub_tags = {
 const itemSource = {
   beginDrag(props, monitor, component) {
     return {
-      id: props.tag.id
+      id: props.tag.id,
+      sub_tags: props.sub_tags,
+      isAvailableDrop: false
     }
   }
 }
 
 const itemTarget = {
+  hover(props, monitor, component) {
+    const { id: source_id, sub_tags } = monitor.getItem()
+    const {
+      tag: { id: target_id }
+    } = props
+
+    monitor.getItem().isAvailableDrop = !searchTagInSubTags(target_id, sub_tags)
+  },
+
   drop(props, monitor, component) {
     const hasDroppedOnChild = monitor.didDrop()
     if (hasDroppedOnChild) {
       return
     }
     const source = monitor.getItem()
-    const { id: source_id } = source
+    const { id: source_id, isAvailableDrop } = source
     const {
       tag: { id: target_id },
       dropTag,
       dragElementEnd
     } = props
 
-    if (target_id !== source_id) {
-      //change items position
-      dropTag({ source_id, target_id, createSubTag: false })
+    if (isAvailableDrop) {
+      if (target_id !== source_id) {
+        dropTag({ source_id, target_id, createSubTag: false })
+      }
     }
     dragElementEnd()
   }
@@ -49,7 +63,8 @@ const itemTarget = {
 
 @DropTarget('TAG', itemTarget, (connect, monitor) => ({
   connectDropTarget: connect.dropTarget(),
-  isOverCurrent: monitor.isOver({ shallow: true })
+  isOverCurrent: monitor.isOver({ shallow: true }),
+  itemSource: monitor.getItem()
 }))
 @DragSource('TAG', itemSource, (connect, monitor) => ({
   connectDragSource: connect.dragSource(),
@@ -72,7 +87,7 @@ class Tag extends Component {
     }
   }
 
-  renderDropInterface() {
+  renderDropInterface(opacity) {
     const {
       tag,
       renderDropInterface,
@@ -83,15 +98,16 @@ class Tag extends Component {
     if (!renderDropInterface) {
       return null
     }
+
     // if (!isOverCurrent) {
     //   return null
     // }
-
     return (
       <DropInterfaceTag
         key={tag.id + '_add_subtag'}
         tag={tag}
         isDragging={isDragging}
+        opacity={opacity}
       />
     )
   }
@@ -117,15 +133,17 @@ class Tag extends Component {
       isOverCurrent,
       connectDragSource,
       connectDropTarget,
-      sub_tags
+      itemSource
     } = this.props
-    const opacity = isDragging ? 0.5 : 1
-    const backgroundColor = isOverCurrent ? 'lightgreen' : 'white'
+    const opacity = isDragging ? 0.25 : 1
+    const isAvailableDrop = itemSource ? itemSource.isAvailableDrop : false
+    const backgroundColor =
+      isAvailableDrop && isOverCurrent ? 'lightgreen' : 'white'
 
     return connectDragSource(
       connectDropTarget(
         <div className="tag-container">
-          {this.renderDropInterface()}
+          {this.renderDropInterface(opacity)}
           <div style={{ ...style, opacity, backgroundColor }} className="tag">
             <div>
               <h5>{tag.title}</h5>

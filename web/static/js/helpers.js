@@ -43,6 +43,19 @@ function insertTag(list, target_id, buf_tag, create_sub_tag) {
   }
 }
 
+export function searchTagInSubTags(tag_id, sub_tags) {
+  for (let i = 0; i < sub_tags.length; i++) {
+    if (sub_tags[i].id === tag_id) {
+      return true
+    } else {
+      const finded = searchTagInSubTags(tag_id, sub_tags[i].sub_tags)
+      if (finded) {
+        return true
+      }
+    }
+  }
+}
+
 export function reorderTagsList(list, source_id, target_id, create_sub_tag) {
   let result = list
   const removed = removeTag(result, source_id)
