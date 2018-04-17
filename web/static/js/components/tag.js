@@ -12,8 +12,7 @@ import Tags from './tags'
 
 const style = {
   color: 'black',
-  backgroundColor: 'white',
-  cursor: 'move'
+  backgroundColor: 'white'
 }
 const style_sub_tags = {
   marginLeft: '20px'
@@ -126,6 +125,11 @@ class Tag extends Component {
     )
   }
 
+  showArticles(event) {
+    const { tag } = this.props
+    event.stopPropagation()
+  }
+
   render() {
     const {
       tag,
@@ -142,7 +146,7 @@ class Tag extends Component {
 
     return connectDragSource(
       connectDropTarget(
-        <div className="tag-container">
+        <div className="tag-container" onClick={ev => this.showArticles(ev)}>
           {this.renderDropInterface(opacity)}
           <div style={{ ...style, opacity, backgroundColor }} className="tag">
             <div>
