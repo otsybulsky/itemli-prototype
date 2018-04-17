@@ -146,7 +146,7 @@ class Tag extends Component {
           {this.renderDropInterface(opacity)}
           <div style={{ ...style, opacity, backgroundColor }} className="tag">
             <div>
-              <h5>{tag.title}</h5>
+              <div className="tag-title">{tag.title}</div>
             </div>
             {this.renderSubTags()}
           </div>

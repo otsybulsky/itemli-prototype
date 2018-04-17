@@ -7,9 +7,25 @@
 }
 
 .tag-container {
+  border: 0px solid gray;
   height: auto;
-  width: 40vh;
+  width: inherit;
 }
 .tag {
   height: auto;
+  min-height: 25px;
+}
+.tag-title {
+  font-weight: bold;
+  font-size: 1.2em;
+}
+.tags-container {
+  border: 1px solid blue;
+  max-width: 30%;
+}
+.articles-container {
+  border: 1px solid red;
+  min-width: 70%;
+  float: right;
+  padding-left: 25px;
 }

@@ -6,12 +6,18 @@ import MultiBackend from 'react-dnd-multi-backend'
 import HTML5toTouch from 'react-dnd-multi-backend/lib/HTML5toTouch'
 
 import Tags from './tags'
+import Articles from './articles'
 
 class TagsProvider extends Component {
   render() {
     return (
       <div>
-        <Tags tag_ids={this.props.tag_ids} />
+        <div>
+          <Articles />
+        </div>
+        <div className="tags-container">
+          <Tags tag_ids={this.props.tag_ids} />
+        </div>
       </div>
     )
   }
