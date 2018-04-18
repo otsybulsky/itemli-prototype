@@ -3,14 +3,18 @@ import { connect } from 'react-redux'
 import Article from './article'
 import { fetchArticles } from '../socket'
 
+import { DragDropContext } from 'react-dnd'
+import MultiBackend from 'react-dnd-multi-backend'
+import HTML5toTouch from 'react-dnd-multi-backend/lib/HTML5toTouch'
+
 class Articles extends Component {
   renderArticles() {
     const { articles } = this.props
     if (!articles) {
       return null
     }
-    return articles.map(article => {
-      return <Article key={article.id} article={article} />
+    return articles.map((article, i) => {
+      return <Article index={i} key={article.id} article={article} />
     })
   }
 

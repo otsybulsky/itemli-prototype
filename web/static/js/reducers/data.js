@@ -1,10 +1,11 @@
 import _ from 'lodash'
 
-import { reorderTagsList } from '../helpers'
+import { reorderTagsList, reorderList } from '../helpers'
 import {
   TABS_ADDED,
   TAGS_FETCH_ALL_OK,
   DROP_TAG,
+  DROP_ARTICLE,
   DRAG_ELEMENT_START,
   DRAG_ELEMENT_END,
   FETCH_LAYOUT_OK,
@@ -77,6 +78,12 @@ export default function(store = INIT_STATE, { type, payload }) {
           target_id,
           createSubTag
         )
+      }
+    case DROP_ARTICLE:
+      const { article, source_index, target_index } = payload
+      return {
+        ...store,
+        articles: reorderList([...store.articles], source_index, target_index)
       }
 
     default:

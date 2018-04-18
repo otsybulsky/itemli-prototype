@@ -8,7 +8,9 @@ export const TAGS_FETCH_ALL_OK = 'TAGS_FETCH_ALL_OK'
 
 export const DRAG_ELEMENT_START = 'DRAG_ELEMENT_START'
 export const DRAG_ELEMENT_END = 'DRAG_ELEMENT_END'
+
 export const DROP_TAG = 'DROP_TAG'
+export const DROP_ARTICLE = 'DROP_ARTICLE'
 
 export const SAVE_LAYOUT = 'SAVE_LAYOUT'
 export const SAVE_LAYOUT_OK = 'SAVE_LAYOUT_OK'
