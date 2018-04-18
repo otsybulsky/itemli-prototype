@@ -34,13 +34,16 @@ export default function(store = INIT_STATE, { type, payload }) {
         ...store,
         articles: articles,
         current_tag_id: tag_id,
-        saveLayout: true
+        saveLayout: store.current_tag_id === tag_id ? false : true
       }
     case TABS_ADDED:
+      const tag = payload
       return {
         ...store,
-        tag_ids: [{ id: payload.id, sub_tags: [] }, ...store.tag_ids],
-        tags: { ...{ [payload.id]: payload }, ...store.tags },
+        tag_ids: [{ id: tag.id, sub_tags: [] }, ...store.tag_ids],
+        tags: { ...{ [tag.id]: tag }, ...store.tags },
+        current_tag_id: tag.id,
+        articles: null,
         saveLayout: true
       }
 
