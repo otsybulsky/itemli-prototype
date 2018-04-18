@@ -127,7 +127,7 @@ class Tag extends Component {
 
   showArticles(event) {
     const { tag, fetchArticles } = this.props
-    fetchArticles({ tag_id: tag.id })
+    fetchArticles(tag.id)
     event.stopPropagation()
   }
 

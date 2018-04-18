@@ -135,7 +135,6 @@ defmodule Itemli.RoomChannel do
     
     articles = tag.articles
     |> Enum.map(fn (article) -> %{"id" => article.id, "title" => article.title, "url" => article.url, "favicon" => article.favicon, "description" => article.description  } end)
-
     {:reply, {:ok, %{articles: articles, tag_id: tag.id}}, socket}
   end
 

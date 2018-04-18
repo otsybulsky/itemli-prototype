@@ -8,22 +8,33 @@ import {
   DRAG_ELEMENT_START,
   DRAG_ELEMENT_END,
   FETCH_LAYOUT_OK,
-  FETCH_ARTICLES_OK
+  FETCH_ARTICLES_OK,
+  SAVE_LAYOUT_OK
 } from '../constants'
 
 const INIT_STATE = {
   saveLayout: null,
+  current_tag_id: null,
   tag_ids: [],
   tags: {},
-  articles: []
+  articles: null
 }
 
 export default function(store = INIT_STATE, { type, payload }) {
   switch (type) {
-    case FETCH_ARTICLES_OK:
+    case SAVE_LAYOUT_OK:
       return {
         ...store,
-        articles: payload.articles
+        saveLayout: false
+      }
+
+    case FETCH_ARTICLES_OK:
+      const { articles, tag_id } = payload
+      return {
+        ...store,
+        articles: articles,
+        current_tag_id: tag_id,
+        saveLayout: true
       }
     case TABS_ADDED:
       return {
@@ -34,10 +45,16 @@ export default function(store = INIT_STATE, { type, payload }) {
       }
 
     case FETCH_LAYOUT_OK:
+      const {
+        layout: { tag_ids, current_tag_id },
+        tags
+      } = payload
       return {
         ...store,
-        tag_ids: payload.layout.tag_ids,
-        tags: _.mapKeys(payload.tags, 'id'),
+        tag_ids: tag_ids,
+        tags: _.mapKeys(tags, 'id'),
+        current_tag_id: current_tag_id,
+        articles: null,
         saveLayout: false
       }
     case DRAG_ELEMENT_START:

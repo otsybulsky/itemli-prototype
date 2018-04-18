@@ -23,7 +23,8 @@ function mapStateToProps(state) {
   return {
     saveLayout: state.data.saveLayout,
     layout: {
-      tag_ids: state.data.tag_ids
+      tag_ids: state.data.tag_ids,
+      current_tag_id: state.data.current_tag_id
     }
   }
 }

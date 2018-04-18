@@ -6,6 +6,7 @@ import {
   TAGS_FETCH_ALL,
   TAGS_FETCH_ALL_OK,
   SAVE_LAYOUT,
+  SAVE_LAYOUT_OK,
   FETCH_LAYOUT,
   FETCH_LAYOUT_OK,
   FETCH_ARTICLES,
@@ -25,7 +26,9 @@ export function saveLayoutToServer(params) {
       dispatch({ type: SAVE_LAYOUT, payload: params })
       channel
         .push('layout:save', params)
-        .receive('ok', message => {})
+        .receive('ok', message => {
+          dispatch({ type: SAVE_LAYOUT_OK, payload: message })
+        })
         .receive('error', err => {
           dispatch(socketError(err))
         })
@@ -44,11 +47,12 @@ export function fetchLayout() {
   }
 }
 
-export function fetchArticles(params) {
+export function fetchArticles(tag_id) {
+  const request = { tag_id: tag_id }
   return dispatch => {
     if (channel) {
-      dispatch({ type: FETCH_ARTICLES, payload: params })
-      channel.push('articles:fetch', params).receive('ok', response => {
+      dispatch({ type: FETCH_ARTICLES, payload: request })
+      channel.push('articles:fetch', request).receive('ok', response => {
         dispatch({ type: FETCH_ARTICLES_OK, payload: response })
       })
     }
@@ -96,7 +100,6 @@ export function createSocket() {
     )
 
     channel.on('layout:updated', () => {
-      console.log('LY updated')
       dispatch(fetchLayout())
     })
   }
