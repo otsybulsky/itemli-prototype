@@ -150,9 +150,7 @@ class Tag extends Component {
         <div className="tag-container" onClick={ev => this.showArticles(ev)}>
           {this.renderDropInterface(opacity)}
           <div style={{ ...style, opacity, backgroundColor }} className="tag">
-            <div>
-              <div className="tag-title">{tag.title}</div>
-            </div>
+            <h6>{tag.title}</h6>
             {this.renderSubTags()}
           </div>
         </div>

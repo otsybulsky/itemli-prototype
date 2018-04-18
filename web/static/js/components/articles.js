@@ -1,16 +1,18 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import Article from './article'
 
 class Articles extends Component {
+  renderArticles() {
+    const { articles } = this.props
+    return articles.map(article => {
+      return <Article article={article} />
+    })
+  }
+
   render() {
     const { articles } = this.props
-    console.log(articles)
-    return (
-      <div className="articles-container">
-        <h3>Articles of ...</h3>
-        <p>{JSON.stringify(articles)}</p>
-      </div>
-    )
+    return <div className="articles-container">{this.renderArticles()}</div>
   }
 }
 

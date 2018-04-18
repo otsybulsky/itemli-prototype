@@ -12,12 +12,11 @@ class TagsProvider extends Component {
   render() {
     return (
       <div>
-        <div>
-          <Articles />
-        </div>
         <div className="tags-container">
           <Tags tag_ids={this.props.tag_ids} />
         </div>
+
+        <Articles />
       </div>
     )
   }

@@ -20,12 +20,23 @@
   font-size: 1.2em;
 }
 .tags-container {
-  border: 1px solid blue;
+  float: left;
+  border: 0px solid blue;
   max-width: 30%;
 }
 .articles-container {
-  border: 1px solid red;
-  max-width: 70%;
-  float: right;
-  padding-left: 25px;
+  border: 0px solid red;
+  padding-left: 5px;
+  margin-left: 30%;
+  width: 70%;
+}
+
+.favicon {
+  float: left;
+  margin-right: 5px;
+  position: inherit;
+  top: 9px;
+  left: 25px;
+  width: 16px;
+  cursor: move;
 }
