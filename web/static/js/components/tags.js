@@ -18,6 +18,8 @@ class Tags extends Component {
           index={i}
           tag={tags[tag_meta.id]}
           sub_tags={tag_meta.sub_tags}
+          collapsed={tag_meta.collapsed}
+          time={Date.now()}
         />
       )
     })

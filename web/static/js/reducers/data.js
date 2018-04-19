@@ -1,6 +1,6 @@
 import _ from 'lodash'
 
-import { reorderTagsList, reorderList } from '../helpers'
+import { reorderTagsList, reorderList, collapseTag } from '../helpers'
 import {
   TABS_ADDED,
   TAGS_FETCH_ALL_OK,
@@ -12,7 +12,8 @@ import {
   FETCH_ARTICLES_OK,
   SAVE_LAYOUT_OK,
   SAVE_ARTICLES_INDEX,
-  UPDATED_ARTICLES_INDEX
+  UPDATED_ARTICLES_INDEX,
+  TAG_COLLAPSE
 } from '../constants'
 
 const INIT_STATE = {
@@ -103,7 +104,12 @@ export default function(store = INIT_STATE, { type, payload }) {
         ...store,
         save_articles_index: false
       }
-
+    case TAG_COLLAPSE:
+      return {
+        ...store,
+        tag_ids: collapseTag([...store.tag_ids], payload.tag_id),
+        saveLayout: true
+      }
     default:
       return store
   }

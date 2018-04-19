@@ -68,7 +68,9 @@ class Article extends Component {
       connectDropTarget(
         <div style={{ opacity }}>
           <img className="favicon" src={favicon} />
-          <h6>{title}</h6>
+          <a href={url} target="_blank">
+            {title}
+          </a>
         </div>
       )
     )
