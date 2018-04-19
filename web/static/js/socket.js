@@ -11,7 +11,8 @@ import {
   FETCH_LAYOUT_OK,
   FETCH_ARTICLES,
   FETCH_ARTICLES_OK,
-  SAVE_ARTICLES_INDEX
+  SAVE_ARTICLES_INDEX,
+  UPDATED_ARTICLES_INDEX
 } from './constants'
 
 let socket = null
@@ -77,6 +78,12 @@ export function fetchArticles(tag_id) {
   }
 }
 
+function updatedArticlesIndex(tag_id) {
+  return dispatch => {
+    dispatch({ type: UPDATED_ARTICLES_INDEX, payload: tag_id })
+  }
+}
+
 export function fetchAllTags() {
   return dispatch => {
     if (channel) {
@@ -119,6 +126,10 @@ export function createSocket() {
 
     channel.on('layout:updated', () => {
       dispatch(fetchLayout())
+    })
+
+    channel.on('articles_index:updated', msg => {
+      dispatch(updatedArticlesIndex(msg.tag_id))
     })
   }
 }

@@ -169,10 +169,12 @@ defmodule Itemli.RoomChannel do
 
     case Repo.update cs do
       {:ok, struct}       -> # Updated with success
+        broadcast_from! socket, "articles_index:updated", %{tag_id: tag_id}
         :ok  
       {:error, changeset} -> # Something went wrong  
         :error
     end
+
 
     
     {:noreply, socket}

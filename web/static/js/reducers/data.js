@@ -11,7 +11,8 @@ import {
   FETCH_LAYOUT_OK,
   FETCH_ARTICLES_OK,
   SAVE_LAYOUT_OK,
-  SAVE_ARTICLES_INDEX
+  SAVE_ARTICLES_INDEX,
+  UPDATED_ARTICLES_INDEX
 } from '../constants'
 
 const INIT_STATE = {
@@ -29,6 +30,15 @@ export default function(store = INIT_STATE, { type, payload }) {
       return {
         ...store,
         saveLayout: false
+      }
+    case UPDATED_ARTICLES_INDEX:
+      if (payload === store.current_tag_id) {
+        return {
+          ...store,
+          articles: null
+        }
+      } else {
+        return store
       }
 
     case FETCH_ARTICLES_OK:
