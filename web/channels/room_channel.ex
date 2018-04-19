@@ -105,6 +105,8 @@ defmodule Itemli.RoomChannel do
     tags = Tag
     |> where([t], t.user_id == type(^user.id, :binary_id))
     |> Repo.all
+    |> Repo.preload([:articles])
+
 
     %{"tag_ids" => tag_list} = layout
     
@@ -121,7 +123,11 @@ defmodule Itemli.RoomChannel do
     actual_layout = layout
     |> Map.put("tag_ids", new_tags ++ layout["tag_ids"])
 
+    tags = Enum.map(tags, fn(tag) -> 
+      %{id: tag.id, title: tag.title, description: tag.description, articles_count: Enum.count(tag.articles)} 
+    end)
 
+    # {:noreply, socket}
     {:reply, {:ok, %{layout: actual_layout, tags: tags}}, socket}
   end
 

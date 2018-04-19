@@ -188,7 +188,9 @@ class Tag extends Component {
           {this.renderCollapsibleInterface()}
           {this.renderDropInterface(opacity)}
           <div style={{ ...style, backgroundColor }} className="tag">
-            <h6>{tag.title}</h6>
+            <h6>
+              {tag.title} ({tag.articles_count})
+            </h6>
             {this.renderSubTags()}
           </div>
         </div>
