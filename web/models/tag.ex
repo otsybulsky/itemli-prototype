@@ -8,6 +8,7 @@ defmodule Itemli.Tag do
     field :title, :string
     field :url, :string
     field :description, :string
+    field :articles_index, :map
 
     belongs_to :user, Itemli.User
     belongs_to :parent, __MODULE__  
@@ -18,7 +19,7 @@ defmodule Itemli.Tag do
 
   def changeset(struct, params \\ %{}) do
     struct
-    |> cast(params, [:parent_id, :title, :url, :description])  
+    |> cast(params, [:parent_id, :title, :url, :description, :articles_index])  
   end
 
   
