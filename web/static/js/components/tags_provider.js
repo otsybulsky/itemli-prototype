@@ -13,7 +13,7 @@ class TagsProvider extends Component {
     return (
       <div>
         <div className="tags-container">
-          <Tags tag_ids={this.props.tag_ids} />
+          <Tags tag_ids={this.props.tag_ids} time={Date.now()} />
         </div>
 
         <Articles />

@@ -64,3 +64,24 @@ export function reorderTagsList(list, source_id, target_id, create_sub_tag) {
   }
   return result
 }
+
+function changeCollapseTag(tag_id, sub_tags) {
+  for (let i = 0; i < sub_tags.length; i++) {
+    if (sub_tags[i].id === tag_id) {
+      sub_tags[i].collapsed = !sub_tags[i].collapsed
+      return true
+    } else {
+      const flag = changeCollapseTag(tag_id, sub_tags[i].sub_tags)
+      if (flag) {
+        return true
+      }
+    }
+  }
+}
+
+export function collapseTag(list, tag_id) {
+  let result = list
+  changeCollapseTag(tag_id, result)
+
+  return result
+}

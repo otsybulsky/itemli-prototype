@@ -11,6 +11,9 @@
   height: auto;
   width: inherit;
 }
+.tag-collapsible {
+  background: bisque;
+}
 .tag {
   height: auto;
   min-height: 25px;
