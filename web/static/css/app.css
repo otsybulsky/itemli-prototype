@@ -7,9 +7,36 @@
 }
 
 .tag-container {
+  border: 0px solid gray;
   height: auto;
-  width: 40vh;
+  width: inherit;
 }
 .tag {
   height: auto;
+  min-height: 25px;
+}
+.tag-title {
+  font-weight: bold;
+  font-size: 1.2em;
+}
+.tags-container {
+  float: left;
+  border: 0px solid blue;
+  max-width: 30%;
+}
+.articles-container {
+  border: 0px solid red;
+  padding-left: 5px;
+  margin-left: 30%;
+  width: 70%;
+}
+
+.favicon {
+  float: left;
+  margin-right: 5px;
+  position: inherit;
+  top: 9px;
+  left: 25px;
+  width: 16px;
+  cursor: move;
 }

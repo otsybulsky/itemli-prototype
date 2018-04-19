@@ -7,13 +7,13 @@ import { dragElementStart, dragElementEnd, dropTag } from '../actions'
 import DropInterfaceTag from './drop_interface_tag'
 
 import { searchTagInSubTags } from '../helpers'
-
 import Tags from './tags'
+import { fetchArticles } from '../socket'
+import { DndTypes } from '../constants'
 
 const style = {
   color: 'black',
-  backgroundColor: 'white',
-  cursor: 'move'
+  backgroundColor: 'white'
 }
 const style_sub_tags = {
   marginLeft: '20px'
@@ -61,12 +61,12 @@ const itemTarget = {
   }
 }
 
-@DropTarget('TAG', itemTarget, (connect, monitor) => ({
+@DropTarget(DndTypes.TAG, itemTarget, (connect, monitor) => ({
   connectDropTarget: connect.dropTarget(),
   isOverCurrent: monitor.isOver({ shallow: true }),
   itemSource: monitor.getItem()
 }))
-@DragSource('TAG', itemSource, (connect, monitor) => ({
+@DragSource(DndTypes.TAG, itemSource, (connect, monitor) => ({
   connectDragSource: connect.dragSource(),
   connectDragPreview: connect.dragPreview(),
   isDragging: monitor.isDragging()
@@ -126,6 +126,12 @@ class Tag extends Component {
     )
   }
 
+  showArticles(event) {
+    const { tag, fetchArticles } = this.props
+    fetchArticles(tag.id)
+    event.stopPropagation()
+  }
+
   render() {
     const {
       tag,
@@ -142,12 +148,10 @@ class Tag extends Component {
 
     return connectDragSource(
       connectDropTarget(
-        <div className="tag-container">
+        <div className="tag-container" onClick={ev => this.showArticles(ev)}>
           {this.renderDropInterface(opacity)}
           <div style={{ ...style, opacity, backgroundColor }} className="tag">
-            <div>
-              <h5>{tag.title}</h5>
-            </div>
+            <h6>{tag.title}</h6>
             {this.renderSubTags()}
           </div>
         </div>
@@ -165,5 +169,6 @@ function mapStateToProps(state) {
 export default connect(mapStateToProps, {
   dragElementStart,
   dragElementEnd,
-  dropTag
+  dropTag,
+  fetchArticles
 })(Tag)
