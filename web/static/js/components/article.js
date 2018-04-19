@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { DragSource, DropTarget } from 'react-dnd'
 import { dropArticle } from '../actions'
+import { saveArticlesIndex } from '../socket'
 
 const itemSource = {
   beginDrag(props, monitor, component) {
@@ -41,6 +42,18 @@ const itemTarget = {
   isDragging: monitor.isDragging()
 }))
 class Article extends Component {
+  componentWillReceiveProps(nextProps) {
+    const {
+      save_articles_index,
+      tag_id,
+      articles,
+      saveArticlesIndex
+    } = nextProps
+    if (!this.props.save_articles_index && save_articles_index) {
+      saveArticlesIndex({ tag_id, articles })
+    }
+  }
+
   render() {
     const {
       article: { title, favicon, url },
@@ -63,8 +76,12 @@ class Article extends Component {
 
 function mapStateToProps(store) {
   return {
-    articles: store.data.articles
+    articles: store.data.articles,
+    save_articles_index: store.data.save_articles_index,
+    tag_id: store.data.current_tag_id
   }
 }
 
-export default connect(mapStateToProps, { dropArticle })(Article)
+export default connect(mapStateToProps, { dropArticle, saveArticlesIndex })(
+  Article
+)

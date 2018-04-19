@@ -132,10 +132,50 @@ defmodule Itemli.RoomChannel do
     |> where([t], (t.id == ^tag_id) and (t.user_id == ^user.id))    
     |> Repo.one
     |> Repo.preload([:articles])
-    
-    articles = tag.articles
+
+    case tag.articles_index do
+      %{"index" => article_ids} ->
+        kw_articles = tag.articles
+        |> Enum.map fn(article) -> {String.to_atom(article.id), article} end
+        
+        articles = article_ids
+        |> Enum.map fn(article_id) ->
+          article = kw_articles[String.to_atom(article_id)] 
+        end
+
+        ids_exists = article_ids
+        |> Enum.map fn(article_id) ->
+          String.to_atom(article_id) 
+        end
+
+        kw_articles = Keyword.drop(kw_articles, ids_exists)
+        articles_without_index = Keyword.to_list(kw_articles)
+        
+        articles = articles ++ articles_without_index
+      _ ->
+        articles = tag.articles
     |> Enum.map(fn (article) -> %{"id" => article.id, "title" => article.title, "url" => article.url, "favicon" => article.favicon, "description" => article.description  } end)
+    end
+    
+    
     {:reply, {:ok, %{articles: articles, tag_id: tag.id}}, socket}
+  end
+
+  def handle_in("tag:reorder_articles", %{"tag_id" => tag_id, "article_ids" => article_ids}, socket) do
+    user = socket.assigns.user
+    
+    cs = Repo.get(Tag, tag_id)
+    |> Ecto.Changeset.change( articles_index: article_ids)
+
+    case Repo.update cs do
+      {:ok, struct}       -> # Updated with success
+        :ok  
+      {:error, changeset} -> # Something went wrong  
+        :error
+    end
+
+    
+    {:noreply, socket}
   end
 
   def handle_in("tabs:add", %{"tabs" => content, "tag_title" => tag_title}, socket) do

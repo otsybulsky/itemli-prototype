@@ -10,7 +10,8 @@ import {
   DRAG_ELEMENT_END,
   FETCH_LAYOUT_OK,
   FETCH_ARTICLES_OK,
-  SAVE_LAYOUT_OK
+  SAVE_LAYOUT_OK,
+  SAVE_ARTICLES_INDEX
 } from '../constants'
 
 const INIT_STATE = {
@@ -18,7 +19,8 @@ const INIT_STATE = {
   current_tag_id: null,
   tag_ids: [],
   tags: {},
-  articles: null
+  articles: null,
+  save_articles_index: null
 }
 
 export default function(store = INIT_STATE, { type, payload }) {
@@ -83,7 +85,13 @@ export default function(store = INIT_STATE, { type, payload }) {
       const { article, source_index, target_index } = payload
       return {
         ...store,
-        articles: reorderList([...store.articles], source_index, target_index)
+        articles: reorderList([...store.articles], source_index, target_index),
+        save_articles_index: true
+      }
+    case SAVE_ARTICLES_INDEX:
+      return {
+        ...store,
+        save_articles_index: false
       }
 
     default:

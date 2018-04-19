@@ -10,7 +10,8 @@ import {
   FETCH_LAYOUT,
   FETCH_LAYOUT_OK,
   FETCH_ARTICLES,
-  FETCH_ARTICLES_OK
+  FETCH_ARTICLES_OK,
+  SAVE_ARTICLES_INDEX
 } from './constants'
 
 let socket = null
@@ -18,6 +19,23 @@ let channel = null
 
 function socketError(err) {
   return { type: SOCKET_ERROR, payload: { error: err } }
+}
+
+export function saveArticlesIndex(params) {
+  return dispatch => {
+    dispatch({ type: SAVE_ARTICLES_INDEX, payload: params })
+    if (channel) {
+      const { tag_id, articles } = params
+
+      let article_ids = articles.map(article => {
+        return article.id
+      })
+      channel.push('tag:reorder_articles', {
+        tag_id: tag_id,
+        article_ids: { index: article_ids }
+      })
+    }
+  }
 }
 
 export function saveLayoutToServer(params) {
