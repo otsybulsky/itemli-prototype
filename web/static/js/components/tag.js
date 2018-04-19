@@ -9,6 +9,7 @@ import DropInterfaceTag from './drop_interface_tag'
 import { searchTagInSubTags } from '../helpers'
 import Tags from './tags'
 import { fetchArticles } from '../socket'
+import { DndTypes } from '../constants'
 
 const style = {
   color: 'black',
@@ -60,12 +61,12 @@ const itemTarget = {
   }
 }
 
-@DropTarget('TAG', itemTarget, (connect, monitor) => ({
+@DropTarget(DndTypes.TAG, itemTarget, (connect, monitor) => ({
   connectDropTarget: connect.dropTarget(),
   isOverCurrent: monitor.isOver({ shallow: true }),
   itemSource: monitor.getItem()
 }))
-@DragSource('TAG', itemSource, (connect, monitor) => ({
+@DragSource(DndTypes.TAG, itemSource, (connect, monitor) => ({
   connectDragSource: connect.dragSource(),
   connectDragPreview: connect.dragPreview(),
   isDragging: monitor.isDragging()

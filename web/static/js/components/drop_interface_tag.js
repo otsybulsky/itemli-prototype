@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { DropTarget } from 'react-dnd'
 import { dragElementEnd, dropTag } from '../actions'
 import { searchTagInSubTags } from '../helpers'
+import { DndTypes } from '../constants'
 
 const style = {
   backgroundColor: 'gray',
@@ -46,7 +47,7 @@ const itemTarget = {
   }
 }
 
-@DropTarget('TAG', itemTarget, (connect, monitor) => ({
+@DropTarget(DndTypes.TAG, itemTarget, (connect, monitor) => ({
   connectDropTarget: connect.dropTarget(),
   isOverCurrent: monitor.isOver({ shallow: true }),
   itemSource: monitor.getItem()

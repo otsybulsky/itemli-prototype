@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { DragSource, DropTarget } from 'react-dnd'
 import { dropArticle } from '../actions'
 import { saveArticlesIndex } from '../socket'
+import { DndTypes } from '../constants'
 
 const itemSource = {
   beginDrag(props, monitor, component) {
@@ -33,11 +34,11 @@ const itemTarget = {
   }
 }
 
-@DropTarget('ARTICLE', itemTarget, (connect, monitor) => ({
+@DropTarget(DndTypes.ARTICLE, itemTarget, (connect, monitor) => ({
   connectDropTarget: connect.dropTarget(),
   isOverCurrent: monitor.isOver({ shallow: true })
 }))
-@DragSource('ARTICLE', itemSource, (connect, monitor) => ({
+@DragSource(DndTypes.ARTICLE, itemSource, (connect, monitor) => ({
   connectDragSource: connect.dragSource(),
   isDragging: monitor.isDragging()
 }))
