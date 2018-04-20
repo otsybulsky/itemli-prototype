@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { findDOMNode } from 'react-dom'
 import { DragSource, DropTarget } from 'react-dnd'
+import { DndTypes } from '../constants'
 
 import {
   dragElementStart,
@@ -9,12 +10,11 @@ import {
   dropTag,
   collapseTag
 } from '../actions'
-import DropInterfaceTag from './drop_interface_tag'
-
-import { searchTagInSubTags } from '../helpers'
-import Tags from './tags'
 import { fetchArticles } from '../socket'
-import { DndTypes } from '../constants'
+import { searchTagInSubTags } from '../helpers'
+
+import Tags from './tags'
+import DropInterfaceTag from './drop_interface_tag'
 
 const style = {
   color: 'black',
@@ -131,9 +131,6 @@ class Tag extends Component {
       return null
     }
 
-    // if (!isOverCurrent) {
-    //   return null
-    // }
     return (
       <DropInterfaceTag
         key={tag.id + '_add_subtag'}
@@ -150,10 +147,13 @@ class Tag extends Component {
       return null
     }
 
-    // time for force render, react view change props for 1 objects level
     return (
       <div style={style_sub_tags}>
-        <Tags key={tag.id + '_sub_tags'} tag_ids={sub_tags} time={Date.now()} />
+        <Tags
+          key={tag.id + '_sub_tags'}
+          tag_ids={sub_tags}
+          forceRefresh={Date.now()}
+        />
       </div>
     )
   }
@@ -173,6 +173,7 @@ class Tag extends Component {
       connectDropTarget,
       itemSource
     } = this.props
+
     const opacity = isDragging ? 0.25 : 1
     const isAvailableDrop = itemSource ? itemSource.isAvailableDrop : false
     const backgroundColor =
@@ -203,6 +204,19 @@ function mapStateToProps(state) {
   return {
     renderDropInterface: state.interface.renderDropInterface
   }
+}
+
+Tag.propTypes = {
+  tag: PropTypes.object.isRequired,
+  sub_tags: PropTypes.array.isRequired,
+  collapsed: PropTypes.bool.isRequired,
+  forceRefresh: PropTypes.number.isRequired,
+
+  dragElementStart: PropTypes.func.isRequired,
+  dragElementEnd: PropTypes.func.isRequired,
+  dropTag: PropTypes.func.isRequired,
+  collapseTag: PropTypes.func.isRequired,
+  fetchArticles: PropTypes.func.isRequired
 }
 
 export default connect(mapStateToProps, {
