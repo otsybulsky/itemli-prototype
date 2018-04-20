@@ -207,6 +207,7 @@ function mapStateToProps(state) {
 }
 
 Tag.propTypes = {
+  renderDropInterface: PropTypes.bool.isRequired,
   tag: PropTypes.object.isRequired,
   sub_tags: PropTypes.array.isRequired,
   collapsed: PropTypes.bool.isRequired,
