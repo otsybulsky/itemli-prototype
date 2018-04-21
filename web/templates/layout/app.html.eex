@@ -10,8 +10,9 @@
     <title>Hello Itemli!</title>
     <link rel="stylesheet" href="<%= static_path(@conn, "/css/app.css") %>">
     
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/css/materialize.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+
     <script>
       <%= if @conn.assigns.user do %>
         window.userToken = "<%= Phoenix.Token.sign(Itemli.Endpoint, Application.get_env(:itemli, :token_secret), @conn.assigns.user.id) %>" 
