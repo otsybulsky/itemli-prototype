@@ -12,7 +12,9 @@ import {
   FETCH_ARTICLES,
   FETCH_ARTICLES_OK,
   SAVE_ARTICLES_INDEX,
-  UPDATED_ARTICLES_INDEX
+  UPDATED_ARTICLES_INDEX,
+  TAG_EDIT_APPLY,
+  TAG_EDIT_APPLY_OK
 } from './constants'
 
 let socket = null
@@ -20,6 +22,13 @@ let channel = null
 
 function socketError(err) {
   return { type: SOCKET_ERROR, payload: { error: err } }
+}
+
+export function editTagApply(params) {
+  return dispatch => {
+    dispatch({ type: TAG_EDIT_APPLY, payload: params })
+    dispatch({ type: TAG_EDIT_APPLY_OK, payload: params })
+  }
 }
 
 export function saveArticlesIndex(params) {

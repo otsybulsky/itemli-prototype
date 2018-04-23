@@ -13,7 +13,10 @@ import {
   SAVE_LAYOUT_OK,
   SAVE_ARTICLES_INDEX,
   UPDATED_ARTICLES_INDEX,
-  TAG_COLLAPSE
+  TAG_COLLAPSE,
+  TAG_EDIT,
+  TAG_EDIT_CANCEL,
+  TAG_EDIT_APPLY_OK
 } from '../constants'
 
 const INIT_STATE = {
@@ -22,11 +25,28 @@ const INIT_STATE = {
   tag_ids: [],
   tags: {},
   articles: null,
-  save_articles_index: null
+  save_articles_index: null,
+  tag_edit_flag: null,
+  tag_edit_id: null
 }
 
 export default function(store = INIT_STATE, { type, payload }) {
   switch (type) {
+    case TAG_EDIT_APPLY_OK:
+      return {
+        ...store,
+        tag_edit_flag: false
+      }
+    case TAG_EDIT_CANCEL:
+      return {
+        ...store,
+        tag_edit_flag: false
+      }
+    case TAG_EDIT:
+      return {
+        ...store,
+        tag_edit_flag: true
+      }
     case SAVE_LAYOUT_OK:
       return {
         ...store,

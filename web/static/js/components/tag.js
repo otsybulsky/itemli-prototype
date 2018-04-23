@@ -202,7 +202,7 @@ class Tag extends Component {
 
 function mapStateToProps(state) {
   return {
-    renderDropInterface: state.interface.renderDropInterface
+    renderDropInterface: state.interface.renderDropInterface || false
   }
 }
 
