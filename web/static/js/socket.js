@@ -27,7 +27,23 @@ function socketError(err) {
 export function editTagApply(params) {
   return dispatch => {
     dispatch({ type: TAG_EDIT_APPLY, payload: params })
-    dispatch({ type: TAG_EDIT_APPLY_OK, payload: params })
+    if (channel) {
+      const { id, title, description } = params
+      channel
+        .push('tag:edit', {
+          tag_id: id,
+          title: title,
+          description: description
+        })
+        .receive('ok', message => {
+          dispatch({ type: TAG_EDIT_APPLY_OK, payload: message })
+          dispatch(fetchLayout(message.id))
+        })
+        .receive('error', err => {
+          //dispatch(socketError(err))
+        })
+    }
+    //
   }
 }
 
@@ -64,12 +80,15 @@ export function saveLayoutToServer(params) {
   }
 }
 
-export function fetchLayout() {
+export function fetchLayout(tag_id) {
   return dispatch => {
     if (channel) {
       dispatch({ type: FETCH_LAYOUT })
       channel.push('layout:fetch').receive('ok', response => {
         dispatch({ type: FETCH_LAYOUT_OK, payload: response })
+        if (tag_id) {
+          dispatch(fetchArticles(tag_id))
+        }
       })
     }
   }

@@ -5,6 +5,23 @@ export function reorderList(list, startIndex, endIndex) {
   return result
 }
 
+// function processCheckTagIds(list) {
+//   for (let i = 0; i < list.length; i++) {
+//     if (!list[i].id) {
+//       const [removed] = list.splice(i, 1)
+//       processCheckTagIds(list)
+//     }
+//     processCheckTagIds(list[i].sub_tags)
+//   }
+// }
+
+// export function checkTagIds(list) {
+//   let result = list
+//   processCheckTagIds(result)
+//   console.log(result)
+//   return result
+// }
+
 function removeTag(list, id) {
   for (let i = 0; i < list.length; i++) {
     if (list[i].id === id) {

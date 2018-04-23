@@ -88,11 +88,17 @@ defmodule Itemli.RoomChannel do
 
   defp get_tag_ids(tag_list) do
     tag_list
-    |> Enum.map(fn %{"id" => id, "sub_tags" => sub_tags } -> 
-      t_ids = sub_tags
-      |> get_tag_ids
-
-     [id] ++ t_ids end) 
+    |> Enum.map(fn item ->
+      case item do
+        %{"id" => id, "sub_tags" => sub_tags } ->
+          t_ids = sub_tags
+          |> get_tag_ids
+    
+         [id] ++ t_ids  
+         _ ->
+          []
+      end
+    end) 
   end
 
  
@@ -113,6 +119,8 @@ defmodule Itemli.RoomChannel do
     tag_ids = tag_list
     |> get_tag_ids
     |> List.flatten
+   
+
 
     new_tags = Tag
     |> where([t], not(t.id in ^tag_ids) and (t.user_id == ^user.id))
@@ -180,10 +188,32 @@ defmodule Itemli.RoomChannel do
       {:error, changeset} -> # Something went wrong  
         :error
     end
-
-
-    
     {:noreply, socket}
+  end
+
+  def handle_in("tag:edit", params, socket) do
+    user = socket.assigns.user
+
+    case params do
+      %{"title" => title, "description" => description} ->
+        #insert new tag
+        new_tag = user
+        |> build_assoc(:tags)
+        |> Tag.changeset(%{title: title, description: description })
+        case Repo.insert(new_tag) do
+          {:ok, tag} ->
+            {:reply, {:ok, %{id: tag.id}},socket}
+          {:error, reason} ->
+            {:reply, {:error, %{errors: reason}}, socket}  
+        end
+
+
+      %{"tag_id" => tag_id, "title" => title, "description" => description} ->  
+        #update tag
+        {:reply, {:error, %{message: "Bad params"}}, socket}
+      _ -> 
+        {:reply, {:error, %{message: "Bad params"}}, socket}
+    end
   end
 
   def handle_in("tabs:add", %{"tabs" => content, "tag_title" => tag_title}, socket) do

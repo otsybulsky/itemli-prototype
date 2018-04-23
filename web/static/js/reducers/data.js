@@ -86,6 +86,7 @@ export default function(store = INIT_STATE, { type, payload }) {
         layout: { tag_ids, current_tag_id },
         tags
       } = payload
+
       return {
         ...store,
         tag_ids: tag_ids,
