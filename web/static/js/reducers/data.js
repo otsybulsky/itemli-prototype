@@ -27,7 +27,7 @@ const INIT_STATE = {
   articles: null,
   save_articles_index: null,
   tag_edit_flag: null,
-  tag_edit_id: null
+  tag_for_edit: null
 }
 
 export default function(store = INIT_STATE, { type, payload }) {
@@ -35,17 +35,20 @@ export default function(store = INIT_STATE, { type, payload }) {
     case TAG_EDIT_APPLY_OK:
       return {
         ...store,
-        tag_edit_flag: false
+        tag_edit_flag: false,
+        tag_for_edit: null
       }
     case TAG_EDIT_CANCEL:
       return {
         ...store,
-        tag_edit_flag: false
+        tag_edit_flag: false,
+        tag_for_edit: null
       }
     case TAG_EDIT:
       return {
         ...store,
-        tag_edit_flag: true
+        tag_edit_flag: true,
+        tag_for_edit: payload
       }
     case SAVE_LAYOUT_OK:
       return {

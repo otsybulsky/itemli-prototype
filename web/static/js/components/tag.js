@@ -15,6 +15,7 @@ import { searchTagInSubTags } from '../helpers'
 
 import Tags from './tags'
 import DropInterfaceTag from './drop_interface_tag'
+import TagBody from './tag_body'
 
 const style = {
   color: 'black',
@@ -189,9 +190,8 @@ class Tag extends Component {
           {this.renderCollapsibleInterface()}
           {this.renderDropInterface(opacity)}
           <div style={{ ...style }} className="tag">
-            <h6>
-              {tag.title} ({tag.articles_count})
-            </h6>
+            <TagBody tag={tag} />
+
             {this.renderSubTags()}
           </div>
         </div>

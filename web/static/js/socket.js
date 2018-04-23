@@ -40,6 +40,7 @@ export function editTagApply(params) {
           dispatch(fetchLayout(message.id))
         })
         .receive('error', err => {
+          console.log(err)
           //dispatch(socketError(err))
         })
     }

@@ -8,10 +8,12 @@ import { editTagApply } from '../socket'
 class TagEdit extends Component {
   constructor(props) {
     super(props)
+
     this.state = {
       title: '',
       description: ''
     }
+
     this.onTitleChange = this.onTitleChange.bind(this)
     this.onDescriptionChange = this.onDescriptionChange.bind(this)
     this.onFormSubmit = this.onFormSubmit.bind(this)
@@ -30,6 +32,29 @@ class TagEdit extends Component {
     this.props.editTagCancel()
   }
 
+  setLocalState(props) {
+    if (props.tag_for_edit) {
+      const {
+        tag_for_edit: { id, title, description }
+      } = props
+      this.setState({ id: id })
+      this.setState({ title: title || '' })
+      this.setState({ description: description || '' })
+    } else {
+      this.setState({ id: undefined })
+      this.setState({ title: '' })
+      this.setState({ description: '' })
+    }
+  }
+
+  componentDidMount() {
+    this.setLocalState(this.props)
+  }
+
+  componentWillReceiveProps(nextProps) {
+    this.setLocalState(nextProps)
+  }
+
   render() {
     return (
       <div className="form-container">
@@ -43,7 +68,7 @@ class TagEdit extends Component {
             placeholder="enter title a tag"
             s={4}
             label="Title"
-            value={this.state.title}
+            value={this.state.title || ''}
             onChange={this.onTitleChange}
           />
           <Input
@@ -52,7 +77,7 @@ class TagEdit extends Component {
             s={6}
             label="Description"
             type="textarea"
-            value={this.state.description}
+            value={this.state.description || ''}
             onChange={this.onDescriptionChange}
           />
           <Button type="submit">Apply</Button>
@@ -64,4 +89,12 @@ class TagEdit extends Component {
 
 TagEdit.propTypes = {}
 
-export default connect(null, { editTagCancel, editTagApply })(TagEdit)
+function mapStateToProps(state) {
+  return {
+    tag_for_edit: state.data.tag_for_edit
+  }
+}
+
+export default connect(mapStateToProps, { editTagCancel, editTagApply })(
+  TagEdit
+)

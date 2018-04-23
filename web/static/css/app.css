@@ -18,6 +18,11 @@
   height: auto;
   min-height: 25px;
 }
+.tag-body h6,
+i {
+  display: inline-block;
+  margin-right: 5px;
+}
 .tag-title {
   font-weight: bold;
   font-size: 1.2em;

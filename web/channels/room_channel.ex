@@ -195,6 +195,18 @@ defmodule Itemli.RoomChannel do
     user = socket.assigns.user
 
     case params do
+      %{"tag_id" => tag_id, "title" => title, "description" => description} ->  
+        #update tag
+        
+        cs = Repo.get(Tag, tag_id)
+        |> Ecto.Changeset.change( title: title, description: description)
+        case Repo.update cs do
+          {:ok, tag}       -> # Updated with success
+            {:reply, {:ok, %{id: tag.id}},socket}
+          {:error, changeset} -> # Something went wrong  
+          {:reply, {:error, %{message: "DB error"}}, socket}    
+        end
+
       %{"title" => title, "description" => description} ->
         #insert new tag
         new_tag = user
@@ -206,11 +218,6 @@ defmodule Itemli.RoomChannel do
           {:error, reason} ->
             {:reply, {:error, %{errors: reason}}, socket}  
         end
-
-
-      %{"tag_id" => tag_id, "title" => title, "description" => description} ->  
-        #update tag
-        {:reply, {:error, %{message: "Bad params"}}, socket}
       _ -> 
         {:reply, {:error, %{message: "Bad params"}}, socket}
     end
