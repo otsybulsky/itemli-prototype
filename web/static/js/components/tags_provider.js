@@ -49,14 +49,16 @@ TagsProvider = DragDropContext(MultiBackend(HTML5toTouch))(TagsProvider)
 function mapStateToProps(state) {
   return {
     tag_ids: state.data.tag_ids,
-    tag_edit_flag: state.data.tag_edit_flag || false
+    tag_edit_flag: state.data.tag_edit_flag || false,
+    articles_without_tag_count: state.data.articles_without_tag_count || 0
   }
 }
 
 TagsProvider.propTypes = {
   tag_ids: PropTypes.array.isRequired,
   editTag: PropTypes.func.isRequired,
-  tag_edit_flag: PropTypes.bool.isRequired
+  tag_edit_flag: PropTypes.bool.isRequired,
+  articles_without_tag_count: PropTypes.number.isRequired
 }
 
 export default connect(mapStateToProps, { editTag })(TagsProvider)
