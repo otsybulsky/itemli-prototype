@@ -14,15 +14,12 @@ class TagBody extends Component {
 
   renderEditInterface() {
     const { onHover } = this.state
-    if (!onHover) return null
+    //if (!onHover) return null
 
     return (
-      <i
-        className="tiny material-icons blue-text"
-        onClick={ev => this.onEditClick(ev)}
-      >
-        edit
-      </i>
+      <div className="tag-body-interface" onClick={ev => this.onEditClick(ev)}>
+        <i className="tiny material-icons">edit</i>
+      </div>
     )
   }
 

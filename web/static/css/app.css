@@ -19,9 +19,16 @@
   min-height: 25px;
 }
 .tag-body h6,
-i {
+.tag-body-interface {
   display: inline-block;
   margin-right: 5px;
+}
+.tag-body-interface {
+  color: blue;
+}
+.tag-body-interface:hover {
+  color: white;
+  background: blue;
 }
 .hover-tag-body {
   background: lightgray;
