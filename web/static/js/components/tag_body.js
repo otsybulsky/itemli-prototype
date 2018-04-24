@@ -14,11 +14,27 @@ class TagBody extends Component {
 
   renderEditInterface() {
     const { onHover } = this.state
-    //if (!onHover) return null
+    if (!onHover) return null
+
+    const editInterface = (
+      <div className="tag-body-interface" onClick={ev => this.onEditClick(ev)}>
+        <i className="small material-icons">edit</i>
+      </div>
+    )
+
+    const deleteInterface = (
+      <div
+        className="tag-body-interface"
+        onClick={ev => this.onDeleteClick(ev)}
+      >
+        <i className="small material-icons">delete</i>
+      </div>
+    )
 
     return (
-      <div className="tag-body-interface" onClick={ev => this.onEditClick(ev)}>
-        <i className="tiny material-icons">edit</i>
+      <div>
+        {editInterface}
+        {deleteInterface}
       </div>
     )
   }
@@ -26,6 +42,9 @@ class TagBody extends Component {
   onEditClick(event) {
     const { tag, editTag } = this.props
     editTag(tag)
+    event.stopPropagation()
+  }
+  onDeleteClick(event) {
     event.stopPropagation()
   }
 

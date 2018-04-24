@@ -28,7 +28,7 @@
 }
 .tag-body-interface:hover {
   color: white;
-  background: blue;
+  background: red;
 }
 .hover-tag-body {
   background: lightgray;
