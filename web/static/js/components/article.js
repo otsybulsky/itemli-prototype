@@ -66,7 +66,7 @@ class Article extends Component {
     const opacity = isDragging ? 0.25 : 1
     return connectDragSource(
       connectDropTarget(
-        <div style={{ opacity }}>
+        <div className="article" style={{ opacity }}>
           <img className="favicon" src={favicon} />
           <a href={url} target="_blank">
             {title}

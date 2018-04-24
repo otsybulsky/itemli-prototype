@@ -6,6 +6,7 @@ import MultiBackend from 'react-dnd-multi-backend'
 import HTML5toTouch from 'react-dnd-multi-backend/lib/HTML5toTouch'
 import Tags from './tags'
 import Articles from './articles'
+import ArticlesUnbound from './articles_unbound'
 import TagEdit from './tag_edit'
 import { editTag } from '../actions'
 
@@ -26,6 +27,17 @@ class TagsProvider extends Component {
     return <Articles />
   }
 
+  renderUnbounds() {
+    const { articles_without_tag_count } = this.props
+    if (articles_without_tag_count == 0) return null
+
+    return (
+      <ArticlesUnbound
+        articles_without_tag_count={articles_without_tag_count}
+      />
+    )
+  }
+
   render() {
     return (
       <div>
@@ -36,8 +48,11 @@ class TagsProvider extends Component {
           >
             <i className="material-icons">add</i>
           </a>
+          {this.renderUnbounds()}
+          <hr />
           <Tags tag_ids={this.props.tag_ids} forceRefresh={Date.now()} />
         </div>
+
         {this.renderBody()}
       </div>
     )
