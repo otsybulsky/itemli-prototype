@@ -159,18 +159,13 @@ defmodule Itemli.RoomChannel do
         
         kw_articles = tag.articles
         |> Enum.map fn(article) -> {String.to_atom(article.id), article} end
-        
-        IO.puts "------------------- kw_articles"
-        IO.inspect kw_articles
-
+       
         articles = article_ids
         |> Enum.map(fn(article_id) ->
           article = kw_articles[String.to_atom(article_id)] 
         end)
         |> Enum.reject(&is_nil/1)
-        IO.puts "------------------- articles"
-        IO.inspect articles
-
+       
         ids_exists = article_ids
         |> Enum.map fn(article_id) ->
           String.to_atom(article_id) 
