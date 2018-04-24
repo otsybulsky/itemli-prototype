@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { findDOMNode } from 'react-dom'
 import { DragSource, DropTarget } from 'react-dnd'
+import { DndTypes } from '../constants'
 
 import {
   dragElementStart,
@@ -9,12 +10,12 @@ import {
   dropTag,
   collapseTag
 } from '../actions'
-import DropInterfaceTag from './drop_interface_tag'
-
-import { searchTagInSubTags } from '../helpers'
-import Tags from './tags'
 import { fetchArticles } from '../socket'
-import { DndTypes } from '../constants'
+import { searchTagInSubTags } from '../helpers'
+
+import Tags from './tags'
+import DropInterfaceTag from './drop_interface_tag'
+import TagBody from './tag_body'
 
 const style = {
   color: 'black',
@@ -131,9 +132,6 @@ class Tag extends Component {
       return null
     }
 
-    // if (!isOverCurrent) {
-    //   return null
-    // }
     return (
       <DropInterfaceTag
         key={tag.id + '_add_subtag'}
@@ -150,10 +148,13 @@ class Tag extends Component {
       return null
     }
 
-    // time for force render, react view change props for 1 objects level
     return (
       <div style={style_sub_tags}>
-        <Tags key={tag.id + '_sub_tags'} tag_ids={sub_tags} time={Date.now()} />
+        <Tags
+          key={tag.id + '_sub_tags'}
+          tag_ids={sub_tags}
+          forceRefresh={Date.now()}
+        />
       </div>
     )
   }
@@ -173,10 +174,13 @@ class Tag extends Component {
       connectDropTarget,
       itemSource
     } = this.props
+
     const opacity = isDragging ? 0.25 : 1
     const isAvailableDrop = itemSource ? itemSource.isAvailableDrop : false
     const backgroundColor =
       isAvailableDrop && isOverCurrent ? 'lightgreen' : 'white'
+
+    //{this.renderDropInterface(opacity)}
 
     return connectDragSource(
       connectDropTarget(
@@ -186,11 +190,10 @@ class Tag extends Component {
           onClick={ev => this.showArticles(ev)}
         >
           {this.renderCollapsibleInterface()}
-          {this.renderDropInterface(opacity)}
-          <div style={{ ...style, backgroundColor }} className="tag">
-            <h6>
-              {tag.title} ({tag.articles_count})
-            </h6>
+
+          <div style={{ ...style }} className="tag">
+            <TagBody tag={tag} isDragOverCurrent={isOverCurrent} />
+
             {this.renderSubTags()}
           </div>
         </div>
@@ -201,8 +204,22 @@ class Tag extends Component {
 
 function mapStateToProps(state) {
   return {
-    renderDropInterface: state.interface.renderDropInterface
+    renderDropInterface: state.interface.renderDropInterface || false
   }
+}
+
+Tag.propTypes = {
+  renderDropInterface: PropTypes.bool.isRequired,
+  tag: PropTypes.object.isRequired,
+  sub_tags: PropTypes.array.isRequired,
+  collapsed: PropTypes.bool.isRequired,
+  forceRefresh: PropTypes.number.isRequired,
+
+  dragElementStart: PropTypes.func.isRequired,
+  dragElementEnd: PropTypes.func.isRequired,
+  dropTag: PropTypes.func.isRequired,
+  collapseTag: PropTypes.func.isRequired,
+  fetchArticles: PropTypes.func.isRequired
 }
 
 export default connect(mapStateToProps, {

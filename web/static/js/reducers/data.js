@@ -1,6 +1,11 @@
 import _ from 'lodash'
 
-import { reorderTagsList, reorderList, collapseTag } from '../helpers'
+import {
+  reorderTagsList,
+  reorderList,
+  collapseTag,
+  checkTagIds
+} from '../helpers'
 import {
   TABS_ADDED,
   TAGS_FETCH_ALL_OK,
@@ -13,7 +18,10 @@ import {
   SAVE_LAYOUT_OK,
   SAVE_ARTICLES_INDEX,
   UPDATED_ARTICLES_INDEX,
-  TAG_COLLAPSE
+  TAG_COLLAPSE,
+  TAG_EDIT,
+  TAG_EDIT_CANCEL,
+  TAG_EDIT_APPLY_OK
 } from '../constants'
 
 const INIT_STATE = {
@@ -22,11 +30,31 @@ const INIT_STATE = {
   tag_ids: [],
   tags: {},
   articles: null,
-  save_articles_index: null
+  save_articles_index: null,
+  tag_edit_flag: null,
+  tag_for_edit: null
 }
 
 export default function(store = INIT_STATE, { type, payload }) {
   switch (type) {
+    case TAG_EDIT_APPLY_OK:
+      return {
+        ...store,
+        tag_edit_flag: false,
+        tag_for_edit: null
+      }
+    case TAG_EDIT_CANCEL:
+      return {
+        ...store,
+        tag_edit_flag: false,
+        tag_for_edit: null
+      }
+    case TAG_EDIT:
+      return {
+        ...store,
+        tag_edit_flag: true,
+        tag_for_edit: payload
+      }
     case SAVE_LAYOUT_OK:
       return {
         ...store,
@@ -66,9 +94,10 @@ export default function(store = INIT_STATE, { type, payload }) {
         layout: { tag_ids, current_tag_id },
         tags
       } = payload
+
       return {
         ...store,
-        tag_ids: tag_ids,
+        tag_ids: checkTagIds(tag_ids),
         tags: _.mapKeys(tags, 'id'),
         current_tag_id: current_tag_id,
         articles: null,

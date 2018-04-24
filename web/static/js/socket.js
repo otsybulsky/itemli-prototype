@@ -12,7 +12,9 @@ import {
   FETCH_ARTICLES,
   FETCH_ARTICLES_OK,
   SAVE_ARTICLES_INDEX,
-  UPDATED_ARTICLES_INDEX
+  UPDATED_ARTICLES_INDEX,
+  TAG_EDIT_APPLY,
+  TAG_EDIT_APPLY_OK
 } from './constants'
 
 let socket = null
@@ -20,6 +22,30 @@ let channel = null
 
 function socketError(err) {
   return { type: SOCKET_ERROR, payload: { error: err } }
+}
+
+export function editTagApply(params) {
+  return dispatch => {
+    dispatch({ type: TAG_EDIT_APPLY, payload: params })
+    if (channel) {
+      const { id, title, description } = params
+      channel
+        .push('tag:edit', {
+          tag_id: id,
+          title: title,
+          description: description
+        })
+        .receive('ok', message => {
+          dispatch({ type: TAG_EDIT_APPLY_OK, payload: message })
+          dispatch(fetchLayout(message.id))
+        })
+        .receive('error', err => {
+          console.log(err)
+          //dispatch(socketError(err))
+        })
+    }
+    //
+  }
 }
 
 export function saveArticlesIndex(params) {
@@ -55,12 +81,15 @@ export function saveLayoutToServer(params) {
   }
 }
 
-export function fetchLayout() {
+export function fetchLayout(tag_id) {
   return dispatch => {
     if (channel) {
       dispatch({ type: FETCH_LAYOUT })
       channel.push('layout:fetch').receive('ok', response => {
         dispatch({ type: FETCH_LAYOUT_OK, payload: response })
+        if (tag_id) {
+          dispatch(fetchArticles(tag_id))
+        }
       })
     }
   }

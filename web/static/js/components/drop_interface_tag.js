@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { DropTarget } from 'react-dnd'
 import { dragElementEnd, dropTag } from '../actions'
@@ -62,10 +63,16 @@ class DropInterfaceTag extends Component {
         style={{ ...style, backgroundColor, opacity }}
         className="drop-interface-tag"
       >
-        ++
+        <i className="tiny material-icons white-text">playlist_add</i>
       </div>
     )
   }
+}
+
+DropInterfaceTag.propTypes = {
+  tag: PropTypes.object.isRequired,
+  isDragging: PropTypes.bool.isRequired,
+  opacity: PropTypes.number.isRequired
 }
 
 export default connect(null, { dragElementEnd, dropTag })(DropInterfaceTag)

@@ -25,6 +25,10 @@ export const SAVE_ARTICLES_INDEX = 'SAVE_ARTICLES_INDEX'
 export const UPDATED_ARTICLES_INDEX = 'UPDATED_ARTICLES_INDEX'
 
 export const TAG_COLLAPSE = 'TAG_COLLAPSE'
+export const TAG_EDIT = 'TAG_EDIT'
+export const TAG_EDIT_CANCEL = 'TAG_EDIT_CANCEL'
+export const TAG_EDIT_APPLY = 'TAG_EDIT_APPLY'
+export const TAG_EDIT_APPLY_OK = 'TAG_EDIT_APPLY_OK'
 
 export const DndTypes = {
   TAG: 'DND_TAG',

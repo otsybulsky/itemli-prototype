@@ -3,13 +3,28 @@ import {
   DRAG_ELEMENT_END,
   DROP_TAG,
   DROP_ARTICLE,
-  TAG_COLLAPSE
+  TAG_COLLAPSE,
+  TAG_EDIT,
+  TAG_EDIT_CANCEL
 } from '../constants'
 
 export function testEvent() {
   return dispatch => {
     console.log('actions - test event')
     dispatch({ type: 'TEST' })
+  }
+}
+
+export function editTag(params) {
+  return {
+    type: TAG_EDIT,
+    payload: params
+  }
+}
+export function editTagCancel(params) {
+  return {
+    type: TAG_EDIT_CANCEL,
+    payload: params
   }
 }
 
