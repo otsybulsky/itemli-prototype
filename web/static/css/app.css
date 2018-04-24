@@ -23,6 +23,9 @@ i {
   display: inline-block;
   margin-right: 5px;
 }
+.hover-tag-body {
+  background: lightgray;
+}
 .tag-title {
   font-weight: bold;
   font-size: 1.2em;

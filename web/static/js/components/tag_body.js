@@ -6,7 +6,10 @@ import { editTag } from '../actions'
 class TagBody extends Component {
   constructor(props) {
     super(props)
-    this.state = { onHover: false }
+    this.state = {
+      onHover: false,
+      hoverClass: ''
+    }
   }
 
   renderEditInterface() {
@@ -30,17 +33,28 @@ class TagBody extends Component {
   }
 
   onMouseEnter(event) {
-    this.setState({ onHover: true })
+    this.setState({ onHover: true, hoverClass: 'hover-tag-body' })
   }
   onMouseLeave(event) {
-    this.setState({ onHover: false })
+    this.setState({ onHover: false, hoverClass: '' })
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.isDragOverCurrent != this.props.isDragOverCurrent) {
+      if (nextProps.isDragOverCurrent) {
+        this.setState({ hoverClass: 'hover-tag-body' })
+      } else {
+        this.setState({ hoverClass: '' })
+      }
+    }
   }
 
   render() {
     const { tag } = this.props
+    const classDiv = `tag-body ${this.state.hoverClass}`
     return (
       <div
-        className="tag-body"
+        className={classDiv}
         onMouseEnter={ev => this.onMouseEnter(ev)}
         onMouseLeave={ev => this.onMouseLeave(ev)}
       >
@@ -54,7 +68,8 @@ class TagBody extends Component {
 }
 
 TagBody.propTypes = {
-  tag: PropTypes.object.isRequired
+  tag: PropTypes.object.isRequired,
+  isDragOverCurrent: PropTypes.bool
 }
 
 export default connect(null, { editTag })(TagBody)

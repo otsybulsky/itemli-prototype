@@ -192,7 +192,7 @@ class Tag extends Component {
           {this.renderCollapsibleInterface()}
 
           <div style={{ ...style }} className="tag">
-            <TagBody tag={tag} />
+            <TagBody tag={tag} isDragOverCurrent={isOverCurrent} />
 
             {this.renderSubTags()}
           </div>
