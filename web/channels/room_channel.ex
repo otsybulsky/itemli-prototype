@@ -106,21 +106,28 @@ defmodule Itemli.RoomChannel do
   def handle_in("layout:fetch", %{}, socket) do
     user = socket.assigns.user
     
-    %{"layout": layout} = get_layout(user)
+    current_layout = %{}
+    current_layout_tag_ids = []
+    case get_layout(user) do
+      %{"layout": layout} ->
+        case layout do
+          %{"tag_ids" => tag_list} ->
+            current_layout = layout
+            current_layout_tag_ids = current_layout["tag_ids"] 
+            tag_ids = tag_list
+            |> get_tag_ids
+            |> List.flatten
+          _ ->
+            tag_ids =[]
+        end
+      _ ->
+        tag_ids = []
+    end
     
     tags = Tag
     |> where([t], t.user_id == type(^user.id, :binary_id))
     |> Repo.all
     |> Repo.preload([:articles])
-
-
-    %{"tag_ids" => tag_list} = layout
-    
-    tag_ids = tag_list
-    |> get_tag_ids
-    |> List.flatten
-   
-
 
     new_tags = Tag
     |> where([t], not(t.id in ^tag_ids) and (t.user_id == ^user.id))
@@ -128,8 +135,8 @@ defmodule Itemli.RoomChannel do
     |> Repo.all
     |> Enum.map(fn(%{"id": id}) -> %{"id" => id, "sub_tags" => [], "collapsed" => :false} end)
 
-    actual_layout = layout
-    |> Map.put("tag_ids", new_tags ++ layout["tag_ids"])
+    actual_layout = current_layout
+    |> Map.put("tag_ids", new_tags ++ current_layout_tag_ids)
 
     tags = Enum.map(tags, fn(tag) -> 
       %{id: tag.id, title: tag.title, description: tag.description, articles_count: Enum.count(tag.articles)} 
