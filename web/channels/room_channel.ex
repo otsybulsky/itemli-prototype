@@ -124,10 +124,13 @@ defmodule Itemli.RoomChannel do
         tag_ids = []
     end
     
-    tags = Tag
-    |> where([t], t.user_id == type(^user.id, :binary_id))
-    |> Repo.all
-    |> Repo.preload([:articles])
+    tags_query = from t in Tag,
+      where: t.user_id == type(^user.id, :binary_id),
+      left_join: a in assoc(t, :articles),
+      group_by: t.id,
+      select: %{id: t.id, title: t.title, description: t.description, articles_count: count(a.id)}
+
+    tags = Repo.all(tags_query)
 
     new_tags = Tag
     |> where([t], not(t.id in ^tag_ids) and (t.user_id == ^user.id))
@@ -138,11 +141,7 @@ defmodule Itemli.RoomChannel do
     actual_layout = current_layout
     |> Map.put("tag_ids", new_tags ++ current_layout_tag_ids)
 
-    tags = Enum.map(tags, fn(tag) -> 
-      %{id: tag.id, title: tag.title, description: tag.description, articles_count: Enum.count(tag.articles)} 
-    end)
 
-    # {:noreply, socket}
     {:reply, {:ok, %{layout: actual_layout, tags: tags}}, socket}
   end
 
