@@ -110,7 +110,22 @@ defmodule Itemli.RoomChannel do
 
     articles = Repo.all(articles_query)
     |> Enum.filter(fn(item) -> item.tags_count == 0 end)
+    |> Enum.map(fn(item) -> item.id end)
     
+  end
+
+  def handle_in("articles:fetch_unbound", %{}, socket) do
+    user = socket.assigns.user
+
+    article_ids = get_articles_without_tag(user)
+    
+    articles_query = from a in Article,
+      where: a.id in ^article_ids,
+      select: %{id: a.id, title: a.title, description: a.description, url: a.url, favicon: a.favicon}
+    
+    articles = Repo.all(articles_query)
+
+    {:reply, {:ok, %{articles: articles, tag_id: nil}}, socket}
   end
 
   def handle_in("layout:fetch", %{}, socket) do
