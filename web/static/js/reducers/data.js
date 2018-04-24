@@ -97,12 +97,14 @@ export default function(store = INIT_STATE, { type, payload }) {
         articles_without_tag_count
       } = payload
 
+      const new_tags = _.mapKeys(tags, 'id')
+
       return {
         ...store,
-        tag_ids: checkTagIds(tag_ids),
-        tags: _.mapKeys(tags, 'id'),
+        tag_ids: checkTagIds(tag_ids, new_tags),
+        tags: new_tags,
         articles_without_tag_count: articles_without_tag_count,
-        current_tag_id: current_tag_id,
+        current_tag_id: _.has(new_tags, current_tag_id) ? current_tag_id : null,
         articles: null,
         saveLayout: false
       }

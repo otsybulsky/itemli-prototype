@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { editTag } from '../actions'
+import { deleteTag } from '../socket'
 
 class TagBody extends Component {
   constructor(props) {
@@ -45,6 +46,8 @@ class TagBody extends Component {
     event.stopPropagation()
   }
   onDeleteClick(event) {
+    const { tag, deleteTag } = this.props
+    deleteTag(tag)
     event.stopPropagation()
   }
 
@@ -88,4 +91,4 @@ TagBody.propTypes = {
   isDragOverCurrent: PropTypes.bool
 }
 
-export default connect(null, { editTag })(TagBody)
+export default connect(null, { editTag, deleteTag })(TagBody)
