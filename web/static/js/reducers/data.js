@@ -1,6 +1,11 @@
 import _ from 'lodash'
 
-import { reorderTagsList, reorderList, collapseTag } from '../helpers'
+import {
+  reorderTagsList,
+  reorderList,
+  collapseTag,
+  checkTagIds
+} from '../helpers'
 import {
   TABS_ADDED,
   TAGS_FETCH_ALL_OK,
@@ -92,7 +97,7 @@ export default function(store = INIT_STATE, { type, payload }) {
 
       return {
         ...store,
-        tag_ids: tag_ids,
+        tag_ids: checkTagIds(tag_ids),
         tags: _.mapKeys(tags, 'id'),
         current_tag_id: current_tag_id,
         articles: null,

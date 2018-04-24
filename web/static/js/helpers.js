@@ -5,22 +5,21 @@ export function reorderList(list, startIndex, endIndex) {
   return result
 }
 
-// function processCheckTagIds(list) {
-//   for (let i = 0; i < list.length; i++) {
-//     if (!list[i].id) {
-//       const [removed] = list.splice(i, 1)
-//       processCheckTagIds(list)
-//     }
-//     processCheckTagIds(list[i].sub_tags)
-//   }
-// }
+function processCheckTagIds(list) {
+  for (let i = 0; i < list.length; i++) {
+    if (!list[i].id) {
+      const [removed] = list.splice(i, 1)
+      continue
+    }
+    processCheckTagIds(list[i].sub_tags)
+  }
+}
 
-// export function checkTagIds(list) {
-//   let result = list
-//   processCheckTagIds(result)
-//   console.log(result)
-//   return result
-// }
+export function checkTagIds(list) {
+  let result = [...list]
+  processCheckTagIds(result)
+  return result
+}
 
 function removeTag(list, id) {
   for (let i = 0; i < list.length; i++) {
@@ -74,7 +73,7 @@ export function searchTagInSubTags(tag_id, sub_tags) {
 }
 
 export function reorderTagsList(list, source_id, target_id, create_sub_tag) {
-  let result = list
+  let result = [...list]
   const removed = removeTag(result, source_id)
   if (removed) {
     insertTag(result, target_id, removed, create_sub_tag)
@@ -97,7 +96,7 @@ function changeCollapseTag(tag_id, sub_tags) {
 }
 
 export function collapseTag(list, tag_id) {
-  let result = list
+  let result = [...list]
   changeCollapseTag(tag_id, result)
 
   return result
