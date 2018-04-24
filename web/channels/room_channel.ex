@@ -264,7 +264,14 @@ defmodule Itemli.RoomChannel do
     
     case Repo.transaction(batch) do
         {:ok, tag} ->
-          result = tag.save_articles
+          
+          result = %{
+            id: tag.save_articles.id,
+            title: tag.save_articles.title,
+            description: tag.save_articles.description,
+            articles_count: length(content)
+          }
+
           broadcast! socket, "tabs:added", %{content: result}
           {:reply, {:ok, %{content: result}},socket}
 
