@@ -101,7 +101,17 @@ defmodule Itemli.RoomChannel do
     end) 
   end
 
- 
+  defp get_articles_without_tag(user) do
+    articles_query = from a in Article,
+      where: a.user_id == type(^user.id, :binary_id),
+      left_join: t in assoc(a, :tags),
+      group_by: a.id,
+      select: %{id: a.id, tags_count: count(t.id)}
+
+    articles = Repo.all(articles_query)
+    |> Enum.filter(fn(item) -> item.tags_count == 0 end)
+    
+  end
 
   def handle_in("layout:fetch", %{}, socket) do
     user = socket.assigns.user
@@ -124,6 +134,8 @@ defmodule Itemli.RoomChannel do
         tag_ids = []
     end
     
+    articles_without_tag = get_articles_without_tag(user) 
+
     tags_query = from t in Tag,
       where: t.user_id == type(^user.id, :binary_id),
       left_join: a in assoc(t, :articles),
@@ -141,8 +153,7 @@ defmodule Itemli.RoomChannel do
     actual_layout = current_layout
     |> Map.put("tag_ids", new_tags ++ current_layout_tag_ids)
 
-
-    {:reply, {:ok, %{layout: actual_layout, tags: tags}}, socket}
+    {:reply, {:ok, %{layout: actual_layout, tags: tags, articles_without_tag_count: length(articles_without_tag)}}, socket}
   end
 
   def handle_in("articles:fetch", %{"tag_id" => tag_id}, socket) do
