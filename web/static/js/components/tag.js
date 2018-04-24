@@ -180,6 +180,8 @@ class Tag extends Component {
     const backgroundColor =
       isAvailableDrop && isOverCurrent ? 'lightgreen' : 'white'
 
+    //{this.renderDropInterface(opacity)}
+
     return connectDragSource(
       connectDropTarget(
         <div
@@ -188,7 +190,7 @@ class Tag extends Component {
           onClick={ev => this.showArticles(ev)}
         >
           {this.renderCollapsibleInterface()}
-          {this.renderDropInterface(opacity)}
+
           <div style={{ ...style }} className="tag">
             <TagBody tag={tag} />
 

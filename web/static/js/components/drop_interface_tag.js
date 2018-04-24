@@ -63,7 +63,7 @@ class DropInterfaceTag extends Component {
         style={{ ...style, backgroundColor, opacity }}
         className="drop-interface-tag"
       >
-        ++
+        <i className="tiny material-icons white-text">playlist_add</i>
       </div>
     )
   }
