@@ -7,6 +7,8 @@ import { DragDropContext } from 'react-dnd'
 import MultiBackend from 'react-dnd-multi-backend'
 import HTML5toTouch from 'react-dnd-multi-backend/lib/HTML5toTouch'
 
+import { Button } from 'react-materialize'
+
 class Articles extends Component {
   renderArticles() {
     const { articles } = this.props
@@ -16,6 +18,16 @@ class Articles extends Component {
     return articles.map((article, i) => {
       return <Article index={i} key={article.id} article={article} />
     })
+  }
+
+  renderInterface() {
+    return (
+      <div>
+        <h5>Articles interface</h5>
+        <Button floating icon="add" />
+        <hr />
+      </div>
+    )
   }
 
   renderTag() {
@@ -37,6 +49,7 @@ class Articles extends Component {
     const { articles } = this.props
     return (
       <div className="articles-container">
+        {this.renderInterface()}
         {this.renderTag()}
         {this.renderArticles()}
       </div>
