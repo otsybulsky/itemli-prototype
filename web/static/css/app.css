@@ -32,7 +32,8 @@
 }
 .hover-tag-body,
 .articles-unbound:hover,
-.article:hover {
+.article:hover,
+.article-drag-hover {
   background: lightgray;
   cursor: pointer;
 }
