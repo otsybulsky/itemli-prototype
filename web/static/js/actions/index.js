@@ -5,13 +5,28 @@ import {
   DROP_ARTICLE,
   TAG_COLLAPSE,
   TAG_EDIT,
-  TAG_EDIT_CANCEL
+  TAG_EDIT_CANCEL,
+  ARTICLE_EDIT,
+  ARTICLE_EDIT_CANCEL
 } from '../constants'
 
 export function testEvent() {
   return dispatch => {
     console.log('actions - test event')
     dispatch({ type: 'TEST' })
+  }
+}
+
+export function editArticle(params) {
+  return {
+    type: ARTICLE_EDIT,
+    payload: params
+  }
+}
+export function editArticleCancel(params) {
+  return {
+    type: ARTICLE_EDIT_CANCEL,
+    payload: params
   }
 }
 

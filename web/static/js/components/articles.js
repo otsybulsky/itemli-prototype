@@ -7,6 +7,11 @@ import { DragDropContext } from 'react-dnd'
 import MultiBackend from 'react-dnd-multi-backend'
 import HTML5toTouch from 'react-dnd-multi-backend/lib/HTML5toTouch'
 
+import { editArticle } from '../actions'
+import ArticleEdit from './article_edit'
+
+import { Button } from 'react-materialize'
+
 class Articles extends Component {
   renderArticles() {
     const { articles } = this.props
@@ -16,6 +21,28 @@ class Articles extends Component {
     return articles.map((article, i) => {
       return <Article index={i} key={article.id} article={article} />
     })
+  }
+
+  onAddArticle(event) {
+    this.props.editArticle()
+  }
+
+  renderInterface() {
+    return (
+      <div>
+        <h5>Articles interface</h5>
+        <Button onClick={ev => this.onAddArticle(ev)} floating icon="add" />
+        <hr />
+      </div>
+    )
+  }
+
+  renderArticleEdit() {
+    const { article_edit_flag } = this.props
+    if (!article_edit_flag) {
+      return null
+    }
+    return <ArticleEdit />
   }
 
   renderTag() {
@@ -37,6 +64,8 @@ class Articles extends Component {
     const { articles } = this.props
     return (
       <div className="articles-container">
+        {this.renderInterface()}
+        {this.renderArticleEdit()}
         {this.renderTag()}
         {this.renderArticles()}
       </div>
@@ -48,10 +77,12 @@ function mapStateToProps(store) {
   return {
     articles: store.data.articles,
     tags: store.data.tags,
-    tag_id: store.data.current_tag_id
+    tag_id: store.data.current_tag_id,
+    article_edit_flag: store.data.article_edit_flag
   }
 }
 
 export default connect(mapStateToProps, {
-  fetchArticles
+  fetchArticles,
+  editArticle
 })(Articles)

@@ -16,7 +16,9 @@ import {
   TAG_EDIT_APPLY,
   TAG_EDIT_APPLY_OK,
   FETCH_ARTICLES_UNBOUND,
-  TAG_DELETE
+  TAG_DELETE,
+  ARTICLE_EDIT_APPLY,
+  ARTICLE_EDIT_APPLY_OK
 } from './constants'
 
 let socket = null
@@ -74,6 +76,31 @@ export function editTagApply(params) {
         })
     }
     //
+  }
+}
+
+export function editArticleApply(params) {
+  return dispatch => {
+    dispatch({ type: ARTICLE_EDIT_APPLY, payload: params })
+    if (channel) {
+      const { id, title, description, url, tag_ids } = params
+      channel
+        .push('article:edit', {
+          article_id: id,
+          title: title,
+          description: description,
+          url: url,
+          tag_ids: tag_ids
+        })
+        .receive('ok', message => {
+          dispatch({ type: ARTICLE_EDIT_APPLY_OK, payload: message })
+          dispatch(fetchLayout())
+        })
+        .receive('error', err => {
+          console.log(err)
+          //dispatch(socketError(err))
+        })
+    }
   }
 }
 
