@@ -181,7 +181,7 @@ defmodule Itemli.RoomChannel do
 
     case tag.articles_index do
       %{"index" => article_ids} ->
-        
+
         kw_articles = tag.articles
         |> Enum.map fn(article) -> {String.to_atom(article.id), article} end
        
@@ -196,10 +196,10 @@ defmodule Itemli.RoomChannel do
           String.to_atom(article_id) 
         end
 
-        kw_articles = Keyword.drop(kw_articles, ids_exists)
-        articles_without_index = Keyword.to_list(kw_articles)
+        articles_without_index = kw_articles
+        |> Keyword.drop ids_exists
         
-        articles = articles ++ articles_without_index
+        articles = Keyword.values(articles_without_index) ++ articles
       _ ->
         articles = tag.articles
     |> Enum.map(fn (article) -> %{"id" => article.id, "title" => article.title, "url" => article.url, "favicon" => article.favicon, "description" => article.description  } end)
@@ -223,6 +223,32 @@ defmodule Itemli.RoomChannel do
         :error
     end
     {:noreply, socket}
+  end
+
+  def handle_in("article:edit", params, socket) do
+    user = socket.assigns.user
+    case params do
+      %{"title" => title, "description" => description, "url" => url, "tag_ids" => tag_ids} -> #new article
+      
+      tags_query = from t in Tag,
+        where: (t.id in ^tag_ids) and (t.user_id == ^user.id),
+        select: t
+
+      tags = Repo.all(tags_query)
+      
+      new_article = user
+        |> build_assoc(:articles)
+        |> Article.changeset(%{tag: tags, title: title, description: description, url: url})
+
+        case Repo.insert(new_article) do
+          {:ok, article} ->
+            {:reply, {:ok, %{id: article.id}},socket}
+          {:error, reason} ->
+            {:reply, {:error, %{errors: reason}}, socket}  
+        end
+      _ ->
+        {:reply, {:error, %{message: "Bad params"}}, socket}
+    end
   end
 
   def handle_in("tag:edit", params, socket) do

@@ -1,8 +1,9 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
-import { Row, Input, Button } from 'react-materialize'
+import { Row, Input, Button, Tag } from 'react-materialize'
 import { editArticleCancel } from '../actions'
+import { editArticleApply } from '../socket'
 
 class ArticleEdit extends Component {
   constructor(props) {
@@ -11,7 +12,8 @@ class ArticleEdit extends Component {
     this.state = {
       title: '',
       description: '',
-      url: ''
+      url: '',
+      tag_ids: []
     }
 
     this.onTitleChange = this.onTitleChange.bind(this)
@@ -31,7 +33,7 @@ class ArticleEdit extends Component {
   }
   onFormSubmit(event) {
     event.preventDefault()
-    //this.props.editTagApply(this.state)
+    this.props.editArticleApply(this.state)
   }
   onEditCancel() {
     this.props.editArticleCancel()
@@ -39,17 +41,20 @@ class ArticleEdit extends Component {
   setLocalState(props) {
     if (props.article_for_edit) {
       const {
-        article_for_edit: { id, title, description, url }
+        article_for_edit: { id, title, description, url },
+        current_tag_id
       } = props
       this.setState({ id: id })
       this.setState({ title: title || '' })
       this.setState({ description: description || '' })
       this.setState({ url: url || '' })
     } else {
+      const { current_tag_id } = props
       this.setState({ id: undefined })
       this.setState({ title: '' })
       this.setState({ description: '' })
       this.setState({ url: '' })
+      this.setState({ tag_ids: current_tag_id ? [current_tag_id] : [] })
     }
   }
 
@@ -61,6 +66,15 @@ class ArticleEdit extends Component {
     this.setLocalState(nextProps)
   }
 
+  renderTags() {
+    const { tag_ids } = this.state
+    const { tags } = this.props
+
+    return tag_ids.map(id => {
+      return <Tag key={id}>{tags[id].title}</Tag>
+    })
+  }
+
   render() {
     return (
       <div className="form-container">
@@ -69,6 +83,7 @@ class ArticleEdit extends Component {
           <h5>Edit article</h5>
         </div>
         <form onSubmit={this.onFormSubmit}>
+          {this.renderTags()}
           <Input
             name="title"
             placeholder="enter title article"
@@ -106,8 +121,13 @@ ArticleEdit.propTypes = {}
 
 function mapStateToProps(state) {
   return {
-    article_for_edit: state.data.article_for_edit
+    article_for_edit: state.data.article_for_edit,
+    current_tag_id: state.data.current_tag_id,
+    tags: state.data.tags
   }
 }
 
-export default connect(mapStateToProps, { editArticleCancel })(ArticleEdit)
+export default connect(mapStateToProps, {
+  editArticleCancel,
+  editArticleApply
+})(ArticleEdit)

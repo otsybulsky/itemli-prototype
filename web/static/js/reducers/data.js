@@ -23,7 +23,8 @@ import {
   TAG_EDIT_CANCEL,
   TAG_EDIT_APPLY_OK,
   ARTICLE_EDIT,
-  ARTICLE_EDIT_CANCEL
+  ARTICLE_EDIT_CANCEL,
+  ARTICLE_EDIT_APPLY_OK
 } from '../constants'
 
 const INIT_STATE = {
@@ -46,6 +47,12 @@ export default function(store = INIT_STATE, { type, payload }) {
         ...store,
         article_edit_flag: true,
         article_for_edit: payload
+      }
+    case ARTICLE_EDIT_APPLY_OK:
+      return {
+        ...store,
+        article_edit_flag: false,
+        article_for_edit: null
       }
     case ARTICLE_EDIT_CANCEL:
       return {
