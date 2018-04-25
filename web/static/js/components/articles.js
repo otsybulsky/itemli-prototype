@@ -26,12 +26,25 @@ class Articles extends Component {
   onAddArticle(event) {
     this.props.editArticle()
   }
+  onOpenArticles(event) {
+    const { articles } = this.props
+    articles.map(article => {
+      if (article.url) {
+        window.open(article.url, '_blank')
+      }
+    })
+  }
 
   renderInterface() {
     return (
       <div>
         <h5>Articles interface</h5>
         <Button onClick={ev => this.onAddArticle(ev)} floating icon="add" />
+        <Button
+          onClick={ev => this.onOpenArticles(ev)}
+          floating
+          icon="open_in_browser"
+        />
         <hr />
       </div>
     )
