@@ -179,10 +179,20 @@ defmodule Itemli.RoomChannel do
     |> Repo.one
     |> Repo.preload([:articles])
 
+    art_ids = tag.articles
+    |> Enum.map(fn(article) -> article.id end)
+
+    article_list = Article
+    |> where([t], (t.id in ^art_ids))
+    |> Repo.all
+    |> Repo.preload([:tags])   
+    
+    
+
     case tag.articles_index do
       %{"index" => article_ids} ->
 
-        kw_articles = tag.articles
+        kw_articles = article_list
         |> Enum.map fn(article) -> {String.to_atom(article.id), article} end
        
         articles = article_ids
@@ -200,11 +210,11 @@ defmodule Itemli.RoomChannel do
         |> Keyword.drop ids_exists
         
         articles = Keyword.values(articles_without_index) ++ articles
+        |> Enum.map(fn (article) -> %{"id" => article.id, "title" => article.title, "url" => article.url, "favicon" => article.favicon, "description" => article.description, "tags" => article.tags  } end)
       _ ->
-        articles = tag.articles
-    |> Enum.map(fn (article) -> %{"id" => article.id, "title" => article.title, "url" => article.url, "favicon" => article.favicon, "description" => article.description  } end)
+        articles = article_list
+    |> Enum.map(fn (article) -> %{"id" => article.id, "title" => article.title, "url" => article.url, "favicon" => article.favicon, "description" => article.description, "tags" => article.tags  } end)
     end
-    
     
     {:reply, {:ok, %{articles: articles, tag_id: tag.id}}, socket}
   end
