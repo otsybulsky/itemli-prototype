@@ -279,6 +279,24 @@ defmodule Itemli.RoomChannel do
     end
   end
 
+  def handle_in("article:delete", params, socket) do
+    user = socket.assigns.user
+    case params do
+      %{"article_id" => article_id} ->
+        article = Repo.get!(Article, article_id)
+
+        case Repo.delete article do 
+          {:ok, struct} ->
+            {:reply, {:ok, %{}}, socket}    
+          {:error, changeset} ->    
+            {:reply, {:error, %{message: "Error db"}}, socket}
+        end
+
+      _ -> 
+        {:reply, {:error, %{message: "Bad params"}}, socket}
+    end  
+  end
+
   def handle_in("tag:edit", params, socket) do
     user = socket.assigns.user
 

@@ -8,3 +8,5 @@ if socket error - block all interface in client
 reorder unbound articles
 
 handle_in("articles:fetch" not work index articles , insert new items not insert to head list
+
+for new tag not autobuild article index

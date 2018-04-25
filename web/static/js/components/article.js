@@ -5,6 +5,7 @@ import { dropArticle } from '../actions'
 import { saveArticlesIndex } from '../socket'
 import { DndTypes } from '../constants'
 import { editArticle } from '../actions'
+import { deleteArticle } from '../socket'
 
 const itemSource = {
   beginDrag(props, monitor, component) {
@@ -102,8 +103,8 @@ class Article extends Component {
     event.stopPropagation()
   }
   onDeleteClick(event) {
-    // const { tag, deleteTag } = this.props
-    // deleteTag(tag)
+    const { article, deleteArticle } = this.props
+    deleteArticle(article)
     event.stopPropagation()
   }
 
@@ -147,5 +148,6 @@ function mapStateToProps(store) {
 export default connect(mapStateToProps, {
   dropArticle,
   saveArticlesIndex,
-  editArticle
+  editArticle,
+  deleteArticle
 })(Article)

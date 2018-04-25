@@ -18,7 +18,8 @@ import {
   FETCH_ARTICLES_UNBOUND,
   TAG_DELETE,
   ARTICLE_EDIT_APPLY,
-  ARTICLE_EDIT_APPLY_OK
+  ARTICLE_EDIT_APPLY_OK,
+  ARTICLE_DELETE
 } from './constants'
 
 let socket = null
@@ -35,6 +36,22 @@ export function fetchArticlesUnbound() {
       channel.push('articles:fetch_unbound').receive('ok', response => {
         dispatch({ type: FETCH_ARTICLES_OK, payload: response })
       })
+    }
+  }
+}
+
+export function deleteArticle(params) {
+  return dispatch => {
+    dispatch({ type: ARTICLE_DELETE, payload: params })
+    if (channel) {
+      const { id } = params
+      channel
+        .push('article:delete', {
+          article_id: id
+        })
+        .receive('ok', message => {
+          dispatch(fetchLayout())
+        })
     }
   }
 }
