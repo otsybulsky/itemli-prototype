@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { editTag } from '../actions'
+import { deleteTag } from '../socket'
 
 class TagBody extends Component {
   constructor(props) {
@@ -16,19 +17,37 @@ class TagBody extends Component {
     const { onHover } = this.state
     if (!onHover) return null
 
-    return (
-      <i
-        className="tiny material-icons blue-text"
-        onClick={ev => this.onEditClick(ev)}
+    const editInterface = (
+      <div className="tag-body-interface" onClick={ev => this.onEditClick(ev)}>
+        <i className="small material-icons">edit</i>
+      </div>
+    )
+
+    const deleteInterface = (
+      <div
+        className="tag-body-interface"
+        onClick={ev => this.onDeleteClick(ev)}
       >
-        edit
-      </i>
+        <i className="small material-icons">delete</i>
+      </div>
+    )
+
+    return (
+      <div>
+        {editInterface}
+        {deleteInterface}
+      </div>
     )
   }
 
   onEditClick(event) {
     const { tag, editTag } = this.props
     editTag(tag)
+    event.stopPropagation()
+  }
+  onDeleteClick(event) {
+    const { tag, deleteTag } = this.props
+    deleteTag(tag)
     event.stopPropagation()
   }
 
@@ -72,4 +91,4 @@ TagBody.propTypes = {
   isDragOverCurrent: PropTypes.bool
 }
 
-export default connect(null, { editTag })(TagBody)
+export default connect(null, { editTag, deleteTag })(TagBody)

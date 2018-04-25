@@ -29,6 +29,9 @@ export const TAG_EDIT = 'TAG_EDIT'
 export const TAG_EDIT_CANCEL = 'TAG_EDIT_CANCEL'
 export const TAG_EDIT_APPLY = 'TAG_EDIT_APPLY'
 export const TAG_EDIT_APPLY_OK = 'TAG_EDIT_APPLY_OK'
+export const TAG_DELETE = 'TAG_DELETE'
+
+export const FETCH_ARTICLES_UNBOUND = 'FETCH_ARTICLES_UNBOUND'
 
 export const DndTypes = {
   TAG: 'DND_TAG',

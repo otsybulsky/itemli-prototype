@@ -5,5 +5,4 @@ remove warnings mix.phx.server
 
 if socket error - block all interface in client
 
-room_channel.ex 108
-  bug - load all articles into memory for counting with tag
+reorder unbound articles

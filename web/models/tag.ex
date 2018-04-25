@@ -12,7 +12,7 @@ defmodule Itemli.Tag do
 
     belongs_to :user, Itemli.User
     belongs_to :parent, __MODULE__  
-    many_to_many :articles, Itemli.Article, join_through: "tags_articles"
+    many_to_many :articles, Itemli.Article, [join_through: "tags_articles", on_delete: :delete_all] 
     
     timestamps()
   end

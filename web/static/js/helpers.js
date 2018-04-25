@@ -1,3 +1,5 @@
+import _ from 'lodash'
+
 export function reorderList(list, startIndex, endIndex) {
   const result = list //Array.from(list)
   const [removed] = result.splice(startIndex, 1)
@@ -5,9 +7,9 @@ export function reorderList(list, startIndex, endIndex) {
   return result
 }
 
-function processCheckTagIds(list) {
+function processCheckTagIds(list, tags) {
   for (let i = 0; i < list.length; i++) {
-    if (!list[i].id) {
+    if (!list[i].id || !_.has(tags, list[i].id)) {
       const [removed] = list.splice(i, 1)
       continue
     }
@@ -15,9 +17,9 @@ function processCheckTagIds(list) {
   }
 }
 
-export function checkTagIds(list) {
+export function checkTagIds(list, tags) {
   let result = [...list]
-  processCheckTagIds(result)
+  processCheckTagIds(result, tags)
   return result
 }
 

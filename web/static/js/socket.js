@@ -14,7 +14,9 @@ import {
   SAVE_ARTICLES_INDEX,
   UPDATED_ARTICLES_INDEX,
   TAG_EDIT_APPLY,
-  TAG_EDIT_APPLY_OK
+  TAG_EDIT_APPLY_OK,
+  FETCH_ARTICLES_UNBOUND,
+  TAG_DELETE
 } from './constants'
 
 let socket = null
@@ -22,6 +24,33 @@ let channel = null
 
 function socketError(err) {
   return { type: SOCKET_ERROR, payload: { error: err } }
+}
+
+export function fetchArticlesUnbound() {
+  return dispatch => {
+    dispatch({ type: FETCH_ARTICLES_UNBOUND })
+    if (channel) {
+      channel.push('articles:fetch_unbound').receive('ok', response => {
+        dispatch({ type: FETCH_ARTICLES_OK, payload: response })
+      })
+    }
+  }
+}
+
+export function deleteTag(params) {
+  return dispatch => {
+    dispatch({ type: TAG_DELETE, payload: params })
+    if (channel) {
+      const { id } = params
+      channel
+        .push('tag:delete', {
+          tag_id: id
+        })
+        .receive('ok', message => {
+          dispatch(fetchLayout())
+        })
+    }
+  }
 }
 
 export function editTagApply(params) {

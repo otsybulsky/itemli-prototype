@@ -101,7 +101,32 @@ defmodule Itemli.RoomChannel do
     end) 
   end
 
- 
+  defp get_articles_without_tag(user) do
+    articles_query = from a in Article,
+      where: a.user_id == type(^user.id, :binary_id),
+      left_join: t in assoc(a, :tags),
+      group_by: a.id,
+      select: %{id: a.id, tags_count: count(t.id)}
+
+    articles = Repo.all(articles_query)
+    |> Enum.filter(fn(item) -> item.tags_count == 0 end)
+    |> Enum.map(fn(item) -> item.id end)
+    
+  end
+
+  def handle_in("articles:fetch_unbound", %{}, socket) do
+    user = socket.assigns.user
+
+    article_ids = get_articles_without_tag(user)
+    
+    articles_query = from a in Article,
+      where: a.id in ^article_ids,
+      select: %{id: a.id, title: a.title, description: a.description, url: a.url, favicon: a.favicon}
+    
+    articles = Repo.all(articles_query)
+
+    {:reply, {:ok, %{articles: articles, tag_id: nil}}, socket}
+  end
 
   def handle_in("layout:fetch", %{}, socket) do
     user = socket.assigns.user
@@ -124,10 +149,15 @@ defmodule Itemli.RoomChannel do
         tag_ids = []
     end
     
-    tags = Tag
-    |> where([t], t.user_id == type(^user.id, :binary_id))
-    |> Repo.all
-    |> Repo.preload([:articles])
+    articles_without_tag = get_articles_without_tag(user) 
+
+    tags_query = from t in Tag,
+      where: t.user_id == type(^user.id, :binary_id),
+      left_join: a in assoc(t, :articles),
+      group_by: t.id,
+      select: %{id: t.id, title: t.title, description: t.description, articles_count: count(a.id)}
+
+    tags = Repo.all(tags_query)
 
     new_tags = Tag
     |> where([t], not(t.id in ^tag_ids) and (t.user_id == ^user.id))
@@ -138,12 +168,7 @@ defmodule Itemli.RoomChannel do
     actual_layout = current_layout
     |> Map.put("tag_ids", new_tags ++ current_layout_tag_ids)
 
-    tags = Enum.map(tags, fn(tag) -> 
-      %{id: tag.id, title: tag.title, description: tag.description, articles_count: Enum.count(tag.articles)} 
-    end)
-
-    # {:noreply, socket}
-    {:reply, {:ok, %{layout: actual_layout, tags: tags}}, socket}
+    {:reply, {:ok, %{layout: actual_layout, tags: tags, articles_without_tag_count: length(articles_without_tag)}}, socket}
   end
 
   def handle_in("articles:fetch", %{"tag_id" => tag_id}, socket) do
@@ -156,14 +181,16 @@ defmodule Itemli.RoomChannel do
 
     case tag.articles_index do
       %{"index" => article_ids} ->
+        
         kw_articles = tag.articles
         |> Enum.map fn(article) -> {String.to_atom(article.id), article} end
-        
+       
         articles = article_ids
-        |> Enum.map fn(article_id) ->
+        |> Enum.map(fn(article_id) ->
           article = kw_articles[String.to_atom(article_id)] 
-        end
-
+        end)
+        |> Enum.reject(&is_nil/1)
+       
         ids_exists = article_ids
         |> Enum.map fn(article_id) ->
           String.to_atom(article_id) 
@@ -230,6 +257,24 @@ defmodule Itemli.RoomChannel do
     end
   end
 
+  def handle_in("tag:delete", params, socket) do
+    user = socket.assigns.user
+    case params do
+      %{"tag_id" => tag_id} ->
+        tag = Repo.get!(Tag, tag_id)
+
+        case Repo.delete tag do 
+          {:ok, struct} ->
+            {:reply, {:ok, %{}}, socket}    
+          {:error, changeset} ->    
+            {:reply, {:error, %{message: "Error db"}}, socket}
+        end
+
+      _ -> 
+        {:reply, {:error, %{message: "Bad params"}}, socket}
+    end  
+  end
+
   def handle_in("tabs:add", %{"tabs" => content, "tag_title" => tag_title}, socket) do
 
     user = socket.assigns.user
@@ -252,7 +297,14 @@ defmodule Itemli.RoomChannel do
     
     case Repo.transaction(batch) do
         {:ok, tag} ->
-          result = tag.save_articles
+          
+          result = %{
+            id: tag.save_articles.id,
+            title: tag.save_articles.title,
+            description: tag.save_articles.description,
+            articles_count: length(content)
+          }
+
           broadcast! socket, "tabs:added", %{content: result}
           {:reply, {:ok, %{content: result}},socket}
 

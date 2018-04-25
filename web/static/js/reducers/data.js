@@ -32,7 +32,8 @@ const INIT_STATE = {
   articles: null,
   save_articles_index: null,
   tag_edit_flag: null,
-  tag_for_edit: null
+  tag_for_edit: null,
+  articles_without_tag_count: null
 }
 
 export default function(store = INIT_STATE, { type, payload }) {
@@ -92,14 +93,18 @@ export default function(store = INIT_STATE, { type, payload }) {
     case FETCH_LAYOUT_OK:
       const {
         layout: { tag_ids, current_tag_id },
-        tags
+        tags,
+        articles_without_tag_count
       } = payload
+
+      const new_tags = _.mapKeys(tags, 'id')
 
       return {
         ...store,
-        tag_ids: checkTagIds(tag_ids),
-        tags: _.mapKeys(tags, 'id'),
-        current_tag_id: current_tag_id,
+        tag_ids: checkTagIds(tag_ids, new_tags),
+        tags: new_tags,
+        articles_without_tag_count: articles_without_tag_count,
+        current_tag_id: _.has(new_tags, current_tag_id) ? current_tag_id : null,
         articles: null,
         saveLayout: false
       }
