@@ -41,13 +41,17 @@ class ArticleEdit extends Component {
   setLocalState(props) {
     if (props.article_for_edit) {
       const {
-        article_for_edit: { id, title, description, url },
+        article_for_edit: { id, title, description, url, tags },
         current_tag_id
       } = props
+
+      const tag_ids = tags ? tags.map(item => item.id) : []
+
       this.setState({ id: id })
       this.setState({ title: title || '' })
       this.setState({ description: description || '' })
       this.setState({ url: url || '' })
+      this.setState({ tag_ids: tag_ids })
     } else {
       const { current_tag_id } = props
       this.setState({ id: undefined })
@@ -105,7 +109,7 @@ class ArticleEdit extends Component {
             name="url"
             placeholder="enter url"
             s={6}
-            label="Description"
+            label="Url"
             type="textarea"
             value={this.state.url || ''}
             onChange={this.onUrlChange}

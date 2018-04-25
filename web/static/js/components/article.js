@@ -4,6 +4,7 @@ import { DragSource, DropTarget } from 'react-dnd'
 import { dropArticle } from '../actions'
 import { saveArticlesIndex } from '../socket'
 import { DndTypes } from '../constants'
+import { editArticle } from '../actions'
 
 const itemSource = {
   beginDrag(props, monitor, component) {
@@ -96,8 +97,8 @@ class Article extends Component {
   }
 
   onEditClick(event) {
-    // const { tag, editTag } = this.props
-    // editTag(tag)
+    const { article, editArticle } = this.props
+    editArticle(article)
     event.stopPropagation()
   }
   onDeleteClick(event) {
@@ -143,6 +144,8 @@ function mapStateToProps(store) {
   }
 }
 
-export default connect(mapStateToProps, { dropArticle, saveArticlesIndex })(
-  Article
-)
+export default connect(mapStateToProps, {
+  dropArticle,
+  saveArticlesIndex,
+  editArticle
+})(Article)

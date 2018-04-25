@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import Article from './article'
-import { fetchArticles } from '../socket'
+import { fetchArticles, fetchArticlesUnbound } from '../socket'
 
 import { DragDropContext } from 'react-dnd'
 import MultiBackend from 'react-dnd-multi-backend'
@@ -54,9 +54,13 @@ class Articles extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { tag_id, articles, fetchArticles } = nextProps
-    if (!articles && tag_id) {
-      fetchArticles(tag_id)
+    const { tag_id, articles, fetchArticles, fetchArticlesUnbound } = nextProps
+    if (!articles) {
+      if (tag_id) {
+        fetchArticles(tag_id)
+      } else {
+        fetchArticlesUnbound()
+      }
     }
   }
 
@@ -84,5 +88,6 @@ function mapStateToProps(store) {
 
 export default connect(mapStateToProps, {
   fetchArticles,
+  fetchArticlesUnbound,
   editArticle
 })(Articles)

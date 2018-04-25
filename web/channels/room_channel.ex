@@ -121,6 +121,7 @@ defmodule Itemli.RoomChannel do
     
     articles_query = from a in Article,
       where: a.id in ^article_ids,
+      order_by: [desc: a.inserted_at],
       select: %{id: a.id, title: a.title, description: a.description, url: a.url, favicon: a.favicon}
     
     articles = Repo.all(articles_query)
@@ -238,6 +239,23 @@ defmodule Itemli.RoomChannel do
   def handle_in("article:edit", params, socket) do
     user = socket.assigns.user
     case params do
+      %{"article_id" => article_id, "title" => title, "description" => description, "url" => url, "tag_ids" => tag_ids} -> #update article
+
+      tags_query = from t in Tag,
+      where: (t.id in ^tag_ids) and (t.user_id == ^user.id),
+      select: t
+      tags = Repo.all(tags_query)
+
+        cs = Repo.get(Article, article_id)
+        |> Ecto.Changeset.change( title: title, description: description, url: url, tag: tags)
+
+      case Repo.update cs do
+        {:ok, article}       -> # Updated with success
+          {:reply, {:ok, %{id: article.id}},socket}
+        {:error, changeset} -> # Something went wrong  
+        {:reply, {:error, %{message: "DB error"}}, socket}    
+      end
+
       %{"title" => title, "description" => description, "url" => url, "tag_ids" => tag_ids} -> #new article
       
       tags_query = from t in Tag,
