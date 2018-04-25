@@ -4,6 +4,7 @@ import { DragSource, DropTarget } from 'react-dnd'
 import { dropArticle } from '../actions'
 import { saveArticlesIndex } from '../socket'
 import { DndTypes } from '../constants'
+import { editArticle } from '../actions'
 
 const itemSource = {
   beginDrag(props, monitor, component) {
@@ -43,6 +44,13 @@ const itemTarget = {
   isDragging: monitor.isDragging()
 }))
 class Article extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      onHover: false
+    }
+  }
+
   componentWillReceiveProps(nextProps) {
     const {
       save_articles_index,
@@ -55,6 +63,50 @@ class Article extends Component {
     }
   }
 
+  onMouseEnter(event) {
+    this.setState({ onHover: true })
+  }
+  onMouseLeave(event) {
+    this.setState({ onHover: false })
+  }
+  renderEditInterface() {
+    const { onHover } = this.state
+    if (!onHover) return null
+
+    const editInterface = (
+      <div className="tag-body-interface" onClick={ev => this.onEditClick(ev)}>
+        <i className="small material-icons">edit</i>
+      </div>
+    )
+
+    const deleteInterface = (
+      <div
+        className="tag-body-interface"
+        onClick={ev => this.onDeleteClick(ev)}
+      >
+        <i className="small material-icons">delete</i>
+      </div>
+    )
+
+    return (
+      <div>
+        {editInterface}
+        {deleteInterface}
+      </div>
+    )
+  }
+
+  onEditClick(event) {
+    const { article, editArticle } = this.props
+    editArticle(article)
+    event.stopPropagation()
+  }
+  onDeleteClick(event) {
+    // const { tag, deleteTag } = this.props
+    // deleteTag(tag)
+    event.stopPropagation()
+  }
+
   render() {
     const {
       article: { title, favicon, url },
@@ -63,14 +115,21 @@ class Article extends Component {
       connectDragSource,
       connectDropTarget
     } = this.props
+    const articleClass = isOverCurrent ? 'article-drag-hover' : 'article'
     const opacity = isDragging ? 0.25 : 1
     return connectDragSource(
       connectDropTarget(
-        <div className="article" style={{ opacity }}>
+        <div
+          className={articleClass}
+          onMouseEnter={ev => this.onMouseEnter(ev)}
+          onMouseLeave={ev => this.onMouseLeave(ev)}
+          style={{ opacity }}
+        >
           <img className="favicon" src={favicon} />
           <a href={url} target="_blank">
             {title}
           </a>
+          {this.renderEditInterface()}
         </div>
       )
     )
@@ -85,6 +144,8 @@ function mapStateToProps(store) {
   }
 }
 
-export default connect(mapStateToProps, { dropArticle, saveArticlesIndex })(
-  Article
-)
+export default connect(mapStateToProps, {
+  dropArticle,
+  saveArticlesIndex,
+  editArticle
+})(Article)
