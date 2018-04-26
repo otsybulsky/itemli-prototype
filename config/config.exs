@@ -25,7 +25,8 @@ config :logger, :console,
 config :ueberauth, Ueberauth,
   providers: [
     facebook: {Ueberauth.Strategy.Facebook, []},
-    github: {Ueberauth.Strategy.Github, []}
+    github: {Ueberauth.Strategy.Github, []},
+    google: {Ueberauth.Strategy.Google, []}
   ]
 
 #add the code to dev.secret.exs (github or other)
