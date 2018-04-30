@@ -348,7 +348,7 @@ defmodule Itemli.RoomChannel do
   end
 
   def handle_in("tabs:add", %{"tabs" => content, "tag_title" => tag_title}, socket) do
-
+    
     user = socket.assigns.user
 
     new_tag = user
@@ -357,15 +357,27 @@ defmodule Itemli.RoomChannel do
     
     batch = Multi.new()
     |> Multi.insert(:tag, new_tag) 
-    |> Multi.run(:save_articles, fn %{tag: tag} ->
-      articles = for %{"title" => title, "url" => url, "favIconUrl" => favicon} <- content do
-        article = user
-        |> build_assoc(:articles)
-        |> Article.changeset(%{tag: [tag], title: title, url: url, favicon: favicon})
-        |> Repo.insert
-      end
-      {:ok, tag }
-    end)
+    |> Multi.run(:save_articles, 
+      fn %{tag: tag} ->
+        articles = for item <- content do
+          case item do
+            %{"title" => title, "url" => url, "favIconUrl" => favicon} ->
+              article = user
+              |> build_assoc(:articles)
+              |> Article.changeset(%{tag: [tag], title: title, url: url, favicon: favicon})
+              |> Repo.insert
+            %{"title" => title, "url" => url} ->
+              article = user
+              |> build_assoc(:articles)
+              |> Article.changeset(%{tag: [tag], title: title, url: url})
+              |> Repo.insert
+            _ ->
+              IO.puts "-------------------------------------------------------------- MATCH ERROR "
+              IO.inspect item
+          end
+        end
+        {:ok, tag }
+      end)
     
     case Repo.transaction(batch) do
         {:ok, tag} ->

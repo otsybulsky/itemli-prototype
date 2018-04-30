@@ -21,10 +21,7 @@ function processCheckTagIds(list, tags) {
 
 export function checkTagIds(list, tags) {
   let result = [...list]
-  console.log([...result])
   processCheckTagIds(result, tags)
-  console.log(result)
-  console.log(tags)
   return result
 }
 
