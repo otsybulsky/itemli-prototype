@@ -9,17 +9,22 @@ export function reorderList(list, startIndex, endIndex) {
 
 function processCheckTagIds(list, tags) {
   for (let i = 0; i < list.length; i++) {
-    if (!list[i].id || !_.has(tags, list[i].id)) {
+    const tag = tags[list[i].id]
+    if (typeof tag === 'undefined') {
       const [removed] = list.splice(i, 1)
+      i--
       continue
     }
-    processCheckTagIds(list[i].sub_tags)
+    processCheckTagIds(list[i].sub_tags, tags)
   }
 }
 
 export function checkTagIds(list, tags) {
   let result = [...list]
+  console.log([...result])
   processCheckTagIds(result, tags)
+  console.log(result)
+  console.log(tags)
   return result
 }
 
