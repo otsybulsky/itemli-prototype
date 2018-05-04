@@ -38,7 +38,7 @@ class Articles extends Component {
   renderInterface() {
     return (
       <div>
-        <h5>Articles interface</h5>
+        <h6>Articles interface</h6>
         <Button onClick={ev => this.onAddArticle(ev)} floating icon="add" />
         <Button
           onClick={ev => this.onOpenArticles(ev)}
@@ -63,7 +63,20 @@ class Articles extends Component {
     if (!tag_id) {
       return null
     }
-    return <h5>{tags[tag_id].title}</h5>
+    const menuInterface = (
+      <div className="tag-body-interface">
+        <i className="material-icons">menu</i>
+      </div>
+    )
+
+    return (
+      <div>
+        <div className="tag-body-toolbar">
+          {menuInterface}
+          <h5 className="tag-body-interface">{tags[tag_id].title}</h5>
+        </div>
+      </div>
+    )
   }
 
   componentWillReceiveProps(nextProps) {

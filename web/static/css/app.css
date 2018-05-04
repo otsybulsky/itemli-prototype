@@ -28,10 +28,14 @@
 .tag-body .tag-body-toolbar,
 .tag-body-interface {
   display: inline-block;
+  vertical-align: middle;
   margin-right: 5px;
 }
 .tag-body-interface {
-  color: blue;
+  color: red;
+}
+.tag-body-interface i {
+  vertical-align: middle;
 }
 .tag-body-interface:hover {
   color: white;
