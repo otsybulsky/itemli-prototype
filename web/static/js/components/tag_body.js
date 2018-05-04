@@ -14,6 +14,7 @@ class TagBody extends Component {
   }
 
   renderEditInterface() {
+    return null
     const { onHover } = this.state
     if (!onHover) return null
 
@@ -69,8 +70,9 @@ class TagBody extends Component {
   }
 
   render() {
-    const { tag } = this.props
-    const classDiv = `tag-body ${this.state.hoverClass}`
+    const { tag, isTagSelected } = this.props
+    const selectedClass = isTagSelected ? 'tag-body-selected' : ''
+    const classDiv = `tag-body ${this.state.hoverClass} ${selectedClass}`
     return (
       <div
         className={classDiv}
@@ -88,6 +90,7 @@ class TagBody extends Component {
 
 TagBody.propTypes = {
   tag: PropTypes.object.isRequired,
+  isTagSelected: PropTypes.bool.isRequired,
   isDragOverCurrent: PropTypes.bool
 }
 

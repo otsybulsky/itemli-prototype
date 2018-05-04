@@ -168,6 +168,7 @@ class Tag extends Component {
   render() {
     const {
       tag,
+      selectedTagId,
       isDragging,
       isOverCurrent,
       connectDragSource,
@@ -179,6 +180,8 @@ class Tag extends Component {
     const isAvailableDrop = itemSource ? itemSource.isAvailableDrop : false
     const backgroundColor =
       isAvailableDrop && isOverCurrent ? 'lightgreen' : 'white'
+
+    const isTagSelected = tag && tag.id === selectedTagId ? true : false
 
     //{this.renderDropInterface(opacity)}
 
@@ -192,7 +195,11 @@ class Tag extends Component {
           {this.renderCollapsibleInterface()}
 
           <div style={{ ...style }} className="tag">
-            <TagBody tag={tag} isDragOverCurrent={isOverCurrent} />
+            <TagBody
+              tag={tag}
+              isDragOverCurrent={isOverCurrent}
+              isTagSelected={isTagSelected}
+            />
 
             {this.renderSubTags()}
           </div>
@@ -204,11 +211,13 @@ class Tag extends Component {
 
 function mapStateToProps(state) {
   return {
+    selectedTagId: state.data.current_tag_id,
     renderDropInterface: state.interface.renderDropInterface || false
   }
 }
 
 Tag.propTypes = {
+  selectedTagId: PropTypes.string.isRequired,
   renderDropInterface: PropTypes.bool.isRequired,
   tag: PropTypes.object.isRequired,
   sub_tags: PropTypes.array.isRequired,
