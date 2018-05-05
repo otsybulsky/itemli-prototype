@@ -20,7 +20,6 @@ class TagsProvider extends Component {
       return (
         <div>
           <TagEdit />
-          <Articles />
         </div>
       )
     }

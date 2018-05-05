@@ -24,6 +24,14 @@
   padding-bottom: 5px;
 }
 
+.tag-body-toolbar i {
+  cursor: pointer;
+}
+.tag-body-toolbar:hover i {
+  background: lightgray;
+  color: #333;
+}
+
 .tag-body h6,
 .tag-body .tag-body-toolbar,
 .tag-body-interface {
@@ -37,10 +45,10 @@
 .tag-body-interface i {
   vertical-align: middle;
 }
-.tag-body-interface:hover {
+/* .tag-body-interface:hover {
   color: white;
   background: red;
-}
+} */
 .hover-tag-body,
 .articles-unbound:hover,
 .article:hover,

@@ -60,26 +60,27 @@ class TagEdit extends Component {
       <div className="form-container">
         <div>
           <Button onClick={() => this.onEditCancel()}>Back</Button>
-          <h5>Edit tag</h5>
         </div>
         <form onSubmit={this.onFormSubmit}>
-          <Input
-            name="title"
-            placeholder="enter title a tag"
-            s={4}
-            label="Title"
-            value={this.state.title || ''}
-            onChange={this.onTitleChange}
-          />
-          <Input
-            name="description"
-            placeholder="enter description"
-            s={6}
-            label="Description"
-            type="textarea"
-            value={this.state.description || ''}
-            onChange={this.onDescriptionChange}
-          />
+          <Row>
+            <Input
+              s={6}
+              name="tag-title"
+              label="Title"
+              value={this.state.title || ''}
+              onChange={this.onTitleChange}
+            />
+
+            <Input
+              name="description"
+              placeholder="enter description"
+              s={6}
+              label="Description"
+              type="textarea"
+              value={this.state.description || ''}
+              onChange={this.onDescriptionChange}
+            />
+          </Row>
           <Button type="submit">Apply</Button>
         </form>
       </div>

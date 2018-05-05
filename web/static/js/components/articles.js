@@ -7,7 +7,7 @@ import { DragDropContext } from 'react-dnd'
 import MultiBackend from 'react-dnd-multi-backend'
 import HTML5toTouch from 'react-dnd-multi-backend/lib/HTML5toTouch'
 
-import { editArticle } from '../actions'
+import { editArticle, editTag } from '../actions'
 import ArticleEdit from './article_edit'
 
 import { Button } from 'react-materialize'
@@ -58,13 +58,19 @@ class Articles extends Component {
     return <ArticleEdit />
   }
 
+  onActionTag(event) {
+    const { tag_id, tags, editTag } = this.props
+    editTag(tags[tag_id])
+    event.stopPropagation()
+  }
+
   renderTag() {
     const { tag_id, tags } = this.props
     if (!tag_id) {
       return null
     }
     const menuInterface = (
-      <div className="tag-body-interface">
+      <div className="tag-body-interface" onClick={ev => this.onActionTag(ev)}>
         <i className="material-icons">menu</i>
       </div>
     )
@@ -74,6 +80,7 @@ class Articles extends Component {
         <div className="tag-body-toolbar">
           {menuInterface}
           <h5 className="tag-body-interface">{tags[tag_id].title}</h5>
+          <p>{tags[tag_id].description}</p>
         </div>
       </div>
     )
@@ -115,5 +122,6 @@ function mapStateToProps(store) {
 export default connect(mapStateToProps, {
   fetchArticles,
   fetchArticlesUnbound,
-  editArticle
+  editArticle,
+  editTag
 })(Articles)
