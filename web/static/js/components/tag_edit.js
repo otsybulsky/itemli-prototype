@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
-import { Row, Input, Button } from 'react-materialize'
+import { Row, Col, Input, Button } from 'react-materialize'
 import { editTagCancel } from '../actions'
 import { editTagApply } from '../socket'
 
@@ -57,33 +57,35 @@ class TagEdit extends Component {
 
   render() {
     return (
-      <div className="form-container">
-        <div>
-          <Button onClick={() => this.onEditCancel()}>Back</Button>
-        </div>
-        <form onSubmit={this.onFormSubmit}>
-          <Row>
-            <Input
-              s={6}
-              name="tag-title"
-              label="Title"
-              value={this.state.title || ''}
-              onChange={this.onTitleChange}
-            />
+      <form className="form-container" onSubmit={this.onFormSubmit}>
+        <Row>
+          <Col>
+            <Button onClick={() => this.onEditCancel()}>Back</Button>
+          </Col>
+        </Row>
+        <Row>
+          <Input
+            name="tag-title"
+            label="Title"
+            value={this.state.title || ''}
+            onChange={this.onTitleChange}
+          />
 
-            <Input
-              name="description"
-              placeholder="enter description"
-              s={6}
-              label="Description"
-              type="textarea"
-              value={this.state.description || ''}
-              onChange={this.onDescriptionChange}
-            />
-          </Row>
-          <Button type="submit">Apply</Button>
-        </form>
-      </div>
+          <Input
+            name="description"
+            placeholder="enter description"
+            label="Description"
+            type="textarea"
+            value={this.state.description || ''}
+            onChange={this.onDescriptionChange}
+          />
+        </Row>
+        <Row>
+          <Col>
+            <Button type="submit">Apply</Button>
+          </Col>
+        </Row>
+      </form>
     )
   }
 }

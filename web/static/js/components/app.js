@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import Tags from './tags_provider'
+import TagsProvider from './tags_provider'
 
 import { createSocket, fetchLayout } from '../socket'
 
@@ -20,7 +20,7 @@ class App extends Component {
   render() {
     return (
       <div>
-        <Tags />
+        <TagsProvider />
       </div>
     )
   }

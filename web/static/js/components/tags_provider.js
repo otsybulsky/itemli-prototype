@@ -9,6 +9,7 @@ import Articles from './articles'
 import ArticlesUnbound from './articles_unbound'
 import TagEdit from './tag_edit'
 import { editTag } from '../actions'
+import { Row, Col } from 'react-materialize'
 
 class TagsProvider extends Component {
   action_add_tag(event) {
