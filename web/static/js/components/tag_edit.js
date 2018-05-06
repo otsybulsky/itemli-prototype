@@ -5,6 +5,7 @@ import { Row, Col, Button } from 'react-materialize'
 import { editTagCancel } from '../actions'
 import { editTagApply } from '../socket'
 import Textarea from 'react-textarea-autosize'
+import ReactTooltip from 'react-tooltip'
 
 class TagEdit extends Component {
   constructor(props) {
@@ -31,6 +32,9 @@ class TagEdit extends Component {
   }
   onEditCancel() {
     this.props.editTagCancel()
+  }
+  onDelete() {
+    console.log('delete the tag')
   }
 
   setLocalState(props) {
@@ -60,13 +64,36 @@ class TagEdit extends Component {
     return (
       <form className="form-container" onSubmit={this.onFormSubmit}>
         <Row>
-          <Col>
-            <Button onClick={() => this.onEditCancel()}>Back</Button>
+          <Col s={4}>
+            <a
+              className="btn btn-small"
+              data-tip
+              data-for="btnBack"
+              onClick={() => this.onEditCancel()}
+            >
+              <i className="material-icons">arrow_back</i>
+            </a>
+            <ReactTooltip
+              id="btnBack"
+              type="info"
+              place="right"
+              effect="solid"
+              delayShow={1000}
+            >
+              <span>Return to articles</span>
+            </ReactTooltip>
+          </Col>
+          <Col s={8} className="right-align">
+            <a className="btn btn-small" onClick={() => this.onDelete()}>
+              <i className="material-icons">delete</i>
+            </a>
           </Col>
         </Row>
         <Row>
           <Col s={12}>
+            <h6>Title</h6>
             <Textarea
+              className="tag-edit-input tag-edit-input-title"
               autoFocus
               placeholder="enter tag title"
               label="Title"
@@ -75,7 +102,9 @@ class TagEdit extends Component {
             />
           </Col>
           <Col s={12}>
+            <h6>Description</h6>
             <Textarea
+              className="tag-edit-input"
               placeholder="enter description"
               label="Description"
               value={this.state.description || ''}
@@ -85,7 +114,7 @@ class TagEdit extends Component {
         </Row>
 
         <Row>
-          <Col>
+          <Col s={12} className="right-align">
             <Button type="submit">Apply</Button>
           </Col>
         </Row>

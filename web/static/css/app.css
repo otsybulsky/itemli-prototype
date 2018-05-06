@@ -26,10 +26,14 @@
   padding-bottom: 5px;
 }
 
-.tag-body-toolbar i {
+.tag-header {
+  border-bottom: 1px red solid;
+}
+
+.tag-body-toolbar {
   cursor: pointer;
 }
-.tag-body-toolbar:hover i {
+.tag-body-toolbar:hover {
   background: lightgray;
   color: #333;
 }
@@ -82,6 +86,20 @@
 
 .form-container {
   margin: 0;
+}
+.form-container h6 {
+  color: blue;
+}
+
+.tag-edit-input {
+  border-top: 0;
+  border-left: 0;
+  border-right: 0;
+  border-color: darkgreen;
+}
+
+.tag-edit-input-title {
+  font-size: 1.2em;
 }
 
 .tag-edit-label {

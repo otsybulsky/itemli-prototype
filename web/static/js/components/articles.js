@@ -70,18 +70,18 @@ class Articles extends Component {
       return null
     }
     const menuInterface = (
-      <div className="tag-body-interface" onClick={ev => this.onActionTag(ev)}>
+      <div className="tag-body-interface">
         <i className="material-icons">menu</i>
       </div>
     )
 
     return (
-      <div>
-        <div className="tag-body-toolbar">
+      <div className="tag-header">
+        <div className="tag-body-toolbar" onClick={ev => this.onActionTag(ev)}>
           {menuInterface}
           <h5 className="tag-body-interface">{tags[tag_id].title}</h5>
-          <p>{tags[tag_id].description}</p>
         </div>
+        <p>{tags[tag_id].description}</p>
       </div>
     )
   }
