@@ -79,3 +79,12 @@
   width: 16px;
   cursor: move;
 }
+
+.form-container {
+  margin: 0;
+}
+
+.tag-edit-label {
+  color: #333 !important;
+  font-size: 1.2rem !important;
+}

@@ -1,9 +1,10 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
-import { Row, Col, Input, Button } from 'react-materialize'
+import { Row, Col, Button } from 'react-materialize'
 import { editTagCancel } from '../actions'
 import { editTagApply } from '../socket'
+import Textarea from 'react-textarea-autosize'
 
 class TagEdit extends Component {
   constructor(props) {
@@ -64,22 +65,25 @@ class TagEdit extends Component {
           </Col>
         </Row>
         <Row>
-          <Input
-            name="tag-title"
-            label="Title"
-            value={this.state.title || ''}
-            onChange={this.onTitleChange}
-          />
-
-          <Input
-            name="description"
-            placeholder="enter description"
-            label="Description"
-            type="textarea"
-            value={this.state.description || ''}
-            onChange={this.onDescriptionChange}
-          />
+          <Col s={12}>
+            <Textarea
+              autoFocus
+              placeholder="enter tag title"
+              label="Title"
+              value={this.state.title || ''}
+              onChange={this.onTitleChange}
+            />
+          </Col>
+          <Col s={12}>
+            <Textarea
+              placeholder="enter description"
+              label="Description"
+              value={this.state.description || ''}
+              onChange={this.onDescriptionChange}
+            />
+          </Col>
         </Row>
+
         <Row>
           <Col>
             <Button type="submit">Apply</Button>
