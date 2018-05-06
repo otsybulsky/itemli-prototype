@@ -40,8 +40,8 @@ class TagsProvider extends Component {
 
   render() {
     return (
-      <div>
-        <div className="tags-container">
+      <Row>
+        <Col s={4} className="tags-container">
           <a
             className="btn-floating btn-small red"
             onClick={ev => this.action_add_tag(ev)}
@@ -51,10 +51,9 @@ class TagsProvider extends Component {
           {this.renderUnbounds()}
           <hr />
           <Tags tag_ids={this.props.tag_ids} forceRefresh={Date.now()} />
-        </div>
-
-        {this.renderBody()}
-      </div>
+        </Col>
+        <Col s={8}>{this.renderBody()}</Col>
+      </Row>
     )
   }
 }

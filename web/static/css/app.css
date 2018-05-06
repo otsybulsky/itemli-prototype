@@ -69,21 +69,6 @@
   font-weight: bold;
   font-size: 1.2em;
 }
-.tags-container {
-  float: left;
-  border: 0px solid blue;
-  max-width: 30%;
-}
-.articles-container {
-  border: 0px solid red;
-  padding-left: 5px;
-  margin-left: 30%;
-  width: 70%;
-}
-.form-container {
-  margin-left: 30%;
-  width: 70%;
-}
 
 .favicon {
   float: left;
