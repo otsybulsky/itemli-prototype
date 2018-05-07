@@ -3,9 +3,11 @@ import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import { Row, Col, Button } from 'react-materialize'
 import { editTagCancel } from '../actions'
-import { editTagApply } from '../socket'
+import { editTagApply, deleteTag } from '../socket'
 import Textarea from 'react-textarea-autosize'
 import ReactTooltip from 'react-tooltip'
+
+import confirmDialog from './dialogs/confirm'
 
 class TagEdit extends Component {
   constructor(props) {
@@ -34,7 +36,19 @@ class TagEdit extends Component {
     this.props.editTagCancel()
   }
   onDelete() {
-    console.log('delete the tag')
+    const { tag_for_edit, deleteTag, editTagCancel } = this.props
+    if (tag_for_edit) {
+      confirmDialog(`Delete tag ${this.props.tag_for_edit.title}?`).then(
+        () => {
+          //delete the tag confirmed
+          editTagCancel()
+          deleteTag(tag_for_edit)
+        },
+        () => {
+          //console.log('delete cancel')
+        }
+      )
+    }
   }
 
   setLocalState(props) {
@@ -131,6 +145,8 @@ function mapStateToProps(state) {
   }
 }
 
-export default connect(mapStateToProps, { editTagCancel, editTagApply })(
-  TagEdit
-)
+export default connect(mapStateToProps, {
+  editTagCancel,
+  editTagApply,
+  deleteTag
+})(TagEdit)

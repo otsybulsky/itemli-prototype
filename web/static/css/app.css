@@ -31,10 +31,10 @@
 .tag-body-toolbar {
   cursor: pointer;
 }
-.tag-body-toolbar:hover {
+/* .tag-body-toolbar:hover {
   background: lightgray;
   color: #333;
-}
+} */
 
 .tag-body h6,
 .tag-body .tag-body-toolbar,
