@@ -8,9 +8,12 @@ import MultiBackend from 'react-dnd-multi-backend'
 import HTML5toTouch from 'react-dnd-multi-backend/lib/HTML5toTouch'
 
 import { editArticle, editTag } from '../actions'
+import { deleteTag } from '../socket'
 import ArticleEdit from './article_edit'
 
 import { Button } from 'react-materialize'
+
+import confirmDialog from './dialogs/confirm'
 
 class Articles extends Component {
   renderArticles() {
@@ -28,24 +31,49 @@ class Articles extends Component {
   }
   onOpenArticles(event) {
     const { articles } = this.props
-    articles.map(article => {
-      if (article.url) {
-        window.open(article.url, '_blank')
-      }
-    })
+    if (articles && articles.length > 0) {
+      confirmDialog(`Open ${articles.length} tabs in your browser?`).then(
+        () => {
+          articles.map(article => {
+            if (article.url) {
+              window.open(article.url, '_blank')
+            }
+          })
+        },
+        () => {}
+      )
+    }
   }
 
   renderInterface() {
     return (
       <div>
-        <h6>Articles interface</h6>
-        <Button onClick={ev => this.onAddArticle(ev)} floating icon="add" />
-        <Button
-          onClick={ev => this.onOpenArticles(ev)}
-          floating
-          icon="open_in_browser"
-        />
-        <hr />
+        <div className="toolbar-fixed">
+          <ul>
+            <li className="waves-effect waves-light" onClick={this.onAddTag}>
+              <a>
+                <i className="material-icons">add</i>
+              </a>
+            </li>
+            <li
+              className="waves-effect waves-light"
+              onClick={ev => this.onActionTag(ev)}
+            >
+              <a>
+                <i className="material-icons">edit</i>
+              </a>
+            </li>
+
+            <li
+              className="waves-effect waves-light right"
+              onClick={this.onDeleteTag}
+            >
+              <a>
+                <i className="material-icons">delete</i>
+              </a>
+            </li>
+          </ul>
+        </div>
       </div>
     )
   }
@@ -56,6 +84,25 @@ class Articles extends Component {
       return null
     }
     return <ArticleEdit />
+  }
+
+  onAddTag = () => {
+    this.props.editTag()
+  }
+  onDeleteTag = () => {
+    const { tag_id, tags, deleteTag } = this.props
+    const tag = tags[tag_id]
+    if (tag) {
+      confirmDialog(`Delete tag ${tag.title}?`).then(
+        () => {
+          //delete the tag confirmed
+          deleteTag(tag)
+        },
+        () => {
+          //console.log('delete cancel')
+        }
+      )
+    }
   }
 
   onActionTag(event) {
@@ -70,16 +117,26 @@ class Articles extends Component {
       return null
     }
     const menuInterface = (
-      <div className="tag-body-interface">
-        <i className="material-icons">menu</i>
-      </div>
+      <a className="tag-body-interface waves-effect waves-light btn-floating blue">
+        <i
+          className="material-icons medium "
+          onClick={ev => this.onOpenArticles(ev)}
+        >
+          open_in_browser
+        </i>
+      </a>
     )
 
     return (
       <div className="tag-header">
-        <div className="tag-body-toolbar" onClick={ev => this.onActionTag(ev)}>
+        <div className="tag-body-toolbar">
           {menuInterface}
-          <h5 className="tag-body-interface">{tags[tag_id].title}</h5>
+          <h5
+            className="tag-body-interface"
+            onClick={ev => this.onActionTag(ev)}
+          >
+            {tags[tag_id].title}
+          </h5>
         </div>
         <p>{tags[tag_id].description}</p>
       </div>
@@ -123,5 +180,6 @@ export default connect(mapStateToProps, {
   fetchArticles,
   fetchArticlesUnbound,
   editArticle,
-  editTag
+  editTag,
+  deleteTag
 })(Articles)

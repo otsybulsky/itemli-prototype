@@ -40,20 +40,25 @@ class TagsProvider extends Component {
 
   render() {
     return (
-      <Row>
-        <Col s={4} className="tags-container">
+      <div>
+        <div className="fixed-action-btn">
           <a
-            className="btn-floating btn-small red"
+            className="btn-floating btn-small red "
             onClick={ev => this.action_add_tag(ev)}
           >
             <i className="material-icons">add</i>
           </a>
-          {this.renderUnbounds()}
-          <hr />
-          <Tags tag_ids={this.props.tag_ids} forceRefresh={Date.now()} />
-        </Col>
-        <Col s={8}>{this.renderBody()}</Col>
-      </Row>
+        </div>
+
+        <Row>
+          <Col s={4} className="tags-container">
+            {this.renderUnbounds()}
+
+            <Tags tag_ids={this.props.tag_ids} forceRefresh={Date.now()} />
+          </Col>
+          <Col s={8}>{this.renderBody()}</Col>
+        </Row>
+      </div>
     )
   }
 }

@@ -1,3 +1,9 @@
+#fixedbutton {
+  position: fixed;
+  bottom: 0px;
+  right: 0px;
+}
+
 .drop-interface-tag {
   width: auto;
   padding: 3px;

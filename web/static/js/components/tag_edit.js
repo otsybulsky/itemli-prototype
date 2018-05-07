@@ -80,12 +80,12 @@ class TagEdit extends Component {
         <Row>
           <Col s={4}>
             <a
-              className="btn btn-small"
+              className="waves-effect waves-light"
               data-tip
               data-for="btnBack"
               onClick={() => this.onEditCancel()}
             >
-              <i className="material-icons">arrow_back</i>
+              <i className="material-icons">close</i>
             </a>
             <ReactTooltip
               id="btnBack"
@@ -98,7 +98,10 @@ class TagEdit extends Component {
             </ReactTooltip>
           </Col>
           <Col s={8} className="right-align">
-            <a className="btn btn-small" onClick={() => this.onDelete()}>
+            <a
+              className="waves-effect waves-light"
+              onClick={() => this.onDelete()}
+            >
               <i className="material-icons">delete</i>
             </a>
           </Col>
@@ -129,7 +132,9 @@ class TagEdit extends Component {
 
         <Row>
           <Col s={12} className="right-align">
-            <Button type="submit">Apply</Button>
+            <Button className="waves-effect waves-light" type="submit">
+              Apply
+            </Button>
           </Col>
         </Row>
       </form>
