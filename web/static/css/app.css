@@ -73,7 +73,6 @@ ul {
 } */
 .hover-tag-body,
 .articles-unbound:hover,
-.article:hover,
 .article-drag-hover {
   background: lightgray;
   cursor: pointer;
@@ -88,16 +87,6 @@ ul {
 .tag-title {
   font-weight: bold;
   font-size: 1.2em;
-}
-
-.favicon {
-  float: left;
-  margin-right: 5px;
-  position: inherit;
-  top: 9px;
-  left: 25px;
-  width: 16px;
-  cursor: move;
 }
 
 .form-container h6 {
@@ -118,4 +107,45 @@ ul {
 .tag-edit-label {
   color: #333 !important;
   font-size: 1.2rem !important;
+}
+
+.article {
+  border-bottom: 1px solid lightgray;
+}
+.article .row {
+  margin-bottom: 0 !important;
+}
+.article-item-more,
+.article-item-body {
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+.article-item-more {
+  padding-left: 5px;
+  padding-right: 15px;
+  color: gray;
+}
+.article-item-more:hover {
+  color: red !important;
+}
+.article-item-body {
+  color: #333;
+}
+.article-item-title {
+  color: #333;
+}
+.article:hover .article-item-more,
+.article-item-title {
+  color: black;
+}
+.favicon {
+  margin-right: 5px;
+  position: inherit;
+  top: 18px;
+  left: 50px;
+  width: 32px;
+  cursor: move;
+}
+.article:hover .article-item-title {
+  font-weight: bold;
 }
