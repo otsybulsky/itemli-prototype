@@ -1,3 +1,6 @@
+ul {
+  margin: 0;
+}
 #fixedbutton {
   position: fixed;
   bottom: 0px;
@@ -10,6 +13,12 @@
   background: gray;
   float: left;
   margin-right: 10px;
+}
+
+.tags-container,
+.articles-container,
+.form-container {
+  margin-top: 20px;
 }
 
 .tag-container {
@@ -32,8 +41,11 @@
 
 .tag-header {
   border-bottom: 1px red solid;
+  margin-bottom: 20px;
 }
-
+.tag-toolbar {
+  margin: 0;
+}
 .tag-body-toolbar {
   cursor: pointer;
 }
@@ -88,9 +100,6 @@
   cursor: move;
 }
 
-.form-container {
-  margin: 0;
-}
 .form-container h6 {
   color: blue;
 }

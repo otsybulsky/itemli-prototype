@@ -48,37 +48,32 @@ class Articles extends Component {
   renderInterface() {
     return (
       <div>
-        <div className="toolbar-fixed">
-          <ul>
-            <li className="waves-effect waves-light" onClick={this.onAddTag}>
-              <a>
-                <i className="material-icons">add</i>
-              </a>
-            </li>
-            <li
-              className="waves-effect waves-light"
-              onClick={ev => this.onActionTag(ev)}
-            >
-              <a>
-                <i className="material-icons">edit</i>
-              </a>
-            </li>
+        <ul className="tag-toolbar">
+          <li className="waves-effect waves-light" onClick={this.onAddTag}>
+            <a>
+              <i className="material-icons">add</i>
+            </a>
+          </li>
+          <li
+            className="waves-effect waves-light"
+            onClick={ev => this.onActionTag(ev)}
+          >
+            <a>
+              <i className="material-icons">edit</i>
+            </a>
+          </li>
 
-            <li
-              className="waves-effect waves-light right"
-              onClick={this.onDeleteTag}
-            >
-              <a>
-                <i className="material-icons">delete</i>
-              </a>
-            </li>
-          </ul>
-        </div>
+          <li className="waves-effect waves-light" onClick={this.onDeleteTag}>
+            <a>
+              <i className="material-icons">delete</i>
+            </a>
+          </li>
+        </ul>
       </div>
     )
   }
 
-  renderArticleEdit() {
+  renderArticleEditForm() {
     const { article_edit_flag } = this.props
     if (!article_edit_flag) {
       return null
@@ -117,14 +112,16 @@ class Articles extends Component {
       return null
     }
     const menuInterface = (
-      <a className="tag-body-interface waves-effect waves-light btn-floating blue">
-        <i
-          className="material-icons medium "
-          onClick={ev => this.onOpenArticles(ev)}
-        >
-          open_in_browser
-        </i>
-      </a>
+      <div className="right">
+        <a className="tag-body-interface waves-effect waves-light btn-floating blue">
+          <i
+            className="material-icons medium "
+            onClick={ev => this.onOpenArticles(ev)}
+          >
+            open_in_browser
+          </i>
+        </a>
+      </div>
     )
 
     return (
@@ -138,6 +135,7 @@ class Articles extends Component {
             {tags[tag_id].title}
           </h5>
         </div>
+        {this.renderInterface()}
         <p>{tags[tag_id].description}</p>
       </div>
     )
@@ -158,8 +156,7 @@ class Articles extends Component {
     const { articles } = this.props
     return (
       <div className="articles-container">
-        {this.renderInterface()}
-        {this.renderArticleEdit()}
+        {this.renderArticleEditForm()}
         {this.renderTag()}
         {this.renderArticles()}
       </div>

@@ -7,6 +7,8 @@ import { DndTypes } from '../constants'
 import { editArticle } from '../actions'
 import { deleteArticle } from '../socket'
 
+import { Row, Col } from 'react-materialize'
+
 const itemSource = {
   beginDrag(props, monitor, component) {
     return {
@@ -126,16 +128,26 @@ class Article extends Component {
           onMouseLeave={ev => this.onMouseLeave(ev)}
           style={{ opacity }}
         >
-          <img className="favicon" src={favicon} />
-          <a href={url} target="_blank">
-            {title}
-          </a>
-          {this.renderEditInterface()}
+          <Row>
+            <Col s={1}>
+              <i className="material-icons tiny waves-effect waves-light">
+                content_paste
+              </i>
+            </Col>
+            <Col s={11}>
+              <img className="favicon" src={favicon} />
+              <a href={url} target="_blank">
+                {title}
+              </a>
+            </Col>
+          </Row>
         </div>
       )
     )
   }
 }
+
+//{this.renderEditInterface()}
 
 function mapStateToProps(store) {
   return {
