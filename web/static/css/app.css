@@ -1,6 +1,9 @@
 ul {
   margin: 0;
 }
+i:hover {
+  color: red;
+}
 #fixedbutton {
   position: fixed;
   bottom: 0px;

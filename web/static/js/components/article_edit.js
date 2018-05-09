@@ -1,9 +1,10 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
-import { Row, Input, Button, Tag } from 'react-materialize'
+import { Row, Col, Input, Button, Tag } from 'react-materialize'
 import { editArticleCancel } from '../actions'
 import { editArticleApply } from '../socket'
+import Textarea from 'react-textarea-autosize'
 
 class ArticleEdit extends Component {
   constructor(props) {
@@ -82,39 +83,74 @@ class ArticleEdit extends Component {
   render() {
     return (
       <div className="form-container">
-        <div>
-          <Button onClick={() => this.onEditCancel()}>Back</Button>
-          <h5>Edit article</h5>
-        </div>
         <form onSubmit={this.onFormSubmit}>
-          {this.renderTags()}
-          <Input
-            name="title"
-            placeholder="enter title article"
-            s={4}
-            label="Title"
-            value={this.state.title || ''}
-            onChange={this.onTitleChange}
-          />
-          <Input
-            name="description"
-            placeholder="enter description"
-            s={6}
-            label="Description"
-            type="textarea"
-            value={this.state.description || ''}
-            onChange={this.onDescriptionChange}
-          />
-          <Input
-            name="url"
-            placeholder="enter url"
-            s={6}
-            label="Url"
-            type="textarea"
-            value={this.state.url || ''}
-            onChange={this.onUrlChange}
-          />
-          <Button type="submit">Apply</Button>
+          <Row>
+            <Col s={4}>
+              <a
+                className="waves-effect waves-light"
+                data-tip
+                data-for="btnBack"
+                onClick={() => this.onEditCancel()}
+              >
+                <i className="material-icons">close</i>
+              </a>
+            </Col>
+            <Col s={8} className="right-align">
+              <a
+                className="waves-effect waves-light btn-floating disabled"
+                //onClick={() => this.onDelete()}
+              >
+                <i className="material-icons">delete</i>
+              </a>
+            </Col>
+          </Row>
+
+          <Row>
+            <Col s={12}>
+              <h6>Title</h6>
+              <Textarea
+                className="tag-edit-input tag-edit-input-title"
+                autoFocus
+                placeholder="enter article title"
+                label="Title"
+                value={this.state.title || ''}
+                onChange={this.onTitleChange}
+              />
+            </Col>
+            <Col s={12}>
+              <h6>Description</h6>
+              <Textarea
+                className="tag-edit-input"
+                placeholder="enter description"
+                label="Description"
+                value={this.state.description || ''}
+                onChange={this.onDescriptionChange}
+              />
+            </Col>
+            <Col s={12}>
+              <a href={this.state.url || ''} target="_blank">
+                <i className="material-icons">link</i>
+              </a>
+
+              <Textarea
+                className="tag-edit-input"
+                placeholder="enter URL"
+                label="URL"
+                value={this.state.url || ''}
+                onChange={this.onUrlChange}
+              />
+            </Col>
+          </Row>
+
+          <div className="article-tags">{this.renderTags()}</div>
+
+          <Row>
+            <Col s={12} className="right-align">
+              <Button className="waves-effect waves-light" type="submit">
+                Apply
+              </Button>
+            </Col>
+          </Row>
         </form>
       </div>
     )
