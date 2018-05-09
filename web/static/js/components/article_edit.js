@@ -3,8 +3,9 @@ import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import { Row, Col, Input, Button, Tag } from 'react-materialize'
 import { editArticleCancel } from '../actions'
-import { editArticleApply } from '../socket'
+import { editArticleApply, deleteArticle } from '../socket'
 import Textarea from 'react-textarea-autosize'
+import confirmDialog from './dialogs/confirm'
 
 class ArticleEdit extends Component {
   constructor(props) {
@@ -39,6 +40,23 @@ class ArticleEdit extends Component {
   onEditCancel() {
     this.props.editArticleCancel()
   }
+  onDelete(event) {
+    const { article_for_edit, deleteArticle } = this.props
+    if (article_for_edit) {
+      confirmDialog(
+        `Delete article ${this.props.article_for_edit.title}?`
+      ).then(
+        () => {
+          this.onEditCancel()
+          deleteArticle(article_for_edit)
+        },
+        () => {
+          //console.log('delete cancel')
+        }
+      )
+    }
+  }
+
   setLocalState(props) {
     if (props.article_for_edit) {
       const {
@@ -97,8 +115,8 @@ class ArticleEdit extends Component {
             </Col>
             <Col s={8} className="right-align">
               <a
-                className="waves-effect waves-light btn-floating disabled"
-                //onClick={() => this.onDelete()}
+                className="waves-effect waves-light"
+                onClick={ev => this.onDelete(ev)}
               >
                 <i className="material-icons">delete</i>
               </a>
@@ -169,5 +187,6 @@ function mapStateToProps(state) {
 
 export default connect(mapStateToProps, {
   editArticleCancel,
-  editArticleApply
+  editArticleApply,
+  deleteArticle
 })(ArticleEdit)

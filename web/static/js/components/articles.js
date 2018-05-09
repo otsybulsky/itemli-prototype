@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import Article from './article'
@@ -45,32 +46,36 @@ class Articles extends Component {
     }
   }
 
-  renderInterface() {
-    return (
-      <div>
-        <ul className="tag-toolbar">
-          <li className="waves-effect waves-light" onClick={this.onAddTag}>
-            <a>
-              <i className="material-icons">add</i>
-            </a>
-          </li>
-          <li
-            className="waves-effect waves-light"
-            onClick={ev => this.onActionTag(ev)}
-          >
-            <a>
-              <i className="material-icons">edit</i>
-            </a>
-          </li>
+  renderInterface(tag) {
+    if (!_.isEmpty(tag.title)) {
+      return null
+    } else {
+      return (
+        <div>
+          <ul className="tag-toolbar">
+            <li className="waves-effect waves-light" onClick={this.onAddTag}>
+              <a>
+                <i className="material-icons">add</i>
+              </a>
+            </li>
+            <li
+              className="waves-effect waves-light"
+              onClick={ev => this.onActionTag(ev)}
+            >
+              <a>
+                <i className="material-icons">edit</i>
+              </a>
+            </li>
 
-          <li className="waves-effect waves-light" onClick={this.onDeleteTag}>
-            <a>
-              <i className="material-icons">delete</i>
-            </a>
-          </li>
-        </ul>
-      </div>
-    )
+            <li className="waves-effect waves-light" onClick={this.onDeleteTag}>
+              <a>
+                <i className="material-icons">delete</i>
+              </a>
+            </li>
+          </ul>
+        </div>
+      )
+    }
   }
 
   renderArticleEditForm() {
@@ -135,7 +140,7 @@ class Articles extends Component {
             {tags[tag_id].title}
           </h5>
         </div>
-        {this.renderInterface()}
+        {this.renderInterface(tags[tag_id])}
         <p>{tags[tag_id].description}</p>
       </div>
     )
