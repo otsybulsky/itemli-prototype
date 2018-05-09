@@ -17,8 +17,8 @@ import confirmDialog from './dialogs/confirm'
 
 class Articles extends Component {
   renderArticles() {
-    const { articles } = this.props
-    if (!articles) {
+    const { articles, article_edit_flag } = this.props
+    if (!articles || article_edit_flag) {
       return null
     }
     return articles.map((article, i) => {
@@ -107,8 +107,8 @@ class Articles extends Component {
   }
 
   renderTag() {
-    const { tag_id, tags } = this.props
-    if (!tag_id) {
+    const { tag_id, tags, article_edit_flag } = this.props
+    if (!tag_id || article_edit_flag) {
       return null
     }
     const menuInterface = (
