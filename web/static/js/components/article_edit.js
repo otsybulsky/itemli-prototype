@@ -93,9 +93,11 @@ class ArticleEdit extends Component {
     const { tag_ids } = this.state
     const { tags } = this.props
 
-    return tag_ids.map(id => {
+    const tags_view = tag_ids.map(id => {
       return <Tag key={id}>{tags[id].title}</Tag>
     })
+
+    return <div>{tags_view}</div>
   }
 
   render() {
