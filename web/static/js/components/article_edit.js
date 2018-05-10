@@ -1,7 +1,8 @@
+import _ from 'lodash'
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
-import { Row, Col, Input, Button, Tag } from 'react-materialize'
+import { Row, Col, Autocomplete, Button, Tag } from 'react-materialize'
 import { editArticleCancel } from '../actions'
 import { editArticleApply, deleteArticle } from '../socket'
 import Textarea from 'react-textarea-autosize'
@@ -15,7 +16,8 @@ class ArticleEdit extends Component {
       title: '',
       description: '',
       url: '',
-      tag_ids: []
+      tag_ids: [],
+      showTagInput: false
     }
 
     this.onTitleChange = this.onTitleChange.bind(this)
@@ -89,6 +91,57 @@ class ArticleEdit extends Component {
     this.setLocalState(nextProps)
   }
 
+  onClickNewTag = () => {
+    this.setState({ showTagInput: true })
+  }
+  onTagInputKeyPress = event => {
+    if (event.key === 'Enter') {
+      this.setState({ showTagInput: false })
+      event.stopPropagation()
+    }
+  }
+  onAutocomplete(value) {
+    const { tags } = this.props
+    const { tag_ids } = this.state
+
+    const data = Object.values(tags).reduce((obj, item) => {
+      obj[item['title']] = item
+      return obj
+    }, {})
+
+    this.setState({
+      showTagInput: false
+    })
+
+    const new_tag = data[value].id
+    if (new_tag && !tag_ids.includes(new_tag)) {
+      this.setState({ tag_ids: [...tag_ids, new_tag] })
+    }
+  }
+
+  showTagInput() {
+    const { showTagInput } = this.state
+    const { tags } = this.props
+
+    const data = Object.values(tags).reduce((obj, item) => {
+      obj[item['title']] = null
+      return obj
+    }, {})
+
+    if (showTagInput) {
+      return (
+        <Autocomplete
+          multiple={true}
+          data={data}
+          onAutocomplete={value => this.onAutocomplete(value)}
+          onKeyPress={event => this.onTagInputKeyPress(event)}
+        />
+      )
+    } else {
+      return <a onClick={this.onClickNewTag}>Add new tag...</a>
+    }
+  }
+
   renderTags() {
     const { tag_ids } = this.state
     const { tags } = this.props
@@ -97,7 +150,12 @@ class ArticleEdit extends Component {
       return <Tag key={id}>{tags[id].title}</Tag>
     })
 
-    return <div>{tags_view}</div>
+    return (
+      <div>
+        {this.showTagInput()}
+        {tags_view}
+      </div>
+    )
   }
 
   render() {
