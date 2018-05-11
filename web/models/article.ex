@@ -16,9 +16,19 @@ defmodule Itemli.Article do
   end
 
   def changeset(struct, params \\ %{}) do
-    struct
-    |> cast(params, [:title, :url, :favicon, :description])  
-    |> put_assoc(:tags, params.tag || nil)
+    
+   case params do
+    %{"tag": tags} ->
+      struct
+      |> cast(params, [:title, :url, :favicon, :description])  
+      |> put_assoc(:tags, params.tag || nil) #for tabs:add from ext client
+    _ ->
+      struct
+      |> cast(params, [:title, :url, :favicon, :description, :tags])  
+   end
+
+
+    
   end
   
 end
