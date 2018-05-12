@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import Article from './article'
@@ -7,15 +8,18 @@ import { DragDropContext } from 'react-dnd'
 import MultiBackend from 'react-dnd-multi-backend'
 import HTML5toTouch from 'react-dnd-multi-backend/lib/HTML5toTouch'
 
-import { editArticle } from '../actions'
+import { editArticle, editTag } from '../actions'
+import { deleteTag } from '../socket'
 import ArticleEdit from './article_edit'
 
 import { Button } from 'react-materialize'
 
+import confirmDialog from './dialogs/confirm'
+
 class Articles extends Component {
   renderArticles() {
-    const { articles } = this.props
-    if (!articles) {
+    const { articles, article_edit_flag } = this.props
+    if (!articles || article_edit_flag) {
       return null
     }
     return articles.map((article, i) => {
@@ -28,29 +32,53 @@ class Articles extends Component {
   }
   onOpenArticles(event) {
     const { articles } = this.props
-    articles.map(article => {
-      if (article.url) {
-        window.open(article.url, '_blank')
-      }
-    })
+    if (articles && articles.length > 0) {
+      confirmDialog(`Open ${articles.length} tabs in your browser?`).then(
+        () => {
+          articles.map(article => {
+            if (article.url) {
+              window.open(article.url, '_blank')
+            }
+          })
+        },
+        () => {}
+      )
+    }
   }
 
-  renderInterface() {
-    return (
-      <div>
-        <h5>Articles interface</h5>
-        <Button onClick={ev => this.onAddArticle(ev)} floating icon="add" />
-        <Button
-          onClick={ev => this.onOpenArticles(ev)}
-          floating
-          icon="open_in_browser"
-        />
-        <hr />
-      </div>
-    )
+  renderInterface(tag) {
+    if (!_.isEmpty(tag.title)) {
+      return null
+    } else {
+      return (
+        <div>
+          <ul className="tag-toolbar">
+            <li className="waves-effect waves-light" onClick={this.onAddTag}>
+              <a>
+                <i className="material-icons">add</i>
+              </a>
+            </li>
+            <li
+              className="waves-effect waves-light"
+              onClick={ev => this.onActionTag(ev)}
+            >
+              <a>
+                <i className="material-icons">edit</i>
+              </a>
+            </li>
+
+            <li className="waves-effect waves-light" onClick={this.onDeleteTag}>
+              <a>
+                <i className="material-icons">delete</i>
+              </a>
+            </li>
+          </ul>
+        </div>
+      )
+    }
   }
 
-  renderArticleEdit() {
+  renderArticleEditForm() {
     const { article_edit_flag } = this.props
     if (!article_edit_flag) {
       return null
@@ -58,12 +86,64 @@ class Articles extends Component {
     return <ArticleEdit />
   }
 
+  onAddTag = () => {
+    this.props.editTag()
+  }
+  onDeleteTag = () => {
+    const { tag_id, tags, deleteTag } = this.props
+    const tag = tags[tag_id]
+    if (tag) {
+      confirmDialog(`Delete tag ${tag.title}?`).then(
+        () => {
+          //delete the tag confirmed
+          deleteTag(tag)
+        },
+        () => {
+          //console.log('delete cancel')
+        }
+      )
+    }
+  }
+
+  onActionTag(event) {
+    const { tag_id, tags, editTag } = this.props
+    editTag(tags[tag_id])
+    event.stopPropagation()
+  }
+
   renderTag() {
-    const { tag_id, tags } = this.props
-    if (!tag_id) {
+    const { tag_id, tags, article_edit_flag } = this.props
+    if (!tag_id || article_edit_flag) {
       return null
     }
-    return <h5>{tags[tag_id].title}</h5>
+    const menuInterface = (
+      <div className="right">
+        <a className="tag-body-interface waves-effect waves-light btn-floating blue">
+          <i
+            className="material-icons medium "
+            onClick={ev => this.onOpenArticles(ev)}
+          >
+            open_in_browser
+          </i>
+        </a>
+      </div>
+    )
+
+    return (
+      <div className="tag-header">
+        <div className="tag-body-toolbar">
+          {menuInterface}
+          <h5
+            className="tag-body-interface"
+            onClick={ev => this.onActionTag(ev)}
+          >
+            {tags[tag_id].title}
+          </h5>
+        </div>
+        {this.renderInterface(tags[tag_id])}
+        <p>{tags[tag_id].description}</p>
+      </div>
+    )
   }
 
   componentWillReceiveProps(nextProps) {
@@ -81,8 +161,7 @@ class Articles extends Component {
     const { articles } = this.props
     return (
       <div className="articles-container">
-        {this.renderInterface()}
-        {this.renderArticleEdit()}
+        {this.renderArticleEditForm()}
         {this.renderTag()}
         {this.renderArticles()}
       </div>
@@ -102,5 +181,7 @@ function mapStateToProps(store) {
 export default connect(mapStateToProps, {
   fetchArticles,
   fetchArticlesUnbound,
-  editArticle
+  editArticle,
+  editTag,
+  deleteTag
 })(Articles)

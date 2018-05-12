@@ -1,9 +1,13 @@
+import _ from 'lodash'
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
-import { Row, Input, Button, Tag } from 'react-materialize'
+import { Row, Col, Autocomplete, Button, Tag } from 'react-materialize'
 import { editArticleCancel } from '../actions'
-import { editArticleApply } from '../socket'
+import { editArticleApply, deleteArticle } from '../socket'
+import Textarea from 'react-textarea-autosize'
+import confirmDialog from './dialogs/confirm'
+import TagChip from './tag_chip'
 
 class ArticleEdit extends Component {
   constructor(props) {
@@ -13,7 +17,8 @@ class ArticleEdit extends Component {
       title: '',
       description: '',
       url: '',
-      tag_ids: []
+      tag_ids: [],
+      showTagInput: false
     }
 
     this.onTitleChange = this.onTitleChange.bind(this)
@@ -38,6 +43,23 @@ class ArticleEdit extends Component {
   onEditCancel() {
     this.props.editArticleCancel()
   }
+  onDelete(event) {
+    const { article_for_edit, deleteArticle } = this.props
+    if (article_for_edit) {
+      confirmDialog(
+        `Delete article ${this.props.article_for_edit.title}?`
+      ).then(
+        () => {
+          this.onEditCancel()
+          deleteArticle(article_for_edit)
+        },
+        () => {
+          //console.log('delete cancel')
+        }
+      )
+    }
+  }
+
   setLocalState(props) {
     if (props.article_for_edit) {
       const {
@@ -70,51 +92,167 @@ class ArticleEdit extends Component {
     this.setLocalState(nextProps)
   }
 
+  onClickNewTag = () => {
+    this.setState({ showTagInput: true })
+  }
+  onTagInputKeyDown = event => {
+    const keys = ['Enter', 'Escape']
+    if (keys.includes(event.key)) {
+      this.setState({ showTagInput: false })
+      event.stopPropagation()
+    }
+  }
+  onAutocomplete(value) {
+    const { tags } = this.props
+    const { tag_ids } = this.state
+
+    const data = Object.values(tags).reduce((obj, item) => {
+      obj[item['title']] = item
+      return obj
+    }, {})
+
+    this.setState({
+      showTagInput: false
+    })
+
+    const new_tag = data[value].id
+    if (new_tag && !tag_ids.includes(new_tag)) {
+      this.setState({ tag_ids: [...tag_ids, new_tag] })
+    }
+  }
+
+  componentDidUpdate() {
+    const { showTagInput } = this.state
+    if (showTagInput) {
+      document.getElementById('tagInput').focus()
+    }
+  }
+
+  showTagInput() {
+    const { showTagInput } = this.state
+    const { tags } = this.props
+
+    const data = Object.values(tags).reduce((obj, item) => {
+      obj[item['title']] = null
+      return obj
+    }, {})
+
+    if (showTagInput) {
+      return (
+        <Autocomplete
+          data={data}
+          title="Tape tag name ..."
+          id="tagInput"
+          onAutocomplete={value => this.onAutocomplete(value)}
+          onKeyDown={event => this.onTagInputKeyDown(event)}
+        />
+      )
+    } else {
+      return <a onClick={this.onClickNewTag}>Add new tag...</a>
+    }
+  }
+
+  removeTag = tag => {
+    const tag_ids = [...this.state.tag_ids]
+    const index = tag_ids.indexOf(tag.id)
+    const removed_data = tag_ids.splice(index, 1)
+
+    this.setState({ tag_ids: tag_ids })
+  }
+
   renderTags() {
     const { tag_ids } = this.state
     const { tags } = this.props
 
-    return tag_ids.map(id => {
-      return <Tag key={id}>{tags[id].title}</Tag>
+    const tags_view = tag_ids.map(id => {
+      return (
+        <TagChip
+          key={'tagchip-' + id}
+          tag={tags[id]}
+          removeTag={this.removeTag}
+        />
+      )
     })
+
+    return (
+      <div>
+        {this.showTagInput()}
+        {tags_view}
+      </div>
+    )
   }
 
   render() {
     return (
       <div className="form-container">
-        <div>
-          <Button onClick={() => this.onEditCancel()}>Back</Button>
-          <h5>Edit article</h5>
-        </div>
         <form onSubmit={this.onFormSubmit}>
-          {this.renderTags()}
-          <Input
-            name="title"
-            placeholder="enter title article"
-            s={4}
-            label="Title"
-            value={this.state.title || ''}
-            onChange={this.onTitleChange}
-          />
-          <Input
-            name="description"
-            placeholder="enter description"
-            s={6}
-            label="Description"
-            type="textarea"
-            value={this.state.description || ''}
-            onChange={this.onDescriptionChange}
-          />
-          <Input
-            name="url"
-            placeholder="enter url"
-            s={6}
-            label="Url"
-            type="textarea"
-            value={this.state.url || ''}
-            onChange={this.onUrlChange}
-          />
-          <Button type="submit">Apply</Button>
+          <Row>
+            <Col s={4}>
+              <a
+                className="waves-effect waves-light"
+                data-tip
+                data-for="btnBack"
+                onClick={() => this.onEditCancel()}
+              >
+                <i className="material-icons">close</i>
+              </a>
+            </Col>
+            <Col s={8} className="right-align">
+              <a
+                className="waves-effect waves-light"
+                onClick={ev => this.onDelete(ev)}
+              >
+                <i className="material-icons">delete</i>
+              </a>
+            </Col>
+          </Row>
+
+          <Row>
+            <Col s={12}>
+              <h6>Title</h6>
+              <Textarea
+                className="tag-edit-input tag-edit-input-title"
+                autoFocus
+                placeholder="enter article title"
+                label="Title"
+                value={this.state.title || ''}
+                onChange={this.onTitleChange}
+              />
+            </Col>
+            <Col s={12}>
+              <h6>Description</h6>
+              <Textarea
+                className="tag-edit-input"
+                placeholder="enter description"
+                label="Description"
+                value={this.state.description || ''}
+                onChange={this.onDescriptionChange}
+              />
+            </Col>
+            <Col s={12}>
+              <a href={this.state.url || ''} target="_blank">
+                <i className="material-icons">link</i>
+              </a>
+
+              <Textarea
+                className="tag-edit-input"
+                placeholder="enter URL"
+                label="URL"
+                value={this.state.url || ''}
+                onChange={this.onUrlChange}
+              />
+            </Col>
+          </Row>
+
+          <div className="article-tags">{this.renderTags()}</div>
+
+          <Row>
+            <Col s={12} className="right-align">
+              <Button className="waves-effect waves-light" type="submit">
+                Apply
+              </Button>
+            </Col>
+          </Row>
         </form>
       </div>
     )
@@ -133,5 +271,6 @@ function mapStateToProps(state) {
 
 export default connect(mapStateToProps, {
   editArticleCancel,
-  editArticleApply
+  editArticleApply,
+  deleteArticle
 })(ArticleEdit)

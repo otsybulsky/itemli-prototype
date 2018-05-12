@@ -238,6 +238,7 @@ defmodule Itemli.RoomChannel do
 
   def handle_in("article:edit", params, socket) do
     user = socket.assigns.user
+    
     case params do
       %{"article_id" => article_id, "title" => title, "description" => description, "url" => url, "tag_ids" => tag_ids} -> #update article
 
@@ -246,9 +247,10 @@ defmodule Itemli.RoomChannel do
       select: t
       tags = Repo.all(tags_query)
 
-        cs = Repo.get(Article, article_id)
-        |> Ecto.Changeset.change( title: title, description: description, url: url, tag: tags)
-
+      cs = Repo.get(Article, article_id)
+        |> Repo.preload([:tags])
+        |> Ecto.Changeset.change( title: title, description: description, url: url, tags: tags)
+ 
       case Repo.update cs do
         {:ok, article}       -> # Updated with success
           {:reply, {:ok, %{id: article.id}},socket}
@@ -362,14 +364,16 @@ defmodule Itemli.RoomChannel do
         articles = for item <- content do
           case item do
             %{"title" => title, "url" => url, "favIconUrl" => favicon} ->
+
               article = user
               |> build_assoc(:articles)
               |> Article.changeset(%{tag: [tag], title: title, url: url, favicon: favicon})
               |> Repo.insert
+
             %{"title" => title, "url" => url} ->
               article = user
               |> build_assoc(:articles)
-              |> Article.changeset(%{tag: [tag], title: title, url: url})
+              |> Article.changeset(%{tags: [tag], title: title, url: url})
               |> Repo.insert
             _ ->
               IO.puts "-------------------------------------------------------------- MATCH ERROR "

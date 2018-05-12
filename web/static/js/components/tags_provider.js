@@ -9,6 +9,7 @@ import Articles from './articles'
 import ArticlesUnbound from './articles_unbound'
 import TagEdit from './tag_edit'
 import { editTag } from '../actions'
+import { Row, Col } from 'react-materialize'
 
 class TagsProvider extends Component {
   action_add_tag(event) {
@@ -20,7 +21,6 @@ class TagsProvider extends Component {
       return (
         <div>
           <TagEdit />
-          <Articles />
         </div>
       )
     }
@@ -41,19 +41,23 @@ class TagsProvider extends Component {
   render() {
     return (
       <div>
-        <div className="tags-container">
+        <div className="fixed-action-btn">
           <a
-            className="btn-floating btn-small red"
+            className="btn-floating btn-small red "
             onClick={ev => this.action_add_tag(ev)}
           >
             <i className="material-icons">add</i>
           </a>
-          {this.renderUnbounds()}
-          <hr />
-          <Tags tag_ids={this.props.tag_ids} forceRefresh={Date.now()} />
         </div>
 
-        {this.renderBody()}
+        <Row>
+          <Col s={4} className="tags-container">
+            {this.renderUnbounds()}
+
+            <Tags tag_ids={this.props.tag_ids} forceRefresh={Date.now()} />
+          </Col>
+          <Col s={8}>{this.renderBody()}</Col>
+        </Row>
       </div>
     )
   }

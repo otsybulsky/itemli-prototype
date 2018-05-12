@@ -7,6 +7,8 @@ import { DndTypes } from '../constants'
 import { editArticle } from '../actions'
 import { deleteArticle } from '../socket'
 
+import { Row, Col } from 'react-materialize'
+
 const itemSource = {
   beginDrag(props, monitor, component) {
     return {
@@ -71,36 +73,40 @@ class Article extends Component {
     this.setState({ onHover: false })
   }
   renderEditInterface() {
-    const { onHover } = this.state
-    if (!onHover) return null
-
-    const editInterface = (
-      <div className="tag-body-interface" onClick={ev => this.onEditClick(ev)}>
-        <i className="small material-icons">edit</i>
-      </div>
-    )
-
-    const deleteInterface = (
-      <div
-        className="tag-body-interface"
-        onClick={ev => this.onDeleteClick(ev)}
-      >
-        <i className="small material-icons">delete</i>
-      </div>
-    )
+    // const { onHover } = this.state
+    // if (!onHover) return null
 
     return (
-      <div>
-        {editInterface}
-        {deleteInterface}
-      </div>
+      <i
+        className="material-icons small waves-effect waves-light article-item-more"
+        onClick={ev => this.onEditClick(ev)}
+      >
+        content_paste
+      </i>
     )
+
+    // const deleteInterface = (
+    //   <div
+    //     className="tag-body-interface"
+    //     onClick={ev => this.onDeleteClick(ev)}
+    //   >
+    //     <i className="small material-icons">delete</i>
+    //   </div>
+    // )
+
+    // return (
+    //   <div>
+    //     {editInterface}
+    //     {deleteInterface}
+    //   </div>
+    // )
   }
 
   onEditClick(event) {
     const { article, editArticle } = this.props
     editArticle(article)
     event.stopPropagation()
+    event.preventDefault()
   }
   onDeleteClick(event) {
     const { article, deleteArticle } = this.props
@@ -126,16 +132,26 @@ class Article extends Component {
           onMouseLeave={ev => this.onMouseLeave(ev)}
           style={{ opacity }}
         >
-          <img className="favicon" src={favicon} />
-          <a href={url} target="_blank">
-            {title}
-          </a>
-          {this.renderEditInterface()}
+          <Row className="article-item">
+            <Col s={12}>
+              <a href={url} className="article-item-title" target="_blank">
+                <div className="article-item-body">
+                  <div className="article-item-title">
+                    {this.renderEditInterface()}
+                    <img className="favicon" src={favicon} />
+                    {title}
+                  </div>
+                </div>
+              </a>
+            </Col>
+          </Row>
         </div>
       )
     )
   }
 }
+
+//{this.renderEditInterface()}
 
 function mapStateToProps(store) {
   return {

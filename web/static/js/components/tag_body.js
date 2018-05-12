@@ -14,12 +14,14 @@ class TagBody extends Component {
   }
 
   renderEditInterface() {
+    return null
     const { onHover } = this.state
-    if (!onHover) return null
+    const { isTagSelected } = this.props
+    if (!isTagSelected) return null
 
     const editInterface = (
       <div className="tag-body-interface" onClick={ev => this.onEditClick(ev)}>
-        <i className="small material-icons">edit</i>
+        <i className="tiny material-icons">edit</i>
       </div>
     )
 
@@ -28,12 +30,12 @@ class TagBody extends Component {
         className="tag-body-interface"
         onClick={ev => this.onDeleteClick(ev)}
       >
-        <i className="small material-icons">delete</i>
+        <i className="tiny material-icons">delete</i>
       </div>
     )
 
     return (
-      <div>
+      <div className="tag-body-toolbar">
         {editInterface}
         {deleteInterface}
       </div>
@@ -69,18 +71,19 @@ class TagBody extends Component {
   }
 
   render() {
-    const { tag } = this.props
-    const classDiv = `tag-body ${this.state.hoverClass}`
+    const { tag, isTagSelected } = this.props
+    const selectedClass = isTagSelected ? 'tag-body-selected' : ''
+    const classDiv = `tag-body ${this.state.hoverClass} ${selectedClass}`
     return (
       <div
         className={classDiv}
         onMouseEnter={ev => this.onMouseEnter(ev)}
         onMouseLeave={ev => this.onMouseLeave(ev)}
       >
+        {this.renderEditInterface()}
         <h6>
           {tag.title} ({tag.articles_count})
         </h6>
-        {this.renderEditInterface()}
       </div>
     )
   }
@@ -88,6 +91,7 @@ class TagBody extends Component {
 
 TagBody.propTypes = {
   tag: PropTypes.object.isRequired,
+  isTagSelected: PropTypes.bool.isRequired,
   isDragOverCurrent: PropTypes.bool
 }
 

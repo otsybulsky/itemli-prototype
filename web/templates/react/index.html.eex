@@ -1,4 +1,6 @@
-<h5>User name: <%= @conn.assigns.user.name %></h5>
 
 <div class="application"></div>
+
+<script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
 <script src="<%= static_path(@conn, "/js/index.js") %>"></script>
