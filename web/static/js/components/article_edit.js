@@ -137,11 +137,12 @@ class ArticleEdit extends Component {
     }, {})
 
     if (showTagInput) {
+      console.log(data)
       return (
         <Autocomplete
+          data={data}
           title="Tape tag name ..."
           id="tagInput"
-          data={data}
           onAutocomplete={value => this.onAutocomplete(value)}
           onKeyDown={event => this.onTagInputKeyDown(event)}
         />
