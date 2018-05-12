@@ -7,6 +7,7 @@ import { editArticleCancel } from '../actions'
 import { editArticleApply, deleteArticle } from '../socket'
 import Textarea from 'react-textarea-autosize'
 import confirmDialog from './dialogs/confirm'
+import TagChip from './tag_chip'
 
 class ArticleEdit extends Component {
   constructor(props) {
@@ -137,7 +138,6 @@ class ArticleEdit extends Component {
     }, {})
 
     if (showTagInput) {
-      console.log(data)
       return (
         <Autocomplete
           data={data}
@@ -152,12 +152,29 @@ class ArticleEdit extends Component {
     }
   }
 
+  removeTag = tag => {
+    const tag_ids = [...this.state.tag_ids]
+    const index = tag_ids.indexOf(tag.id)
+    const removed_data = tag_ids.splice(index, 1)
+
+    this.setState({ tag_ids: tag_ids })
+  }
+
   renderTags() {
     const { tag_ids } = this.state
     const { tags } = this.props
 
     const tags_view = tag_ids.map(id => {
-      return <Tag key={id}>{tags[id].title}</Tag>
+      return (
+        <TagChip
+          key={'tagchip-' + id}
+          tag={tags[id]}
+          removeTag={this.removeTag}
+        />
+        // <Tag key={id} onClick={event => this.onDeleteTag(event)}>
+        //   {tags[id].title}
+        // </Tag>
+      )
     })
 
     return (

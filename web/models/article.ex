@@ -10,7 +10,7 @@ defmodule Itemli.Article do
     field :description, :string
 
     belongs_to :user, Itemli.User  
-    many_to_many :tags, Itemli.Tag, [join_through: "tags_articles", on_delete: :delete_all]
+    many_to_many :tags, Itemli.Tag, [join_through: "tags_articles", on_delete: :delete_all, on_replace: :delete]
 
     timestamps()
   end
