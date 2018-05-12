@@ -94,8 +94,9 @@ class ArticleEdit extends Component {
   onClickNewTag = () => {
     this.setState({ showTagInput: true })
   }
-  onTagInputKeyPress = event => {
-    if (event.key === 'Enter') {
+  onTagInputKeyDown = event => {
+    const keys = ['Enter', 'Escape']
+    if (keys.includes(event.key)) {
       this.setState({ showTagInput: false })
       event.stopPropagation()
     }
@@ -119,6 +120,13 @@ class ArticleEdit extends Component {
     }
   }
 
+  componentDidUpdate() {
+    const { showTagInput } = this.state
+    if (showTagInput) {
+      document.getElementById('tagInput').focus()
+    }
+  }
+
   showTagInput() {
     const { showTagInput } = this.state
     const { tags } = this.props
@@ -131,10 +139,11 @@ class ArticleEdit extends Component {
     if (showTagInput) {
       return (
         <Autocomplete
-          multiple={true}
+          title="Tape tag name ..."
+          id="tagInput"
           data={data}
           onAutocomplete={value => this.onAutocomplete(value)}
-          onKeyPress={event => this.onTagInputKeyPress(event)}
+          onKeyDown={event => this.onTagInputKeyDown(event)}
         />
       )
     } else {
