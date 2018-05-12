@@ -12,7 +12,7 @@ class TagChip extends Component {
     return (
       <div className="chip">
         {tag.title}
-        <i className="material-icons" onClick={this.onRemoveTag}>
+        <i className="close material-icons" onClick={this.onRemoveTag}>
           close
         </i>
       </div>

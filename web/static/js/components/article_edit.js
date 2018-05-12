@@ -171,9 +171,6 @@ class ArticleEdit extends Component {
           tag={tags[id]}
           removeTag={this.removeTag}
         />
-        // <Tag key={id} onClick={event => this.onDeleteTag(event)}>
-        //   {tags[id].title}
-        // </Tag>
       )
     })
 
