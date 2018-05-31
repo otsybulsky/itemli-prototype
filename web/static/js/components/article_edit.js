@@ -3,12 +3,39 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import { Row, Col, Autocomplete, Button, Tag } from 'react-materialize'
-import { editArticleCancel } from '../actions'
+import {
+  editArticleCancel,
+  articleEditAddTag,
+  articleEditRemoveTag,
+  dragElementEnd
+} from '../actions'
 import { editArticleApply, deleteArticle } from '../socket'
 import Textarea from 'react-textarea-autosize'
 import confirmDialog from './dialogs/confirm'
 import TagChip from './tag_chip'
 
+import { DropTarget } from 'react-dnd'
+import { DndTypes } from '../constants'
+
+const itemTarget = {
+  drop(props, monitor, component) {
+    const source = monitor.getItem()
+    const { id: new_tag, isAvailableDrop } = source
+
+    const { tag_ids, articleEditAddTag, dragElementEnd } = props
+
+    if (new_tag && !tag_ids.includes(new_tag)) {
+      //add new tag for article
+      articleEditAddTag(new_tag)
+    }
+    dragElementEnd()
+  }
+}
+
+@DropTarget(DndTypes.TAG, itemTarget, (dnd_connect, monitor) => ({
+  connectDropTarget: dnd_connect.dropTarget(),
+  isOverCurrent: monitor.isOver({ shallow: true })
+}))
 class ArticleEdit extends Component {
   constructor(props) {
     super(props)
@@ -17,7 +44,6 @@ class ArticleEdit extends Component {
       title: '',
       description: '',
       url: '',
-      tag_ids: [],
       showTagInput: false
     }
 
@@ -38,7 +64,8 @@ class ArticleEdit extends Component {
   }
   onFormSubmit(event) {
     event.preventDefault()
-    this.props.editArticleApply(this.state)
+    const { tag_ids, editArticleApply } = this.props
+    editArticleApply(this.state, tag_ids)
   }
   onEditCancel() {
     this.props.editArticleCancel()
@@ -63,24 +90,21 @@ class ArticleEdit extends Component {
   setLocalState(props) {
     if (props.article_for_edit) {
       const {
-        article_for_edit: { id, title, description, url, tags },
+        article_for_edit: { id, title, description, url },
         current_tag_id
       } = props
-
-      const tag_ids = tags ? tags.map(item => item.id) : []
 
       this.setState({ id: id })
       this.setState({ title: title || '' })
       this.setState({ description: description || '' })
       this.setState({ url: url || '' })
-      this.setState({ tag_ids: tag_ids })
     } else {
-      const { current_tag_id } = props
+      const { current_tag_id, articleEditAddTag } = props
       this.setState({ id: undefined })
       this.setState({ title: '' })
       this.setState({ description: '' })
       this.setState({ url: '' })
-      this.setState({ tag_ids: current_tag_id ? [current_tag_id] : [] })
+      articleEditAddTag(current_tag_id)
     }
   }
 
@@ -103,8 +127,7 @@ class ArticleEdit extends Component {
     }
   }
   onAutocomplete(value) {
-    const { tags } = this.props
-    const { tag_ids } = this.state
+    const { tags, tag_ids, articleEditAddTag } = this.props
 
     const data = Object.values(tags).reduce((obj, item) => {
       obj[item['title']] = item
@@ -117,7 +140,8 @@ class ArticleEdit extends Component {
 
     const new_tag = data[value].id
     if (new_tag && !tag_ids.includes(new_tag)) {
-      this.setState({ tag_ids: [...tag_ids, new_tag] })
+      //add new tag for article
+      articleEditAddTag(new_tag)
     }
   }
 
@@ -153,16 +177,12 @@ class ArticleEdit extends Component {
   }
 
   removeTag = tag => {
-    const tag_ids = [...this.state.tag_ids]
-    const index = tag_ids.indexOf(tag.id)
-    const removed_data = tag_ids.splice(index, 1)
-
-    this.setState({ tag_ids: tag_ids })
+    const { articleEditRemoveTag } = this.props
+    articleEditRemoveTag(tag.id)
   }
 
   renderTags() {
-    const { tag_ids } = this.state
-    const { tags } = this.props
+    const { tags, tag_ids } = this.props
 
     const tags_view = tag_ids.map(id => {
       return (
@@ -183,8 +203,14 @@ class ArticleEdit extends Component {
   }
 
   render() {
-    return (
-      <div className="form-container">
+    const { connectDropTarget, isOverCurrent } = this.props
+
+    const formClass = isOverCurrent
+      ? 'form-container article-edit-hover'
+      : 'form-container'
+
+    return connectDropTarget(
+      <div className={formClass}>
         <form onSubmit={this.onFormSubmit}>
           <Row>
             <Col s={4}>
@@ -263,6 +289,7 @@ ArticleEdit.propTypes = {}
 
 function mapStateToProps(state) {
   return {
+    tag_ids: state.interface.article_edit_tag_ids,
     article_for_edit: state.data.article_for_edit,
     current_tag_id: state.data.current_tag_id,
     tags: state.data.tags
@@ -272,5 +299,8 @@ function mapStateToProps(state) {
 export default connect(mapStateToProps, {
   editArticleCancel,
   editArticleApply,
-  deleteArticle
+  deleteArticle,
+  articleEditAddTag,
+  articleEditRemoveTag,
+  dragElementEnd
 })(ArticleEdit)

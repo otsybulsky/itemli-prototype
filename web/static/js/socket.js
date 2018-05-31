@@ -96,11 +96,11 @@ export function editTagApply(params) {
   }
 }
 
-export function editArticleApply(params) {
+export function editArticleApply(params, tag_ids) {
   return dispatch => {
     dispatch({ type: ARTICLE_EDIT_APPLY, payload: params })
     if (channel) {
-      const { id, title, description, url, tag_ids } = params
+      const { id, title, description, url } = params
       channel
         .push('article:edit', {
           article_id: id,

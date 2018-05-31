@@ -7,7 +7,9 @@ import {
   TAG_EDIT,
   TAG_EDIT_CANCEL,
   ARTICLE_EDIT,
-  ARTICLE_EDIT_CANCEL
+  ARTICLE_EDIT_CANCEL,
+  ARTICLE_EDIT_ADD_TAG,
+  ARTICLE_EDIT_REMOVE_TAG
 } from '../constants'
 
 export function testEvent() {
@@ -21,6 +23,18 @@ export function editArticle(params) {
   return {
     type: ARTICLE_EDIT,
     payload: params
+  }
+}
+export function articleEditAddTag(tag_id) {
+  return {
+    type: ARTICLE_EDIT_ADD_TAG,
+    payload: tag_id
+  }
+}
+export function articleEditRemoveTag(tag_id) {
+  return {
+    type: ARTICLE_EDIT_REMOVE_TAG,
+    payload: tag_id
   }
 }
 export function editArticleCancel(params) {
