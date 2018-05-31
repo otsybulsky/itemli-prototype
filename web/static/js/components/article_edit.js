@@ -64,7 +64,8 @@ class ArticleEdit extends Component {
   }
   onFormSubmit(event) {
     event.preventDefault()
-    this.props.editArticleApply(this.state)
+    const { tag_ids, editArticleApply } = this.props
+    editArticleApply(this.state, tag_ids)
   }
   onEditCancel() {
     this.props.editArticleCancel()
