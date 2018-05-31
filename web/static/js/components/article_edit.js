@@ -54,7 +54,6 @@ class ArticleEdit extends Component {
       title: '',
       description: '',
       url: '',
-      tag_ids: [],
       showTagInput: false
     }
 
@@ -198,8 +197,7 @@ class ArticleEdit extends Component {
   }
 
   renderTags() {
-    const { tag_ids } = this.state
-    const { tags } = this.props
+    const { tags, tag_ids } = this.props
 
     const tags_view = tag_ids.map(id => {
       return (
@@ -301,6 +299,7 @@ ArticleEdit.propTypes = {}
 
 function mapStateToProps(state) {
   return {
+    tag_ids: state.interface.article_edit_tag_ids,
     article_for_edit: state.data.article_for_edit,
     current_tag_id: state.data.current_tag_id,
     tags: state.data.tags
