@@ -3,7 +3,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import { Row, Col, Autocomplete, Button, Tag } from 'react-materialize'
-import { editArticleCancel } from '../actions'
+import { editArticleCancel, articleEditAddTag } from '../actions'
 import { editArticleApply, deleteArticle } from '../socket'
 import Textarea from 'react-textarea-autosize'
 import confirmDialog from './dialogs/confirm'
@@ -139,8 +139,7 @@ class ArticleEdit extends Component {
     }
   }
   onAutocomplete(value) {
-    const { tags } = this.props
-    const { tag_ids } = this.state
+    const { tags, tag_ids, articleEditAddTag } = this.props
 
     const data = Object.values(tags).reduce((obj, item) => {
       obj[item['title']] = item
@@ -153,7 +152,9 @@ class ArticleEdit extends Component {
 
     const new_tag = data[value].id
     if (new_tag && !tag_ids.includes(new_tag)) {
-      this.setState({ tag_ids: [...tag_ids, new_tag] })
+      //add new tag for article
+      articleEditAddTag(new_tag)
+      //this.setState({ tag_ids: [...tag_ids, new_tag] })
     }
   }
 
@@ -309,5 +310,6 @@ function mapStateToProps(state) {
 export default connect(mapStateToProps, {
   editArticleCancel,
   editArticleApply,
-  deleteArticle
+  deleteArticle,
+  articleEditAddTag
 })(ArticleEdit)

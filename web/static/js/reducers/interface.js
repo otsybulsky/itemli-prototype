@@ -19,7 +19,11 @@ export default function(store = INIT_STATE, { type, payload }) {
         ...store,
         article_edit_tag_ids: tags ? tags.map(item => item.id) : []
       }
-
+    case ARTICLE_EDIT_ADD_TAG:
+      return {
+        ...store,
+        article_edit_tag_ids: [...store.article_edit_tag_ids, payload]
+      }
     case DRAG_ELEMENT_START:
       return { ...store, renderDropInterface: true }
     case DRAG_ELEMENT_END:
