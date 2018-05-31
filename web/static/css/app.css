@@ -153,6 +153,8 @@ i:hover {
   font-weight: bold;
 }
 
-.article-edit {
+.article-edit-hover {
+  padding: 5px;
   border: 1px red solid;
+  cursor: pointer;
 }

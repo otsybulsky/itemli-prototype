@@ -90,24 +90,21 @@ class ArticleEdit extends Component {
   setLocalState(props) {
     if (props.article_for_edit) {
       const {
-        article_for_edit: { id, title, description, url, tags },
+        article_for_edit: { id, title, description, url },
         current_tag_id
       } = props
-
-      const tag_ids = tags ? tags.map(item => item.id) : []
 
       this.setState({ id: id })
       this.setState({ title: title || '' })
       this.setState({ description: description || '' })
       this.setState({ url: url || '' })
-      this.setState({ tag_ids: tag_ids })
     } else {
-      const { current_tag_id } = props
+      const { current_tag_id, articleEditAddTag } = props
       this.setState({ id: undefined })
       this.setState({ title: '' })
       this.setState({ description: '' })
       this.setState({ url: '' })
-      this.setState({ tag_ids: current_tag_id ? [current_tag_id] : [] })
+      articleEditAddTag(current_tag_id)
     }
   }
 
@@ -206,9 +203,14 @@ class ArticleEdit extends Component {
   }
 
   render() {
-    const { connectDropTarget } = this.props
+    const { connectDropTarget, isOverCurrent } = this.props
+
+    const formClass = isOverCurrent
+      ? 'form-container article-edit-hover'
+      : 'form-container'
+
     return connectDropTarget(
-      <div className="form-container article-edit">
+      <div className={formClass}>
         <form onSubmit={this.onFormSubmit}>
           <Row>
             <Col s={4}>
