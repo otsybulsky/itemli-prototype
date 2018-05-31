@@ -152,3 +152,7 @@ i:hover {
 .article:hover .article-item-title {
   font-weight: bold;
 }
+
+.article-edit {
+  border: 1px red solid;
+}
