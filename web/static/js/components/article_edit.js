@@ -3,7 +3,11 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import { Row, Col, Autocomplete, Button, Tag } from 'react-materialize'
-import { editArticleCancel, articleEditAddTag } from '../actions'
+import {
+  editArticleCancel,
+  articleEditAddTag,
+  articleEditRemoveTag
+} from '../actions'
 import { editArticleApply, deleteArticle } from '../socket'
 import Textarea from 'react-textarea-autosize'
 import confirmDialog from './dialogs/confirm'
@@ -154,7 +158,6 @@ class ArticleEdit extends Component {
     if (new_tag && !tag_ids.includes(new_tag)) {
       //add new tag for article
       articleEditAddTag(new_tag)
-      //this.setState({ tag_ids: [...tag_ids, new_tag] })
     }
   }
 
@@ -190,11 +193,8 @@ class ArticleEdit extends Component {
   }
 
   removeTag = tag => {
-    const tag_ids = [...this.state.tag_ids]
-    const index = tag_ids.indexOf(tag.id)
-    const removed_data = tag_ids.splice(index, 1)
-
-    this.setState({ tag_ids: tag_ids })
+    const { articleEditRemoveTag } = this.props
+    articleEditRemoveTag(tag.id)
   }
 
   renderTags() {
@@ -311,5 +311,6 @@ export default connect(mapStateToProps, {
   editArticleCancel,
   editArticleApply,
   deleteArticle,
-  articleEditAddTag
+  articleEditAddTag,
+  articleEditRemoveTag
 })(ArticleEdit)

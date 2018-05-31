@@ -24,6 +24,15 @@ export default function(store = INIT_STATE, { type, payload }) {
         ...store,
         article_edit_tag_ids: [...store.article_edit_tag_ids, payload]
       }
+    case ARTICLE_EDIT_REMOVE_TAG:
+      const tag_ids = [...store.article_edit_tag_ids]
+      const index = tag_ids.indexOf(payload)
+      const removed_data = tag_ids.splice(index, 1)
+      return {
+        ...store,
+        article_edit_tag_ids: tag_ids
+      }
+
     case DRAG_ELEMENT_START:
       return { ...store, renderDropInterface: true }
     case DRAG_ELEMENT_END:
