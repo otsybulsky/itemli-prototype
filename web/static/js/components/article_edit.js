@@ -6,7 +6,8 @@ import { Row, Col, Autocomplete, Button, Tag } from 'react-materialize'
 import {
   editArticleCancel,
   articleEditAddTag,
-  articleEditRemoveTag
+  articleEditRemoveTag,
+  dragElementEnd
 } from '../actions'
 import { editArticleApply, deleteArticle } from '../socket'
 import Textarea from 'react-textarea-autosize'
@@ -17,38 +18,23 @@ import { DropTarget } from 'react-dnd'
 import { DndTypes } from '../constants'
 
 const itemTarget = {
-  hover(props, monitor, component) {
-    const { id: source_id } = monitor.getItem()
-    const { tags } = props
-
-    //monitor.getItem().isAvailableDrop = !searchTagInSubTags(target_id, sub_tags)
-  },
-
   drop(props, monitor, component) {
-    //   const hasDroppedOnChild = monitor.didDrop()
-    //   if (hasDroppedOnChild) {
-    //     return
-    //   }
-    //   const source = monitor.getItem()
-    //   const { id: source_id, isAvailableDrop } = source
-    //   const {
-    //     tag: { id: target_id },
-    //     dropTag,
-    //     dragElementEnd
-    //   } = props
-    //   if (isAvailableDrop) {
-    //     if (target_id !== source_id) {
-    //       dropTag({ source_id, target_id, createSubTag: false })
-    //     }
-    //   }
-    //   dragElementEnd()
+    const source = monitor.getItem()
+    const { id: new_tag, isAvailableDrop } = source
+
+    const { tag_ids, articleEditAddTag, dragElementEnd } = props
+
+    if (new_tag && !tag_ids.includes(new_tag)) {
+      //add new tag for article
+      articleEditAddTag(new_tag)
+    }
+    dragElementEnd()
   }
 }
 
 @DropTarget(DndTypes.TAG, itemTarget, (dnd_connect, monitor) => ({
   connectDropTarget: dnd_connect.dropTarget(),
-  isOverCurrent: monitor.isOver({ shallow: true }),
-  itemSource: monitor.getItem()
+  isOverCurrent: monitor.isOver({ shallow: true })
 }))
 class ArticleEdit extends Component {
   constructor(props) {
@@ -312,5 +298,6 @@ export default connect(mapStateToProps, {
   editArticleApply,
   deleteArticle,
   articleEditAddTag,
-  articleEditRemoveTag
+  articleEditRemoveTag,
+  dragElementEnd
 })(ArticleEdit)
