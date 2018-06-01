@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import TagsProvider from './tags_provider'
+import ImportData from './import_data'
+import { BrowserRouter, Switch, Route } from 'react-router-dom'
 
 import { createSocket, fetchLayout } from '../socket'
 
@@ -19,9 +21,14 @@ class App extends Component {
 
   render() {
     return (
-      <div>
-        <TagsProvider />
-      </div>
+      <BrowserRouter>
+        <div className="container-app">
+          <Switch>
+            <Route exact path="/app" component={TagsProvider} />
+            <Route exact path="/app/import" component={ImportData} />
+          </Switch>
+        </div>
+      </BrowserRouter>
     )
   }
 }

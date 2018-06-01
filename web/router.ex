@@ -19,14 +19,6 @@ defmodule Itemli.Router do
     plug Itemli.Plugs.SetUser 
   end
 
-  scope "/", Itemli do
-    pipe_through :browser # Use the default browser stack
-
-    get "/", MainController, :index
-    get "/signin", MainController, :signin
-    get "/app", ReactController, :index
-  end
-
   scope "/auth", Itemli do
     pipe_through :browser
 
@@ -41,5 +33,14 @@ defmodule Itemli.Router do
 
     get "/check", ApiController, :check
     get "/need_auth", ApiController, :need_auth
+  end
+
+  scope "/", Itemli do
+    pipe_through :browser # Use the default browser stack
+
+    get "/", MainController, :index
+    get "/signin", MainController, :signin
+    get "/app", ReactController, :index
+    get "*path", ReactController, :index
   end
 end

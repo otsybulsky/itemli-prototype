@@ -11,23 +11,20 @@ import thunk from 'redux-thunk'
 import reducers from './reducers'
 import App from './components/app'
 import LayoutProvider from './components/layout_provider'
-import { BrowserRouter } from 'react-router-dom'
 
 const createStoreWithMiddleware = applyMiddleware(thunk, logger)(createStore)
 
 ReactDOM.render(
-  <BrowserRouter>
-    <Provider
-      store={createStoreWithMiddleware(
-        reducers,
-        window.__REDUX_DEVTOOLS_EXTENSION__ &&
-          window.__REDUX_DEVTOOLS_EXTENSION__() //for dev only
-      )}
-    >
-      <LayoutProvider>
-        <App />
-      </LayoutProvider>
-    </Provider>
-  </BrowserRouter>,
+  <Provider
+    store={createStoreWithMiddleware(
+      reducers,
+      window.__REDUX_DEVTOOLS_EXTENSION__ &&
+        window.__REDUX_DEVTOOLS_EXTENSION__() //for dev only
+    )}
+  >
+    <LayoutProvider>
+      <App />
+    </LayoutProvider>
+  </Provider>,
   document.querySelector('.application')
 )
