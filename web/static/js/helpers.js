@@ -1,5 +1,16 @@
 import _ from 'lodash'
 
+export function parseUrlsList(listUrl) {
+  const result = {
+    urls: []
+  }
+  const urls = listUrl.toLowerCase()
+  //get urls from list
+  const regexp = /http\S+/gim //start 'http' while not space
+  result.urls = urls.match(regexp)
+  return result
+}
+
 export function reorderList(list, startIndex, endIndex) {
   const result = list //Array.from(list)
   const [removed] = result.splice(startIndex, 1)

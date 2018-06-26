@@ -3,6 +3,8 @@ import PropTypes from 'prop-types'
 import Textarea from 'react-textarea-autosize'
 import { Row, Col, Button } from 'react-materialize'
 
+import { parseUrlsList } from '../helpers'
+
 class ImportData extends Component {
   state = {
     title: '',
@@ -12,7 +14,9 @@ class ImportData extends Component {
   onFormSubmit = event => {
     event.preventDefault()
     //parse urls
-    //send data to server
+    const data = parseUrlsList(this.state.urls)
+    //send data to server for get names from urls and save to new tag
+
     //receive answer from server
     //if ok - redirect to view the new data
     //else show error message
