@@ -8,6 +8,11 @@ export function parseUrlsList(listUrl) {
   //get urls from list
   const regexp = /http\S+/gim //start 'http' while not space
   result.urls = urls.match(regexp)
+
+  result.urls.forEach(item => {
+    console.log(item)
+  })
+
   return result
 }
 
