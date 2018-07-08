@@ -9,9 +9,11 @@ export function parseUrlsList(listUrl) {
   const regexp = /http\S+/gim //start 'http' while not space
   result.urls = urls.match(regexp)
 
-  result.urls.forEach(item => {
-    console.log(item)
-  })
+  if (result.urls) {
+    result.urls.forEach(item => {
+      console.log(item)
+    })
+  }
 
   return result
 }

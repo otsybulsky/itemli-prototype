@@ -2,6 +2,9 @@ defmodule Itemli.RoomChannel do
   use Itemli.Web, :channel
   alias Itemli.{Article, Tag, TagArticle, Layout}
   alias Ecto.Multi
+  alias Itemli.MetaInspector
+
+ 
 
   def join("room:" <> _room_id, _params, socket) do
     {:ok, socket}
@@ -216,6 +219,17 @@ defmodule Itemli.RoomChannel do
         articles = article_list
     |> Enum.map(fn (article) -> %{"id" => article.id, "title" => article.title, "url" => article.url, "favicon" => article.favicon, "description" => article.description, "tags" => article.tags  } end)
     end
+
+    
+    # articles 
+    # |> Enum.each fn (article) ->
+    #   # IO.inspect article
+    #   # meta_site = Scrape.website article["url"]
+    #   meta_site = MetaInspector.get_info article["url"]
+    #   # IO.puts meta_site
+    # end
+
+     
     
     {:reply, {:ok, %{articles: articles, tag_id: tag.id}}, socket}
   end
