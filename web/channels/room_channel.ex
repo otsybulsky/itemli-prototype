@@ -387,7 +387,7 @@ defmodule Itemli.RoomChannel do
             %{"title" => title, "url" => url} ->
               article = user
               |> build_assoc(:articles)
-              |> Article.changeset(%{tags: [tag], title: title, url: url})
+              |> Article.changeset(%{tag: [tag], title: title, url: url})
               |> Repo.insert
             _ ->
               IO.puts "-------------------------------------------------------------- MATCH ERROR "
