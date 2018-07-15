@@ -14,6 +14,7 @@ defmodule Itemli do
       supervisor(Itemli.Endpoint, []),
       # Start your own worker by calling: Itemli.Worker.start_link(arg1, arg2, arg3)
       # worker(Itemli.Worker, [arg1, arg2, arg3]),
+      Itemli.MetaUpdater
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
