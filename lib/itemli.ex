@@ -1,6 +1,10 @@
 defmodule Itemli do
   use Application
 
+  defp poolboy_config do
+    [{:name, {:local, :worker_article}}, {:worker_module, MetaInspector}, {:size, 5}, {:max_overflow, 2}]
+  end
+
   # See https://hexdocs.pm/elixir/Application.html
   # for more information on OTP Applications
   def start(_type, _args) do
@@ -13,8 +17,8 @@ defmodule Itemli do
       # Start the endpoint when the application starts
       supervisor(Itemli.Endpoint, []),
       # Start your own worker by calling: Itemli.Worker.start_link(arg1, arg2, arg3)
-      # worker(Itemli.Worker, [arg1, arg2, arg3]),
-      Itemli.MetaUpdater
+      # worker(Itemli.Worker, [arg1, arg2, arg3]),      
+      :poolboy.child_spec(:worker_article, poolboy_config(), [])
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

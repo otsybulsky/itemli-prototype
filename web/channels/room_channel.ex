@@ -4,7 +4,8 @@ defmodule Itemli.RoomChannel do
   alias Ecto.Multi
   alias Itemli.MetaInspector
 
- 
+  use Task
+  @timeout 60000
 
   def join("room:" <> _room_id, _params, socket) do
     {:ok, socket}
@@ -221,18 +222,23 @@ defmodule Itemli.RoomChannel do
     end
 
     
-    # articles 
-    # |> Enum.each fn (article) ->
-    #   # IO.inspect article
-    #   # meta_site = Scrape.website article["url"]
-    #   meta_site = MetaInspector.get_info article["url"]
-    #   # IO.puts meta_site
-    # end
+    articles 
+    |> Enum.each fn (article) ->      
+      Task.async(fn ->
+        :poolboy.transaction(
+          :worker_article, 
+          &GenServer.call(&1, %{:url =>article["url"], :user_id => socket.assigns.user_id}), 
+          @timeout
+        )
+      end)      
+    end
 
      
     
     {:reply, {:ok, %{articles: articles, tag_id: tag.id}}, socket}
   end
+
+ 
 
   def handle_in("tag:reorder_articles", %{"tag_id" => tag_id, "article_ids" => article_ids}, socket) do
     user = socket.assigns.user
