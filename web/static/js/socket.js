@@ -19,7 +19,8 @@ import {
   TAG_DELETE,
   ARTICLE_EDIT_APPLY,
   ARTICLE_EDIT_APPLY_OK,
-  ARTICLE_DELETE
+  ARTICLE_DELETE,
+  ARTICLE_UPDATED
 } from './constants'
 
 let socket = null
@@ -232,6 +233,10 @@ export function createSocket() {
 
     channel.on('articles_index:updated', msg => {
       dispatch(updatedArticlesIndex(msg.tag_id))
+    })
+
+    channel.on('article:updated', msg => {
+      dispatch({ type: ARTICLE_UPDATED, payload: msg.article })
     })
   }
 }

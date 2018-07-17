@@ -73,13 +73,17 @@ defmodule MetaInspector do
 
                     changeset = Ecto.Changeset.change(current_article, changes)
 
-                    # Repo.update!(changeset)
+                    case Repo.update changeset do
+                      {:ok, article} ->
+                        IO.puts "=========================================="
+                        IO.inspect article
+                        Endpoint.broadcast("room:" <> user_id, "article:updated", %{article: article})
+                      _ -> nil
+                    end
+
                   end
                 _ -> nil                  
               end
-              
-              # Endpoint.broadcast("room:" <> user_id, "meta_inspector", %{body: response.body})
-             
             _ -> nil
           end          
         end
