@@ -24,7 +24,8 @@ import {
   TAG_EDIT_APPLY_OK,
   ARTICLE_EDIT,
   ARTICLE_EDIT_CANCEL,
-  ARTICLE_EDIT_APPLY_OK
+  ARTICLE_EDIT_APPLY_OK,
+  ARTICLE_UPDATED
 } from '../constants'
 
 const INIT_STATE = {
@@ -42,6 +43,34 @@ const INIT_STATE = {
 
 export default function(store = INIT_STATE, { type, payload }) {
   switch (type) {
+    case ARTICLE_UPDATED:
+      if (store.articles) {
+        const local_article_index = store.articles.findIndex(article => {
+          return article.id === payload.id
+        })
+        if (local_article_index >= 0) {
+          const articles = [...store.articles]
+
+          if (!articles[local_article_index].title) {
+            articles[local_article_index].title = payload.title
+          }
+          if (!articles[local_article_index].favicon) {
+            articles[local_article_index].favicon = payload.favicon
+          }
+          if (!articles[local_article_index].description) {
+            articles[local_article_index].description = payload.description
+          }
+          articles[local_article_index].updated_at = payload.updated_at
+          return {
+            ...store,
+            articles: articles
+          }
+        } else {
+          return store
+        }
+      } else {
+        return store
+      }
     case ARTICLE_EDIT:
       return {
         ...store,
