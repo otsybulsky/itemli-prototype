@@ -215,25 +215,31 @@ defmodule Itemli.RoomChannel do
         |> Keyword.drop ids_exists
         
         articles = Keyword.values(articles_without_index) ++ articles
-        |> Enum.map(fn (article) -> %{"id" => article.id, "title" => article.title, "url" => article.url, "favicon" => article.favicon, "description" => article.description, "tags" => article.tags  } end)
+        |> Enum.map(fn (article) -> %{"id" => article.id, "title" => article.title, "url" => article.url, "favicon" => article.favicon, "description" => article.description,
+        "updated_at" => article.updated_at,
+        "tags" => article.tags  } end)
       _ ->
         articles = article_list
-    |> Enum.map(fn (article) -> %{"id" => article.id, "title" => article.title, "url" => article.url, "favicon" => article.favicon, "description" => article.description, "tags" => article.tags  } end)
+    |> Enum.map(fn (article) ->       
+      %{"id" => article.id, "title" => article.title, "url" => article.url, "favicon" => article.favicon, "description" => article.description,
+      "updated_at" => article.updated_at,
+      "tags" => article.tags  } end)
     end
 
-    
-    articles 
-    |> Enum.each fn (article) ->      
-      Task.async(fn ->
+
+    # check article for full data set
+    Enum.each(articles, fn (article) ->
+      Task.async(fn -> 
         :poolboy.transaction(
-          :worker_article, 
-          &GenServer.call(&1, %{:url =>article["url"], :user_id => socket.assigns.user_id}), 
+          :worker_article,
+          &GenServer.call(
+            &1,
+            %{:article => article, :user_id => socket.assigns.user_id}
+          ),
           @timeout
         )
-      end)      
-    end
-
-     
+      end)  
+    end)
     
     {:reply, {:ok, %{articles: articles, tag_id: tag.id}}, socket}
   end
