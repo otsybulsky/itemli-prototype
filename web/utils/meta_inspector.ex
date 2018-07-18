@@ -26,14 +26,14 @@ defmodule MetaInspector do
 
   def handle_call(%{ :article => article, :user_id => user_id}, _from, state) do
 
-    check_title = check_string(article["title"])
-    check_favicon = check_string(article["favicon"])
-    check_description = check_string(article["description"])
+    check_title = check_string(article.title)
+    check_favicon = check_string(article.favicon)
+    check_description = check_string(article.description)
     
     case check_title && check_favicon && check_description do
       :false ->
-        link = article["url"]
-
+        link = article.url
+        
         if check_string(link) do
           request = "https://head-meta.gigalixirapp.com/?url="<>link  
           
@@ -46,9 +46,9 @@ defmodule MetaInspector do
                   
                   meta_favicon, "description" => meta_description} = meta
                  
-                  current_article = Repo.get!(Article, article["id"]) |> Repo.preload([:tags]) 
+                  current_article = Repo.get!(Article, article.id) |> Repo.preload([:tags]) 
 
-                  if current_article.updated_at === article["updated_at"] do
+                  if current_article.updated_at === article.updated_at do
                     
                     changes = %{}
                     |> (fn(cs) -> 
@@ -69,14 +69,19 @@ defmodule MetaInspector do
                         _ -> cs
                       end
                     end).()
+                    |> (fn(cs) ->
+                      if (article.url !== meta_url) do
+                        Map.put_new(cs, :url, meta_url)
+                      else
+                        cs
+                      end
+                    end).()
                     
 
                     changeset = Ecto.Changeset.change(current_article, changes)
 
                     case Repo.update changeset do
                       {:ok, article} ->
-                        IO.puts "=========================================="
-                        IO.inspect article
                         Endpoint.broadcast("room:" <> user_id, "article:updated", %{article: article})
                       _ -> nil
                     end

@@ -126,9 +126,11 @@ defmodule Itemli.RoomChannel do
     articles_query = from a in Article,
       where: a.id in ^article_ids,
       order_by: [desc: a.inserted_at],
-      select: %{id: a.id, title: a.title, description: a.description, url: a.url, favicon: a.favicon}
+      select: %{id: a.id, title: a.title, description: a.description, url: a.url, favicon: a.favicon, updated_at: a.updated_at}
     
     articles = Repo.all(articles_query)
+
+    check_articles_data(articles, socket.assigns.user_id)
 
     {:reply, {:ok, %{articles: articles, tag_id: nil}}, socket}
   end
@@ -215,18 +217,22 @@ defmodule Itemli.RoomChannel do
         |> Keyword.drop ids_exists
         
         articles = Keyword.values(articles_without_index) ++ articles
-        |> Enum.map(fn (article) -> %{"id" => article.id, "title" => article.title, "url" => article.url, "favicon" => article.favicon, "description" => article.description,
-        "updated_at" => article.updated_at,
-        "tags" => article.tags  } end)
+        |> Enum.map(fn (article) -> %{id: article.id, title: article.title, url: article.url, favicon: article.favicon, description: article.description,
+        updated_at: article.updated_at, tags: article.tags  } end)
       _ ->
         articles = article_list
     |> Enum.map(fn (article) ->       
-      %{"id" => article.id, "title" => article.title, "url" => article.url, "favicon" => article.favicon, "description" => article.description,
-      "updated_at" => article.updated_at,
-      "tags" => article.tags  } end)
+      %{id: article.id, title: article.title, url: article.url, favicon: article.favicon, description: article.description,
+        updated_at: article.updated_at, tags: article.tags } end)
     end
 
 
+    check_articles_data(articles, socket.assigns.user_id)
+    
+    {:reply, {:ok, %{articles: articles, tag_id: tag.id}}, socket}
+  end
+
+  defp check_articles_data(articles, user_id) do
     # check article for full data set
     Enum.each(articles, fn (article) ->
       Task.async(fn -> 
@@ -234,14 +240,12 @@ defmodule Itemli.RoomChannel do
           :worker_article,
           &GenServer.call(
             &1,
-            %{:article => article, :user_id => socket.assigns.user_id}
+            %{:article => article, :user_id => user_id}
           ),
           @timeout
         )
       end)  
     end)
-    
-    {:reply, {:ok, %{articles: articles, tag_id: tag.id}}, socket}
   end
 
  
