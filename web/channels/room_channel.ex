@@ -191,6 +191,7 @@ defmodule Itemli.RoomChannel do
 
     article_list = Article
     |> where([t], (t.id in ^art_ids))
+    |> order_by(asc: :inserted_at)
     |> Repo.all
     |> Repo.preload([:tags])   
     
@@ -217,13 +218,15 @@ defmodule Itemli.RoomChannel do
         |> Keyword.drop ids_exists
         
         articles = Keyword.values(articles_without_index) ++ articles
-        |> Enum.map(fn (article) -> %{id: article.id, title: article.title, url: article.url, favicon: article.favicon, description: article.description,
-        updated_at: article.updated_at, tags: article.tags  } end)
+        |> Enum.map(fn (article) -> 
+          %{id: article.id, title: article.title, url: article.url, favicon: article.favicon, description: article.description,
+          updated_at: article.updated_at, tags: article.tags  } end)
       _ ->
+
         articles = article_list
-    |> Enum.map(fn (article) ->       
-      %{id: article.id, title: article.title, url: article.url, favicon: article.favicon, description: article.description,
-        updated_at: article.updated_at, tags: article.tags } end)
+        |> Enum.map(fn (article) ->       
+          %{id: article.id, title: article.title, url: article.url, favicon: article.favicon, description: article.description,
+          updated_at: article.updated_at, tags: article.tags } end)
     end
 
 
