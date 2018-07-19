@@ -15,6 +15,7 @@ import ArticleEdit from './article_edit'
 import { Button } from 'react-materialize'
 
 import confirmDialog from './dialogs/confirm'
+import ReactTooltip from 'react-tooltip'
 
 class Articles extends Component {
   renderArticles() {
@@ -30,6 +31,7 @@ class Articles extends Component {
   onAddArticle(event) {
     this.props.editArticle()
   }
+
   onOpenArticles(event) {
     const { articles } = this.props
     if (articles && articles.length > 0) {
@@ -40,6 +42,22 @@ class Articles extends Component {
               window.open(article.url, '_blank')
             }
           })
+        },
+        () => {}
+      )
+    }
+  }
+
+  onClearList(event) {
+    const { articles } = this.props
+    if (articles && articles.length > 0) {
+      confirmDialog(`Confirm delete ${articles.length} unbound articles?`).then(
+        () => {
+          // articles.map(article => {
+          //   if (article.url) {
+          //     window.open(article.url, '_blank')
+          //   }
+          // })
         },
         () => {}
       )
@@ -113,37 +131,75 @@ class Articles extends Component {
 
   renderTag() {
     const { tag_id, tags, article_edit_flag } = this.props
-    if (!tag_id || article_edit_flag) {
+
+    if (article_edit_flag) {
       return null
     }
-    const menuInterface = (
-      <div className="right">
-        <a className="tag-body-interface waves-effect waves-light btn-floating blue">
-          <i
-            className="material-icons medium "
-            onClick={ev => this.onOpenArticles(ev)}
-          >
-            open_in_browser
-          </i>
-        </a>
-      </div>
-    )
 
-    return (
-      <div className="tag-header">
-        <div className="tag-body-toolbar">
-          {menuInterface}
-          <h5
-            className="tag-body-interface"
-            onClick={ev => this.onActionTag(ev)}
+    let menuInterface
+
+    if (tag_id) {
+      menuInterface = (
+        <div className="right">
+          <a
+            id="btn-open-in-browser"
+            className="tag-body-interface waves-effect waves-light btn-floating blue"
+            data-tip="Open all in browser"
           >
-            {tags[tag_id].title}
-          </h5>
+            <i
+              className="material-icons medium "
+              onClick={ev => this.onOpenArticles(ev)}
+            >
+              open_in_browser
+            </i>
+          </a>
+          <ReactTooltip />
         </div>
-        {this.renderInterface(tags[tag_id])}
-        <p>{tags[tag_id].description}</p>
-      </div>
-    )
+      )
+
+      return (
+        <div className="tag-header">
+          <div className="tag-body-toolbar">
+            {menuInterface}
+            <h5
+              className="tag-body-interface"
+              onClick={ev => this.onActionTag(ev)}
+            >
+              {tags[tag_id].title}
+            </h5>
+          </div>
+          {this.renderInterface(tags[tag_id])}
+          <p>{tags[tag_id].description}</p>
+        </div>
+      )
+    } else {
+      menuInterface = (
+        <div className="right">
+          <a
+            id="btn-delete-unbound-articles"
+            className="tag-body-interface waves-effect waves-light btn-floating blue"
+            data-tip="Delete all unbound articles"
+          >
+            <i
+              className="material-icons medium "
+              onClick={ev => this.onClearList(ev)}
+            >
+              delete
+            </i>
+          </a>
+          <ReactTooltip />
+        </div>
+      )
+
+      return (
+        <div className="tag-header">
+          <div className="tag-body-toolbar">
+            {menuInterface}
+            <h5 className="tag-body-interface">Articles unbound</h5>
+          </div>
+        </div>
+      )
+    }
   }
 
   componentWillReceiveProps(nextProps) {
