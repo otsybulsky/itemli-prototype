@@ -384,6 +384,9 @@ defmodule Itemli.RoomChannel do
 
   def handle_in("tabs:add", %{"tabs" => content, "tag_title" => tag_title}, socket) do
     
+    IO.puts "================================================="
+    IO.inspect content
+
     user = socket.assigns.user
 
     new_tag = user
@@ -408,6 +411,11 @@ defmodule Itemli.RoomChannel do
               |> build_assoc(:articles)
               |> Article.changeset(%{tag: [tag], title: title, url: url})
               |> Repo.insert
+            %{"url" => url} ->
+                article = user
+                |> build_assoc(:articles)
+                |> Article.changeset(%{tag: [tag], url: url})
+                |> Repo.insert
             _ ->
               IO.puts "-------------------------------------------------------------- MATCH ERROR "
               IO.inspect item

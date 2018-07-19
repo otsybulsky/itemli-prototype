@@ -52,21 +52,27 @@ defmodule MetaInspector do
                     
                     changes = %{}
                     |> (fn(cs) -> 
-                      case check_title do
-                        :false -> Map.put_new(cs, :title, meta_title)
-                        _ -> cs
+                      cond do
+                        !check_title && check_string(meta_title) ->
+                          Map.put_new(cs, :title, meta_title)
+                        :true ->
+                          cs
                       end
                     end).()
                     |> (fn(cs) -> 
-                      case check_favicon do
-                        :false -> Map.put_new(cs, :favicon, meta_favicon)
-                        _ -> cs
+                      cond do
+                        !check_favicon && check_string(meta_favicon) ->
+                          Map.put_new(cs, :favicon, meta_favicon)
+                        :true ->
+                          cs
                       end
                     end).()
                     |> (fn(cs) ->
-                      case check_description do
-                        :false -> Map.put_new(cs, :description, meta_description)
-                        _ -> cs
+                      cond do
+                        !check_description && check_string(meta_description) ->
+                          Map.put_new(cs, :description, meta_description)
+                        :true ->
+                          cs
                       end
                     end).()
                     |> (fn(cs) ->
@@ -77,15 +83,17 @@ defmodule MetaInspector do
                       end
                     end).()
                     
-
-                    changeset = Ecto.Changeset.change(current_article, changes)
-
-                    case Repo.update changeset do
-                      {:ok, article} ->
-                        Endpoint.broadcast("room:" <> user_id, "article:updated", %{article: article})
-                      _ -> nil
+                    case length Map.to_list changes do
+                      0 -> nil
+                      _ ->
+                        changeset = Ecto.Changeset.change(current_article, changes)
+                        case Repo.update changeset do
+                          {:ok, article} ->
+                            Endpoint.broadcast("room:" <> user_id, "article:updated", %{article: article})
+                          _ -> nil
+                        end
                     end
-
+                    
                   end
                 _ -> nil                  
               end

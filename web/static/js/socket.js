@@ -1,6 +1,8 @@
 import { Socket } from 'phoenix'
 import {
   TABS_ADDED,
+  SEND_TABS,
+  SEND_TABS_OK,
   SOCKET_CONNECTED,
   SOCKET_ERROR,
   TAGS_FETCH_ALL,
@@ -203,6 +205,25 @@ export function fetchAllTags() {
   }
 }
 
+export function sendTabs(request_body, history) {
+  return dispatch => {
+    dispatch({ type: SEND_TABS, payload: request_body })
+
+    if (channel) {
+      channel
+        .push('tabs:add', request_body)
+        .receive('ok', resp => {
+          history.push('/app')
+          dispatch({
+            type: SEND_TABS_OK,
+            payload: resp
+          })
+        })
+        .receive('error', err => {})
+    }
+  }
+}
+
 export function createSocket() {
   return dispatch => {
     socket = new Socket('/socket', { params: { token: window.userToken } })
@@ -223,9 +244,9 @@ export function createSocket() {
       dispatch(socketError(err))
     })
 
-    channel.on('tabs:added', msg =>
+    channel.on('tabs:added', msg => {
       dispatch({ type: TABS_ADDED, payload: msg.content })
-    )
+    })
 
     channel.on('layout:updated', () => {
       dispatch(fetchLayout())

@@ -2,6 +2,8 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import Textarea from 'react-textarea-autosize'
 import { Row, Col, Button } from 'react-materialize'
+import { connect } from 'react-redux'
+import { sendTabs } from '../socket'
 
 import { parseUrlsList } from '../helpers'
 
@@ -13,13 +15,19 @@ class ImportData extends Component {
 
   onFormSubmit = event => {
     event.preventDefault()
-    //parse urls
-    const data = parseUrlsList(this.state.urls)
-    //send data to server for get names from urls and save to new tag
 
-    //receive answer from server
-    //if ok - redirect to view the new data
-    //else show error message
+    const data = parseUrlsList(this.state.urls)
+
+    if (data.urls) {
+      const request_body = {
+        tag_title: this.state.title,
+        tabs: data.urls.map(tab => {
+          return { url: tab }
+        })
+      }
+
+      this.props.sendTabs(request_body, this.props.history)
+    }
   }
   onTitleChange = event => {
     this.setState({ title: event.target.value })
@@ -62,4 +70,7 @@ class ImportData extends Component {
   }
 }
 
-export default ImportData
+export default connect(
+  null,
+  { sendTabs }
+)(ImportData)

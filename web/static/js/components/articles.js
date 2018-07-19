@@ -174,14 +174,18 @@ function mapStateToProps(store) {
     articles: store.data.articles,
     tags: store.data.tags,
     tag_id: store.data.current_tag_id,
-    article_edit_flag: store.data.article_edit_flag
+    article_edit_flag: store.data.article_edit_flag,
+    fetch_articles_flag: store.data.fetch_articles_flag
   }
 }
 
-export default connect(mapStateToProps, {
-  fetchArticles,
-  fetchArticlesUnbound,
-  editArticle,
-  editTag,
-  deleteTag
-})(Articles)
+export default connect(
+  mapStateToProps,
+  {
+    fetchArticles,
+    fetchArticlesUnbound,
+    editArticle,
+    editTag,
+    deleteTag
+  }
+)(Articles)

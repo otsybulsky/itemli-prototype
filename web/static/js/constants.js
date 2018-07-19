@@ -1,4 +1,6 @@
 export const TABS_ADDED = 'TABS_ADDED'
+export const SEND_TABS = 'SEND_TABS'
+export const SEND_TABS_OK = 'SEND_TABS_OK'
 
 export const SOCKET_CONNECTED = 'SOCKET_CONNECTED'
 export const SOCKET_ERROR = 'SOCKET_ERROR'
