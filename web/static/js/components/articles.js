@@ -2,7 +2,11 @@ import _ from 'lodash'
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import Article from './article'
-import { fetchArticles, fetchArticlesUnbound } from '../socket'
+import {
+  fetchArticles,
+  fetchArticlesUnbound,
+  deleteArticlesUnbound
+} from '../socket'
 
 import { DragDropContext } from 'react-dnd'
 import MultiBackend from 'react-dnd-multi-backend'
@@ -49,15 +53,11 @@ class Articles extends Component {
   }
 
   onClearList(event) {
-    const { articles } = this.props
+    const { articles, deleteArticlesUnbound } = this.props
     if (articles && articles.length > 0) {
       confirmDialog(`Confirm delete ${articles.length} unbound articles?`).then(
         () => {
-          // articles.map(article => {
-          //   if (article.url) {
-          //     window.open(article.url, '_blank')
-          //   }
-          // })
+          deleteArticlesUnbound()
         },
         () => {}
       )
@@ -240,6 +240,7 @@ export default connect(
   {
     fetchArticles,
     fetchArticlesUnbound,
+    deleteArticlesUnbound,
     editArticle,
     editTag,
     deleteTag

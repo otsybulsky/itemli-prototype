@@ -18,6 +18,7 @@ import {
   TAG_EDIT_APPLY,
   TAG_EDIT_APPLY_OK,
   FETCH_ARTICLES_UNBOUND,
+  DELETE_ARTICLES_UNBOUND,
   TAG_DELETE,
   ARTICLE_EDIT_APPLY,
   ARTICLE_EDIT_APPLY_OK,
@@ -38,6 +39,17 @@ export function fetchArticlesUnbound() {
     if (channel) {
       channel.push('articles:fetch_unbound').receive('ok', response => {
         dispatch({ type: FETCH_ARTICLES_OK, payload: response })
+      })
+    }
+  }
+}
+
+export function deleteArticlesUnbound() {
+  return dispatch => {
+    dispatch({ type: DELETE_ARTICLES_UNBOUND })
+    if (channel) {
+      channel.push('articles:delete_unbound').receive('ok', message => {
+        dispatch(fetchLayout())
       })
     }
   }

@@ -382,11 +382,21 @@ defmodule Itemli.RoomChannel do
     end  
   end
 
-  def handle_in("tabs:add", %{"tabs" => content, "tag_title" => tag_title}, socket) do
+  def handle_in("articles:delete_unbound", %{}, socket) do
     
-    IO.puts "================================================="
-    IO.inspect content
+    user = socket.assigns.user
+    article_ids = get_articles_without_tag(user)
 
+    article_ids
+    |> Enum.each fn(id) -> 
+      Repo.get(Article, id)
+      |> Repo.delete
+    end
+
+    {:ok, {:error, %{}}, socket}     
+  end
+
+  def handle_in("tabs:add", %{"tabs" => content, "tag_title" => tag_title}, socket) do
     user = socket.assigns.user
 
     new_tag = user
