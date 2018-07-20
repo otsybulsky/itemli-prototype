@@ -393,7 +393,7 @@ defmodule Itemli.RoomChannel do
       |> Repo.delete
     end
 
-    {:ok, {:error, %{}}, socket}     
+    {:reply, {:ok, %{}}, socket}     
   end
 
   def handle_in("tabs:add", %{"tabs" => content, "tag_title" => tag_title}, socket) do
