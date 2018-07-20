@@ -184,7 +184,7 @@ class Articles extends Component {
               className="material-icons medium "
               onClick={ev => this.onClearList(ev)}
             >
-              delete
+              delete_forever
             </i>
           </a>
           <ReactTooltip />

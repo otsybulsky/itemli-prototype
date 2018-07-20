@@ -41,13 +41,25 @@ class TagsProvider extends Component {
   render() {
     return (
       <div>
-        <div className="fixed-action-btn">
-          <a
-            className="btn-floating btn-small red "
-            onClick={ev => this.action_add_tag(ev)}
-          >
-            <i className="material-icons">add</i>
+        <div className="fixed-action-btn vertical">
+          <a className="btn-floating btn-large red">
+            <i className="large material-icons">add</i>
           </a>
+          <ul>
+            <li>
+              <a
+                className="btn-floating green"
+                onClick={ev => this.action_add_tag(ev)}
+              >
+                <i className="material-icons">create_new_folder</i>
+              </a>
+            </li>
+            <li>
+              <a className="btn-floating blue">
+                <i className="material-icons">link</i>
+              </a>
+            </li>
+          </ul>
         </div>
 
         <Row>
@@ -80,4 +92,7 @@ TagsProvider.propTypes = {
   articles_without_tag_count: PropTypes.number.isRequired
 }
 
-export default connect(mapStateToProps, { editTag })(TagsProvider)
+export default connect(
+  mapStateToProps,
+  { editTag }
+)(TagsProvider)
