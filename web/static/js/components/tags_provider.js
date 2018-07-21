@@ -16,6 +16,10 @@ class TagsProvider extends Component {
     this.props.editTag()
   }
 
+  action_open_import(event) {
+    this.props.history.push('/app/import')
+  }
+
   action_add_article(event) {
     const { current_tag_id, tags, editArticle } = this.props
 
@@ -61,6 +65,14 @@ class TagsProvider extends Component {
           <ul>
             <li>
               <a
+                className="btn-floating blue"
+                onClick={ev => this.action_open_import(ev)}
+              >
+                <i className="material-icons">cloud_upload</i>
+              </a>
+            </li>
+            <li>
+              <a
                 className="btn-floating green"
                 onClick={ev => this.action_add_tag(ev)}
               >
@@ -69,7 +81,7 @@ class TagsProvider extends Component {
             </li>
             <li>
               <a
-                className="btn-floating blue"
+                className="btn-floating red"
                 onClick={ev => this.action_add_article(ev)}
               >
                 <i className="material-icons">link</i>

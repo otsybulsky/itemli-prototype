@@ -1,19 +1,52 @@
 import _ from 'lodash'
 
 export function parseUrlsList(listUrl) {
-  const result = {
-    urls: []
-  }
+  const result = []
   const urls = listUrl.toLowerCase()
   //get urls from list
-  const regexp = /http\S+/gim //start 'http' while not space
-  result.urls = urls.match(regexp)
 
-  // if (result.urls) {
-  //   result.urls.forEach(item => {
-  //     console.log(item)
-  //   })
-  // }
+  const endOfLine = /[\r\n]/
+  const regexpUrl = /http\S+/gim //start 'http' while not space
+  const splitterOneTab = ' | '
+  const dataList = listUrl.split(endOfLine)
+
+  const parsedList = dataList.map(item => {
+    if (~item.indexOf(splitterOneTab)) {
+      const oneTabItem = item.split(splitterOneTab)
+      return { url: oneTabItem[0], title: oneTabItem[1] }
+    } else {
+      const url = item.match(regexpUrl)
+      if (url) {
+        return { url: url[0], title: '' }
+      } else {
+        return { url: null, title: item }
+      }
+    }
+  })
+
+  if (parsedList.length > 0) {
+    let resultIndex = 0
+    result.push({
+      title: `import tag -`,
+      urls: []
+    })
+    parsedList.forEach(item => {
+      const { url, title } = item
+      if (url) {
+        result[resultIndex].urls.push(item)
+      } else {
+        if (result[resultIndex].urls.length > 0) {
+          result.push({
+            title: `import tag - ${item.title}`,
+            urls: []
+          })
+          resultIndex = resultIndex + 1
+        } else {
+          result[resultIndex].title = `import tag - ${item.title}`
+        }
+      }
+    })
+  }
 
   return result
 }

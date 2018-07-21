@@ -9,7 +9,6 @@ import { parseUrlsList } from '../helpers'
 
 class ImportData extends Component {
   state = {
-    title: '',
     urls: ''
   }
 
@@ -18,20 +17,20 @@ class ImportData extends Component {
 
     const data = parseUrlsList(this.state.urls)
 
-    if (data.urls) {
-      const request_body = {
-        tag_title: this.state.title,
-        tabs: data.urls.map(tab => {
-          return { url: tab }
-        })
+    data.forEach(list => {
+      if (list.urls.length > 0) {
+        const request_body = {
+          tag_title: list.title,
+          tabs: list.urls.map(tab => {
+            return { url: tab.url, title: tab.title }
+          })
+        }
+        console.log(request_body)
+        this.props.sendTabs(request_body, this.props.history)
       }
+    })
+  }
 
-      this.props.sendTabs(request_body, this.props.history)
-    }
-  }
-  onTitleChange = event => {
-    this.setState({ title: event.target.value })
-  }
   onUrlsChange = event => {
     this.setState({ urls: event.target.value })
   }
@@ -43,13 +42,6 @@ class ImportData extends Component {
       <div className={className}>
         <h5>Import data manual</h5>
         <form onSubmit={this.onFormSubmit}>
-          <h6>Tag title</h6>
-          <Textarea
-            autoFocus
-            placeholder="type title new tag for url's list"
-            value={this.state.title || ''}
-            onChange={this.onTitleChange}
-          />
           <h6>URL's list</h6>
           <Textarea
             minRows={10}
