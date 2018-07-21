@@ -23,7 +23,9 @@ import {
   ARTICLE_EDIT_APPLY,
   ARTICLE_EDIT_APPLY_OK,
   ARTICLE_DELETE,
-  ARTICLE_UPDATED
+  ARTICLE_UPDATED,
+  EXPORT_LAYOUT,
+  EXPORT_LAYOUT_OK
 } from './constants'
 
 let socket = null
@@ -228,6 +230,24 @@ export function sendTabs(request_body, history) {
           history.push('/app')
           dispatch({
             type: SEND_TABS_OK,
+            payload: resp
+          })
+        })
+        .receive('error', err => {})
+    }
+  }
+}
+
+export function exportLayout() {
+  return dispatch => {
+    dispatch({ type: EXPORT_LAYOUT })
+
+    if (channel) {
+      channel
+        .push('layout:export')
+        .receive('ok', resp => {
+          dispatch({
+            type: EXPORT_LAYOUT_OK,
             payload: resp
           })
         })

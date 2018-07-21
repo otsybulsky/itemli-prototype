@@ -3,10 +3,12 @@ import PropTypes from 'prop-types'
 import Textarea from 'react-textarea-autosize'
 import { Row, Col, Button } from 'react-materialize'
 import { connect } from 'react-redux'
+import { exportLayout } from '../socket'
 
 class ExportData extends Component {
   onFormSubmit = event => {
     event.preventDefault()
+    this.props.exportLayout()
   }
 
   render() {
@@ -33,5 +35,5 @@ class ExportData extends Component {
 
 export default connect(
   null,
-  {}
+  { exportLayout }
 )(ExportData)

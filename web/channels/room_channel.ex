@@ -229,7 +229,6 @@ defmodule Itemli.RoomChannel do
           updated_at: article.updated_at, tags: article.tags } end)
     end
 
-
     check_articles_data(articles, socket.assigns.user_id)
     
     {:reply, {:ok, %{articles: articles, tag_id: tag.id}}, socket}
@@ -394,6 +393,38 @@ defmodule Itemli.RoomChannel do
     end
 
     {:reply, {:ok, %{}}, socket}     
+  end
+
+  def handle_in("layout:export", %{}, socket) do    
+    user = socket.assigns.user_id
+ 
+    # get tags list
+    {:reply, {:ok, res}, _} = handle_in("layout:fetch", %{}, socket)
+
+    tags = res.tags
+    |> Enum.map fn(tag) -> {String.to_atom(tag.id), tag} end
+    
+    tags = res.layout["tag_ids"]
+    |> Enum.map fn(tag) -> 
+      tag = tags[String.to_atom(tag["id"])]            
+      tag = %{id: tag.id, title: tag.title, description: tag.description}                  
+      {:reply, {:ok, res}, _} = handle_in("articles:fetch", %{"tag_id" => tag.id}, socket)
+      
+      articles = res.articles
+      |> Enum.map fn(article) -> 
+        %{id: article.id, title: article.title, url: article.url, favicon: article.favicon, description: article.description }                  
+      end
+      Map.put_new(tag, :articles, articles)
+    end
+
+    {:reply, {:ok, res}, _} = handle_in("articles:fetch_unbound", %{}, socket)
+
+    articles = res.articles
+      |> Enum.map fn(article) -> 
+        %{id: article.id, title: article.title, url: article.url, favicon: article.favicon, description: article.description }                  
+      end
+
+    {:reply, {:ok, %{req_type: "itemli-layout", tags: tags, unbound_articles: articles}}, socket}     
   end
 
   def handle_in("tabs:add", %{"tabs" => content, "tag_title" => tag_title}, socket) do
