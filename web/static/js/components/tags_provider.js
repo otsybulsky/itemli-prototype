@@ -8,12 +8,25 @@ import Tags from './tags'
 import Articles from './articles'
 import ArticlesUnbound from './articles_unbound'
 import TagEdit from './tag_edit'
-import { editTag } from '../actions'
+import { editTag, editArticle } from '../actions'
 import { Row, Col } from 'react-materialize'
 
 class TagsProvider extends Component {
   action_add_tag(event) {
     this.props.editTag()
+  }
+
+  action_add_article(event) {
+    const { current_tag_id, tags, editArticle } = this.props
+
+    const current_tag = []
+    if (current_tag_id) {
+      current_tag.push(tags[current_tag_id])
+    }
+
+    editArticle({
+      tags: current_tag
+    })
   }
 
   renderBody() {
@@ -55,7 +68,10 @@ class TagsProvider extends Component {
               </a>
             </li>
             <li>
-              <a className="btn-floating blue">
+              <a
+                className="btn-floating blue"
+                onClick={ev => this.action_add_article(ev)}
+              >
                 <i className="material-icons">link</i>
               </a>
             </li>
@@ -81,7 +97,10 @@ function mapStateToProps(state) {
   return {
     tag_ids: state.data.tag_ids,
     tag_edit_flag: state.data.tag_edit_flag || false,
-    articles_without_tag_count: state.data.articles_without_tag_count || 0
+    articles_without_tag_count: state.data.articles_without_tag_count || 0,
+
+    current_tag_id: state.data.current_tag_id,
+    tags: state.data.tags
   }
 }
 
@@ -89,10 +108,12 @@ TagsProvider.propTypes = {
   tag_ids: PropTypes.array.isRequired,
   editTag: PropTypes.func.isRequired,
   tag_edit_flag: PropTypes.bool.isRequired,
-  articles_without_tag_count: PropTypes.number.isRequired
+  articles_without_tag_count: PropTypes.number.isRequired,
+  current_tag_id: PropTypes.string,
+  tags: PropTypes.array
 }
 
 export default connect(
   mapStateToProps,
-  { editTag }
+  { editTag, editArticle }
 )(TagsProvider)
