@@ -39,4 +39,7 @@ function mapStateToProps(state) {
   }
 }
 
-export default connect(mapStateToProps, { createSocket, fetchLayout })(App)
+export default connect(
+  mapStateToProps,
+  { createSocket, fetchLayout }
+)(App)

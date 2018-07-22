@@ -1,7 +1,7 @@
 defmodule Itemli.Article do
   use Itemli.Web, :model
 
-  @derive {Poison.Encoder, only: [:id, :title, :url, :favicon, :description]}
+  @derive {Poison.Encoder, only: [:id, :title, :url, :favicon, :description, :updated_at]}
 
   schema "articles" do
     field :title, :string

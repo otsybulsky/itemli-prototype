@@ -8,12 +8,33 @@ import Tags from './tags'
 import Articles from './articles'
 import ArticlesUnbound from './articles_unbound'
 import TagEdit from './tag_edit'
-import { editTag } from '../actions'
+import { editTag, editArticle } from '../actions'
+import { exportLayout } from '../socket'
 import { Row, Col } from 'react-materialize'
 
 class TagsProvider extends Component {
   action_add_tag(event) {
     this.props.editTag()
+  }
+
+  action_open_import(event) {
+    this.props.history.push('/app/import')
+  }
+  action_open_export(event) {
+    this.props.exportLayout()
+  }
+
+  action_add_article(event) {
+    const { current_tag_id, tags, editArticle } = this.props
+
+    const current_tag = []
+    if (current_tag_id) {
+      current_tag.push(tags[current_tag_id])
+    }
+
+    editArticle({
+      tags: current_tag
+    })
   }
 
   renderBody() {
@@ -41,13 +62,52 @@ class TagsProvider extends Component {
   render() {
     return (
       <div>
-        <div className="fixed-action-btn">
-          <a
-            className="btn-floating btn-small red "
-            onClick={ev => this.action_add_tag(ev)}
-          >
-            <i className="material-icons">add</i>
+        <div className="fixed-action-btn vertical">
+          <a className="btn-floating btn-large red">
+            <i className="large material-icons">add</i>
           </a>
+          <ul>
+            <li>
+              <a
+                className="btn-floating blue tooltipped"
+                data-position="left"
+                data-tooltip="Export all data"
+                onClick={ev => this.action_open_export(ev)}
+              >
+                <i className="material-icons">cloud_upload</i>
+              </a>
+            </li>
+            <li>
+              <a
+                className="btn-floating blue tooltipped"
+                data-position="left"
+                data-tooltip="Import data"
+                onClick={ev => this.action_open_import(ev)}
+              >
+                <i className="material-icons">cloud_download</i>
+              </a>
+            </li>
+            <li>
+              <a
+                className="btn-floating green  tooltipped"
+                data-position="left"
+                data-tooltip="Add new tag"
+                onClick={ev => this.action_add_tag(ev)}
+              >
+                <i className="material-icons">create_new_folder</i>
+              </a>
+            </li>
+            <li>
+              <a
+                className="btn-floating red tooltipped"
+                data-position="left"
+                data-tooltip="Add new link"
+                onClick={ev => this.action_add_article(ev)}
+              >
+                <i className="material-icons">link</i>
+              </a>
+            </li>
+          </ul>
         </div>
 
         <Row>
@@ -69,7 +129,10 @@ function mapStateToProps(state) {
   return {
     tag_ids: state.data.tag_ids,
     tag_edit_flag: state.data.tag_edit_flag || false,
-    articles_without_tag_count: state.data.articles_without_tag_count || 0
+    articles_without_tag_count: state.data.articles_without_tag_count || 0,
+
+    current_tag_id: state.data.current_tag_id,
+    tags: state.data.tags
   }
 }
 
@@ -77,7 +140,12 @@ TagsProvider.propTypes = {
   tag_ids: PropTypes.array.isRequired,
   editTag: PropTypes.func.isRequired,
   tag_edit_flag: PropTypes.bool.isRequired,
-  articles_without_tag_count: PropTypes.number.isRequired
+  articles_without_tag_count: PropTypes.number.isRequired,
+  current_tag_id: PropTypes.string,
+  tags: PropTypes.array
 }
 
-export default connect(mapStateToProps, { editTag })(TagsProvider)
+export default connect(
+  mapStateToProps,
+  { editTag, editArticle, exportLayout }
+)(TagsProvider)

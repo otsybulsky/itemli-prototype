@@ -1,6 +1,10 @@
 import { Socket } from 'phoenix'
+import { saveAs } from 'file-saver/FileSaver'
+
 import {
   TABS_ADDED,
+  SEND_TABS,
+  SEND_TABS_OK,
   SOCKET_CONNECTED,
   SOCKET_ERROR,
   TAGS_FETCH_ALL,
@@ -16,10 +20,14 @@ import {
   TAG_EDIT_APPLY,
   TAG_EDIT_APPLY_OK,
   FETCH_ARTICLES_UNBOUND,
+  DELETE_ARTICLES_UNBOUND,
   TAG_DELETE,
   ARTICLE_EDIT_APPLY,
   ARTICLE_EDIT_APPLY_OK,
-  ARTICLE_DELETE
+  ARTICLE_DELETE,
+  ARTICLE_UPDATED,
+  EXPORT_LAYOUT,
+  EXPORT_LAYOUT_OK
 } from './constants'
 
 let socket = null
@@ -35,6 +43,17 @@ export function fetchArticlesUnbound() {
     if (channel) {
       channel.push('articles:fetch_unbound').receive('ok', response => {
         dispatch({ type: FETCH_ARTICLES_OK, payload: response })
+      })
+    }
+  }
+}
+
+export function deleteArticlesUnbound() {
+  return dispatch => {
+    dispatch({ type: DELETE_ARTICLES_UNBOUND })
+    if (channel) {
+      channel.push('articles:delete_unbound').receive('ok', message => {
+        dispatch(fetchLayout())
       })
     }
   }
@@ -202,6 +221,47 @@ export function fetchAllTags() {
   }
 }
 
+export function sendTabs(request_body, history) {
+  return dispatch => {
+    dispatch({ type: SEND_TABS, payload: request_body })
+
+    if (channel) {
+      channel
+        .push('tabs:add', request_body)
+        .receive('ok', resp => {
+          history.push('/app')
+          dispatch({
+            type: SEND_TABS_OK,
+            payload: resp
+          })
+        })
+        .receive('error', err => {})
+    }
+  }
+}
+
+export function exportLayout() {
+  return dispatch => {
+    dispatch({ type: EXPORT_LAYOUT })
+
+    if (channel) {
+      channel
+        .push('layout:export')
+        .receive('ok', resp => {
+          dispatch({
+            type: EXPORT_LAYOUT_OK,
+            payload: resp
+          })
+          const blob = new Blob([JSON.stringify(resp)], {
+            type: 'text/plain;charset=utf-8'
+          })
+          saveAs(blob, 'export-itemli.txt')
+        })
+        .receive('error', err => {})
+    }
+  }
+}
+
 export function createSocket() {
   return dispatch => {
     socket = new Socket('/socket', { params: { token: window.userToken } })
@@ -222,9 +282,9 @@ export function createSocket() {
       dispatch(socketError(err))
     })
 
-    channel.on('tabs:added', msg =>
+    channel.on('tabs:added', msg => {
       dispatch({ type: TABS_ADDED, payload: msg.content })
-    )
+    })
 
     channel.on('layout:updated', () => {
       dispatch(fetchLayout())
@@ -232,6 +292,10 @@ export function createSocket() {
 
     channel.on('articles_index:updated', msg => {
       dispatch(updatedArticlesIndex(msg.tag_id))
+    })
+
+    channel.on('article:updated', msg => {
+      dispatch({ type: ARTICLE_UPDATED, payload: msg.article })
     })
   }
 }

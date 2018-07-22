@@ -8,6 +8,7 @@ import {
 } from '../helpers'
 import {
   TABS_ADDED,
+  SEND_TABS_OK,
   TAGS_FETCH_ALL_OK,
   DROP_TAG,
   DROP_ARTICLE,
@@ -24,7 +25,8 @@ import {
   TAG_EDIT_APPLY_OK,
   ARTICLE_EDIT,
   ARTICLE_EDIT_CANCEL,
-  ARTICLE_EDIT_APPLY_OK
+  ARTICLE_EDIT_APPLY_OK,
+  ARTICLE_UPDATED
 } from '../constants'
 
 const INIT_STATE = {
@@ -37,11 +39,43 @@ const INIT_STATE = {
   tag_edit_flag: null,
   tag_for_edit: null,
   article_edit_flag: null,
-  articles_without_tag_count: null
+  articles_without_tag_count: null,
+  fetch_articles_flag: null
 }
 
 export default function(store = INIT_STATE, { type, payload }) {
   switch (type) {
+    case ARTICLE_UPDATED:
+      if (store.articles) {
+        const local_article_index = store.articles.findIndex(article => {
+          return article.id === payload.id
+        })
+        if (local_article_index >= 0) {
+          const articles = [...store.articles]
+
+          // if (!articles[local_article_index].title) {
+          articles[local_article_index].title = payload.title
+          // }
+          // if (!articles[local_article_index].favicon) {
+          articles[local_article_index].favicon = payload.favicon
+          // }
+          // if (!articles[local_article_index].description) {
+          articles[local_article_index].description = payload.description
+          // }
+          // if (articles[local_article_index].url !== payload.url) {
+          articles[local_article_index].url = payload.url
+          // }
+          articles[local_article_index].updated_at = payload.updated_at
+          return {
+            ...store,
+            articles: articles
+          }
+        } else {
+          return store
+        }
+      } else {
+        return store
+      }
     case ARTICLE_EDIT:
       return {
         ...store,
@@ -99,7 +133,8 @@ export default function(store = INIT_STATE, { type, payload }) {
         ...store,
         articles: articles,
         current_tag_id: tag_id,
-        saveLayout: store.current_tag_id === tag_id ? false : true
+        saveLayout: store.current_tag_id === tag_id ? false : true,
+        fetch_articles_flag: null
       }
     case TABS_ADDED:
       const tag = payload
@@ -110,6 +145,11 @@ export default function(store = INIT_STATE, { type, payload }) {
         current_tag_id: tag.id,
         articles: null,
         saveLayout: true
+      }
+    case SEND_TABS_OK:
+      return {
+        ...store,
+        fetch_articles_flag: true
       }
 
     case FETCH_LAYOUT_OK:

@@ -2,6 +2,10 @@ defmodule Itemli.RoomChannel do
   use Itemli.Web, :channel
   alias Itemli.{Article, Tag, TagArticle, Layout}
   alias Ecto.Multi
+  alias Itemli.MetaInspector
+
+  use Task
+  @timeout 60000
 
   def join("room:" <> _room_id, _params, socket) do
     {:ok, socket}
@@ -122,9 +126,11 @@ defmodule Itemli.RoomChannel do
     articles_query = from a in Article,
       where: a.id in ^article_ids,
       order_by: [desc: a.inserted_at],
-      select: %{id: a.id, title: a.title, description: a.description, url: a.url, favicon: a.favicon}
+      select: %{id: a.id, title: a.title, description: a.description, url: a.url, favicon: a.favicon, updated_at: a.updated_at}
     
     articles = Repo.all(articles_query)
+
+    check_articles_data(articles, socket.assigns.user_id)
 
     {:reply, {:ok, %{articles: articles, tag_id: nil}}, socket}
   end
@@ -185,6 +191,7 @@ defmodule Itemli.RoomChannel do
 
     article_list = Article
     |> where([t], (t.id in ^art_ids))
+    |> order_by(asc: :inserted_at)
     |> Repo.all
     |> Repo.preload([:tags])   
     
@@ -211,14 +218,39 @@ defmodule Itemli.RoomChannel do
         |> Keyword.drop ids_exists
         
         articles = Keyword.values(articles_without_index) ++ articles
-        |> Enum.map(fn (article) -> %{"id" => article.id, "title" => article.title, "url" => article.url, "favicon" => article.favicon, "description" => article.description, "tags" => article.tags  } end)
+        |> Enum.map(fn (article) -> 
+          %{id: article.id, title: article.title, url: article.url, favicon: article.favicon, description: article.description,
+          updated_at: article.updated_at, tags: article.tags  } end)
       _ ->
+
         articles = article_list
-    |> Enum.map(fn (article) -> %{"id" => article.id, "title" => article.title, "url" => article.url, "favicon" => article.favicon, "description" => article.description, "tags" => article.tags  } end)
+        |> Enum.map(fn (article) ->       
+          %{id: article.id, title: article.title, url: article.url, favicon: article.favicon, description: article.description,
+          updated_at: article.updated_at, tags: article.tags } end)
     end
+
+    check_articles_data(articles, socket.assigns.user_id)
     
     {:reply, {:ok, %{articles: articles, tag_id: tag.id}}, socket}
   end
+
+  defp check_articles_data(articles, user_id) do
+    # check article for full data set
+    Enum.each(articles, fn (article) ->
+      Task.async(fn -> 
+        :poolboy.transaction(
+          :worker_article,
+          &GenServer.call(
+            &1,
+            %{:article => article, :user_id => user_id}
+          ),
+          @timeout
+        )
+      end)  
+    end)
+  end
+
+ 
 
   def handle_in("tag:reorder_articles", %{"tag_id" => tag_id, "article_ids" => article_ids}, socket) do
     user = socket.assigns.user
@@ -349,13 +381,64 @@ defmodule Itemli.RoomChannel do
     end  
   end
 
-  def handle_in("tabs:add", %{"tabs" => content, "tag_title" => tag_title}, socket) do
+  def handle_in("articles:delete_unbound", %{}, socket) do
     
+    user = socket.assigns.user
+    article_ids = get_articles_without_tag(user)
+
+    article_ids
+    |> Enum.each fn(id) -> 
+      Repo.get(Article, id)
+      |> Repo.delete
+    end
+
+    {:reply, {:ok, %{}}, socket}     
+  end
+
+  def handle_in("layout:export", %{}, socket) do    
+    user = socket.assigns.user_id
+ 
+    # get tags list
+    {:reply, {:ok, res}, _} = handle_in("layout:fetch", %{}, socket)
+
+    tags = res.tags
+    |> Enum.map fn(tag) -> {String.to_atom(tag.id), tag} end
+    
+    
+
+    tags = res.layout["tag_ids"]
+    |> Enum.map fn(tag) ->       
+      tag = tags[String.to_atom(tag["id"])]
+      if (tag !== nil) do
+        tag = %{id: tag.id, title: tag.title, description: tag.description}                  
+      
+        {:reply, {:ok, res}, _} = handle_in("articles:fetch", %{"tag_id" => tag.id}, socket)
+      
+        articles = res.articles
+        |> Enum.map fn(article) -> 
+        %{id: article.id, title: article.title, url: article.url, favIconUrl: article.favicon, description: article.description }                  
+        end
+
+        Map.put_new(tag, :articles, articles)  
+      end                        
+    end
+
+    {:reply, {:ok, res}, _} = handle_in("articles:fetch_unbound", %{}, socket)
+
+    articles = res.articles
+      |> Enum.map fn(article) -> 
+        %{id: article.id, title: article.title, url: article.url, favIconUrl: article.favicon, description: article.description }                  
+      end
+
+    {:reply, {:ok, %{req_type: "itemli-layout", tags: tags, unbound_articles: articles}}, socket}   
+  end
+
+  def handle_in("tabs:add", %{"tabs" => content, "tag" => tag}, socket) do
     user = socket.assigns.user
 
     new_tag = user
     |> build_assoc(:tags)
-    |> Tag.changeset(%{title: tag_title})
+    |> Tag.changeset(%{title: tag["title"], description: tag["description"]})
     
     batch = Multi.new()
     |> Multi.insert(:tag, new_tag) 
@@ -363,6 +446,14 @@ defmodule Itemli.RoomChannel do
       fn %{tag: tag} ->
         articles = for item <- content do
           case item do
+            %{"title" => title, "url" => url, "favIconUrl" => favicon, "description" => description} ->
+
+              article = user
+              |> build_assoc(:articles)
+              |> Article.changeset(%{tag: [tag], title: title, url: url, favicon: favicon, description: description})
+              |> Repo.insert
+
+
             %{"title" => title, "url" => url, "favIconUrl" => favicon} ->
 
               article = user
@@ -373,8 +464,13 @@ defmodule Itemli.RoomChannel do
             %{"title" => title, "url" => url} ->
               article = user
               |> build_assoc(:articles)
-              |> Article.changeset(%{tags: [tag], title: title, url: url})
+              |> Article.changeset(%{tag: [tag], title: title, url: url})
               |> Repo.insert
+            %{"url" => url} ->
+                article = user
+                |> build_assoc(:articles)
+                |> Article.changeset(%{tag: [tag], url: url})
+                |> Repo.insert
             _ ->
               IO.puts "-------------------------------------------------------------- MATCH ERROR "
               IO.inspect item

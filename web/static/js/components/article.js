@@ -116,12 +116,15 @@ class Article extends Component {
 
   render() {
     const {
-      article: { title, favicon, url },
+      article: { title, favicon, url, description },
       isDragging,
       isOverCurrent,
       connectDragSource,
       connectDropTarget
     } = this.props
+
+    const descr = description ? `description: ${description}` : ''
+
     const articleClass = isOverCurrent ? 'article-drag-hover' : 'article'
     const opacity = isDragging ? 0.25 : 1
     return connectDragSource(
@@ -140,6 +143,7 @@ class Article extends Component {
                     {this.renderEditInterface()}
                     <img className="favicon" src={favicon} />
                     {title}
+                    <div className="truncate">{descr}</div>
                   </div>
                 </div>
               </a>
@@ -161,9 +165,12 @@ function mapStateToProps(store) {
   }
 }
 
-export default connect(mapStateToProps, {
-  dropArticle,
-  saveArticlesIndex,
-  editArticle,
-  deleteArticle
-})(Article)
+export default connect(
+  mapStateToProps,
+  {
+    dropArticle,
+    saveArticlesIndex,
+    editArticle,
+    deleteArticle
+  }
+)(Article)
