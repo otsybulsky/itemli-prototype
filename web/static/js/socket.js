@@ -1,4 +1,6 @@
 import { Socket } from 'phoenix'
+import { saveAs } from 'file-saver/FileSaver'
+
 import {
   TABS_ADDED,
   SEND_TABS,
@@ -250,6 +252,10 @@ export function exportLayout() {
             type: EXPORT_LAYOUT_OK,
             payload: resp
           })
+          const blob = new Blob([JSON.stringify(resp)], {
+            type: 'text/plain;charset=utf-8'
+          })
+          saveAs(blob, 'export-itemli.txt')
         })
         .receive('error', err => {})
     }

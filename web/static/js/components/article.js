@@ -143,7 +143,7 @@ class Article extends Component {
                     {this.renderEditInterface()}
                     <img className="favicon" src={favicon} />
                     {title}
-                    <div>{descr}</div>
+                    <div className="truncate">{descr}</div>
                   </div>
                 </div>
               </a>

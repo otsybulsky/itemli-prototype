@@ -404,35 +404,41 @@ defmodule Itemli.RoomChannel do
     tags = res.tags
     |> Enum.map fn(tag) -> {String.to_atom(tag.id), tag} end
     
+    
+
     tags = res.layout["tag_ids"]
-    |> Enum.map fn(tag) -> 
-      tag = tags[String.to_atom(tag["id"])]            
-      tag = %{id: tag.id, title: tag.title, description: tag.description}                  
-      {:reply, {:ok, res}, _} = handle_in("articles:fetch", %{"tag_id" => tag.id}, socket)
+    |> Enum.map fn(tag) ->       
+      tag = tags[String.to_atom(tag["id"])]
+      if (tag !== nil) do
+        tag = %{id: tag.id, title: tag.title, description: tag.description}                  
       
-      articles = res.articles
-      |> Enum.map fn(article) -> 
-        %{id: article.id, title: article.title, url: article.url, favicon: article.favicon, description: article.description }                  
-      end
-      Map.put_new(tag, :articles, articles)
+        {:reply, {:ok, res}, _} = handle_in("articles:fetch", %{"tag_id" => tag.id}, socket)
+      
+        articles = res.articles
+        |> Enum.map fn(article) -> 
+        %{id: article.id, title: article.title, url: article.url, favIconUrl: article.favicon, description: article.description }                  
+        end
+
+        Map.put_new(tag, :articles, articles)  
+      end                        
     end
 
     {:reply, {:ok, res}, _} = handle_in("articles:fetch_unbound", %{}, socket)
 
     articles = res.articles
       |> Enum.map fn(article) -> 
-        %{id: article.id, title: article.title, url: article.url, favicon: article.favicon, description: article.description }                  
+        %{id: article.id, title: article.title, url: article.url, favIconUrl: article.favicon, description: article.description }                  
       end
 
-    {:reply, {:ok, %{req_type: "itemli-layout", tags: tags, unbound_articles: articles}}, socket}     
+    {:reply, {:ok, %{req_type: "itemli-layout", tags: tags, unbound_articles: articles}}, socket}   
   end
 
-  def handle_in("tabs:add", %{"tabs" => content, "tag_title" => tag_title}, socket) do
+  def handle_in("tabs:add", %{"tabs" => content, "tag" => tag}, socket) do
     user = socket.assigns.user
 
     new_tag = user
     |> build_assoc(:tags)
-    |> Tag.changeset(%{title: tag_title})
+    |> Tag.changeset(%{title: tag["title"], description: tag["description"]})
     
     batch = Multi.new()
     |> Multi.insert(:tag, new_tag) 
@@ -440,6 +446,14 @@ defmodule Itemli.RoomChannel do
       fn %{tag: tag} ->
         articles = for item <- content do
           case item do
+            %{"title" => title, "url" => url, "favIconUrl" => favicon, "description" => description} ->
+
+              article = user
+              |> build_assoc(:articles)
+              |> Article.changeset(%{tag: [tag], title: title, url: url, favicon: favicon, description: description})
+              |> Repo.insert
+
+
             %{"title" => title, "url" => url, "favIconUrl" => favicon} ->
 
               article = user

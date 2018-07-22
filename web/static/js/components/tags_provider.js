@@ -9,6 +9,7 @@ import Articles from './articles'
 import ArticlesUnbound from './articles_unbound'
 import TagEdit from './tag_edit'
 import { editTag, editArticle } from '../actions'
+import { exportLayout } from '../socket'
 import { Row, Col } from 'react-materialize'
 
 class TagsProvider extends Component {
@@ -20,7 +21,7 @@ class TagsProvider extends Component {
     this.props.history.push('/app/import')
   }
   action_open_export(event) {
-    this.props.history.push('/app/export')
+    this.props.exportLayout()
   }
 
   action_add_article(event) {
@@ -68,23 +69,29 @@ class TagsProvider extends Component {
           <ul>
             <li>
               <a
-                className="btn-floating blue"
+                className="btn-floating blue tooltipped"
+                data-position="left"
+                data-tooltip="Export all data"
                 onClick={ev => this.action_open_export(ev)}
-              >
-                <i className="material-icons">cloud_download</i>
-              </a>
-            </li>
-            <li>
-              <a
-                className="btn-floating blue"
-                onClick={ev => this.action_open_import(ev)}
               >
                 <i className="material-icons">cloud_upload</i>
               </a>
             </li>
             <li>
               <a
-                className="btn-floating green"
+                className="btn-floating blue tooltipped"
+                data-position="left"
+                data-tooltip="Import data"
+                onClick={ev => this.action_open_import(ev)}
+              >
+                <i className="material-icons">cloud_download</i>
+              </a>
+            </li>
+            <li>
+              <a
+                className="btn-floating green  tooltipped"
+                data-position="left"
+                data-tooltip="Add new tag"
                 onClick={ev => this.action_add_tag(ev)}
               >
                 <i className="material-icons">create_new_folder</i>
@@ -92,7 +99,9 @@ class TagsProvider extends Component {
             </li>
             <li>
               <a
-                className="btn-floating red"
+                className="btn-floating red tooltipped"
+                data-position="left"
+                data-tooltip="Add new link"
                 onClick={ev => this.action_add_article(ev)}
               >
                 <i className="material-icons">link</i>
@@ -138,5 +147,5 @@ TagsProvider.propTypes = {
 
 export default connect(
   mapStateToProps,
-  { editTag, editArticle }
+  { editTag, editArticle, exportLayout }
 )(TagsProvider)
