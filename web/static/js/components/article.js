@@ -123,7 +123,7 @@ class Article extends Component {
       connectDropTarget
     } = this.props
 
-    const descr = description ? `description: ${description}` : ''
+    const descr = description ? description : ''
 
     const articleClass = isOverCurrent ? 'article-drag-hover' : 'article'
     const opacity = isDragging ? 0.25 : 1
@@ -143,7 +143,9 @@ class Article extends Component {
                     {this.renderEditInterface()}
                     <img className="favicon" src={favicon} />
                     {title}
-                    <div className="truncate">{descr}</div>
+                    <div className="article-description block-with-text">
+                      {descr}
+                    </div>
                   </div>
                 </div>
               </a>
