@@ -11,6 +11,7 @@ import TagEdit from './tag_edit'
 import { editTag, editArticle } from '../actions'
 import { exportLayout } from '../socket'
 import { Row, Col } from 'react-materialize'
+import ScrollToTop from 'react-scroll-up'
 
 class TagsProvider extends Component {
   action_add_tag(event) {
@@ -59,9 +60,44 @@ class TagsProvider extends Component {
     )
   }
 
+  renderLayout() {
+    const { show_tags_list } = this.props
+
+    if (show_tags_list) {
+      return (
+        <Row>
+          <Col s={4} className="tags-container">
+            {this.renderUnbounds()}
+            <Tags tag_ids={this.props.tag_ids} forceRefresh={Date.now()} />
+          </Col>
+          <Col s={8}>{this.renderBody()}</Col>
+        </Row>
+      )
+    } else {
+      return (
+        <Row>
+          <Col s={12}>{this.renderBody()}</Col>
+        </Row>
+      )
+    }
+  }
+
+  scrollToTopStyle = {
+    position: 'fixed',
+    bottom: 10,
+    right: 100,
+    cursor: 'pointer',
+    transitionDuration: '0.2s',
+    transitionTimingFunction: 'linear',
+    transitionDelay: '0s'
+  }
+
   render() {
     return (
       <div>
+        <ScrollToTop showUnder={160} style={this.scrollToTopStyle}>
+          <i className="medium material-icons">file_upload</i>
+        </ScrollToTop>
         <div className="fixed-action-btn vertical">
           <a className="btn-floating btn-large red">
             <i className="large material-icons">add</i>
@@ -110,14 +146,7 @@ class TagsProvider extends Component {
           </ul>
         </div>
 
-        <Row>
-          <Col s={4} className="tags-container">
-            {this.renderUnbounds()}
-
-            <Tags tag_ids={this.props.tag_ids} forceRefresh={Date.now()} />
-          </Col>
-          <Col s={8}>{this.renderBody()}</Col>
-        </Row>
+        {this.renderLayout()}
       </div>
     )
   }
@@ -132,7 +161,9 @@ function mapStateToProps(state) {
     articles_without_tag_count: state.data.articles_without_tag_count || 0,
 
     current_tag_id: state.data.current_tag_id,
-    tags: state.data.tags
+    tags: state.data.tags,
+
+    show_tags_list: state.interface.show_tags_list
   }
 }
 
@@ -142,7 +173,8 @@ TagsProvider.propTypes = {
   tag_edit_flag: PropTypes.bool.isRequired,
   articles_without_tag_count: PropTypes.number.isRequired,
   current_tag_id: PropTypes.string,
-  tags: PropTypes.array
+  tags: PropTypes.array,
+  show_tags_list: PropTypes.bool.isRequired
 }
 
 export default connect(

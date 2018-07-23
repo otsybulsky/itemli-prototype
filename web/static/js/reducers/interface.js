@@ -3,16 +3,23 @@ import {
   DRAG_ELEMENT_END,
   ARTICLE_EDIT,
   ARTICLE_EDIT_ADD_TAG,
-  ARTICLE_EDIT_REMOVE_TAG
+  ARTICLE_EDIT_REMOVE_TAG,
+  TAGS_LIST_SHOW
 } from '../constants'
 
 const INIT_STATE = {
   renderDropInterface: null,
-  article_edit_tag_ids: []
+  article_edit_tag_ids: [],
+  show_tags_list: true
 }
 
 export default function(store = INIT_STATE, { type, payload }) {
   switch (type) {
+    case TAGS_LIST_SHOW:
+      return {
+        ...store,
+        show_tags_list: !store.show_tags_list
+      }
     case ARTICLE_EDIT:
       const { tags } = payload
       return {
