@@ -134,7 +134,11 @@ export default function(store = INIT_STATE, { type, payload }) {
         articles: articles,
         current_tag_id: tag_id,
         saveLayout: store.current_tag_id === tag_id ? false : true,
-        fetch_articles_flag: null
+        fetch_articles_flag: null,
+        article_edit_flag: false,
+        article_for_edit: null,
+        tag_edit_flag: false,
+        tag_for_edit: null
       }
     case TABS_ADDED:
       const tag = payload
