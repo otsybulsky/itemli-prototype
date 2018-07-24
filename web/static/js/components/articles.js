@@ -134,7 +134,21 @@ class Articles extends Component {
   }
 
   renderTag() {
-    const { tag_id, tags, article_edit_flag, show_tags_list } = this.props
+    const {
+      tag_id,
+      tags,
+      article_edit_flag,
+      show_tags_list,
+      articles_without_tag_count,
+      tag_ids
+    } = this.props
+
+    if (!tag_id && !articles_without_tag_count) {
+      if (tag_ids.length > 0) {
+        this.props.fetchArticles(tag_ids[0].id)
+      }
+      return null
+    }
 
     if (article_edit_flag) {
       return null
@@ -264,7 +278,9 @@ function mapStateToProps(store) {
     tag_id: store.data.current_tag_id,
     article_edit_flag: store.data.article_edit_flag,
     fetch_articles_flag: store.data.fetch_articles_flag,
-    show_tags_list: store.interface.show_tags_list
+    show_tags_list: store.interface.show_tags_list,
+    articles_without_tag_count: store.data.articles_without_tag_count,
+    tag_ids: store.data.tag_ids
   }
 }
 
