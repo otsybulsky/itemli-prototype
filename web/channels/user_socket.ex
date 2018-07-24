@@ -7,7 +7,7 @@ defmodule Itemli.UserSocket do
   transport :websocket, Phoenix.Transports.WebSocket
   
   def connect(%{"token" => token}, socket) do
-    case Phoenix.Token.verify(socket, Application.get_env(:itemli, :token_secret), token, max_age: 86400) do
+    case Phoenix.Token.verify(socket, Application.get_env(:itemli, :token_secret), token, max_age: 86400) do #max 1 day 86400
       {:ok, user_id} ->
         user = Repo.get(User, user_id)
         
