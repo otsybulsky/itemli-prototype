@@ -175,6 +175,15 @@ class Articles extends Component {
             >
               <i className="material-icons">menu</i>
             </a>
+            <a
+              id="btn-edit-tag"
+              className="right tag-body-interface waves-effect waves-light btn-floating blue"
+              data-tip="Edit current tag"
+              onClick={ev => this.onActionTag(ev)}
+            >
+              <i className="material-icons medium">edit</i>
+            </a>
+
             <ReactTooltip />
             <h5
               className="tag-body-interface"
@@ -184,7 +193,7 @@ class Articles extends Component {
             </h5>
           </div>
           {this.renderInterface(tags[tag_id])}
-          <p>{tags[tag_id].description}</p>
+          <div className="block-with-text">{tags[tag_id].description}</div>
         </div>
       )
     } else {
