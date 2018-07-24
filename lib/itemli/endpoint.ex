@@ -36,7 +36,8 @@ defmodule Itemli.Endpoint do
   plug Plug.Session,
     store: :cookie,
     key: "_itemli_key",
-    signing_salt: "ylSQzPzx"
+    signing_salt: "ylSQzPzx",
+    max_age: 864000 # 10 days
 
   plug CORSPlug #for access web-ext addon from browser, see config :cors_plug
   
