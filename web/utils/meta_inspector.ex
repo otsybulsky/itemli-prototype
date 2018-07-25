@@ -76,7 +76,7 @@ defmodule MetaInspector do
                       end
                     end).()
                     |> (fn(cs) ->
-                      if (article.url !== meta_url) do
+                      if (!String.starts_with? article.url, "http") do #(article.url !== meta_url) do
                         Map.put_new(cs, :url, meta_url)
                       else
                         cs
