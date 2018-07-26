@@ -61,6 +61,21 @@ config :cors_plug,
   max_age: 86400,
   methods: ["GET", "POST"]
 
-import_config "dev.secret.exs"
+
+
+config :ueberauth, Ueberauth.Strategy.Facebook.OAuth,
+  client_id: String.trim(System.get_env("ITEMLI_FACEBOOK_ID"),"\r") ,
+  client_secret: String.trim(System.get_env("ITEMLI_FACEBOOK_SECRET"),"\r")
+
+config :ueberauth, Ueberauth.Strategy.Github.OAuth,
+  client_id: String.trim(System.get_env("ITEMLI_GITHUB_ID"),"\r"),
+  client_secret: String.trim(System.get_env("ITEMLI_GITHUB_SECRET"),"\r") 
+
+config :ueberauth, Ueberauth.Strategy.Google.OAuth,
+  client_id: String.trim(System.get_env("ITEMLI_GOOGLE_ID"),"\r"),
+  client_secret: String.trim(System.get_env("ITEMLI_GOOGLE_SECRET"),"\r") 
+
+config :itemli,
+  token_secret: String.trim(System.get_env("ITEMLI_TOKEN_SECRET"),"\r")
 
   
