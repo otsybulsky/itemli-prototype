@@ -20,8 +20,8 @@ use Mix.Config
 # configured to run both http and https servers on
 # different ports.
 config :itemli, Itemli.Endpoint,  
-  https: [port: 4000, keyfile: "priv/server.key",
-  certfile: "priv/server.crt"],
+  https: [port: 4000, keyfile: "priv/keys/localhost.key",
+  certfile: "priv/keys/localhost.crt"],
   debug_errors: true,
   code_reloader: true,
   check_origin: false,
