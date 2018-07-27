@@ -35,7 +35,7 @@ defmodule MetaInspector do
         link = article.url
         
         if check_string(link) do
-          request = "https://head-meta.gigalixirapp.com/?url="<>link  
+          request = System.get_env("ITEMLI_META_INSPECTOR_API")<>link  
           
           case HTTPoison.get request do
             {:ok, response} ->
