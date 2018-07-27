@@ -64,18 +64,18 @@ config :cors_plug,
 
 
 config :ueberauth, Ueberauth.Strategy.Facebook.OAuth,
-  client_id: String.trim(System.get_env("ITEMLI_FACEBOOK_ID"),"\r") ,
-  client_secret: String.trim(System.get_env("ITEMLI_FACEBOOK_SECRET"),"\r")
+  client_id: System.get_env("ITEMLI_FACEBOOK_ID") ,
+  client_secret: System.get_env("ITEMLI_FACEBOOK_SECRET")
 
 config :ueberauth, Ueberauth.Strategy.Github.OAuth,
-  client_id: String.trim(System.get_env("ITEMLI_GITHUB_ID"),"\r"),
-  client_secret: String.trim(System.get_env("ITEMLI_GITHUB_SECRET"),"\r") 
+  client_id: System.get_env("ITEMLI_GITHUB_ID"),
+  client_secret: System.get_env("ITEMLI_GITHUB_SECRET") 
 
 config :ueberauth, Ueberauth.Strategy.Google.OAuth,
-  client_id: String.trim(System.get_env("ITEMLI_GOOGLE_ID"),"\r"),
-  client_secret: String.trim(System.get_env("ITEMLI_GOOGLE_SECRET"),"\r") 
+  client_id: System.get_env("ITEMLI_GOOGLE_ID"),
+  client_secret: System.get_env("ITEMLI_GOOGLE_SECRET")
 
 config :itemli,
-  token_secret: String.trim(System.get_env("ITEMLI_TOKEN_SECRET"),"\r")
+  token_secret: System.get_env("ITEMLI_TOKEN_SECRET")
 
   

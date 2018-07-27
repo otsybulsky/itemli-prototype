@@ -36,8 +36,8 @@ defmodule Itemli.Endpoint do
   plug Plug.Session,
     store: :cookie,
     key: "_itemli_key",
-    signing_salt: String.trim(System.get_env("ITEMLI_COOKIES_SALT"),"\r"), 
-    max_age: String.trim(System.get_env("ITEMLI_COOKIES_MAX_AGE"),"\r") |> String.to_integer
+    signing_salt: System.get_env("ITEMLI_COOKIES_SALT"), 
+    max_age: System.get_env("ITEMLI_COOKIES_MAX_AGE") |> String.to_integer
 
   plug CORSPlug #for access web-ext addon from browser, see config :cors_plug
   
