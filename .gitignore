@@ -26,3 +26,4 @@ mix.lock
 package-lock.json
 /config/dev.secret.exs
 dev.bat
+dev.sh
