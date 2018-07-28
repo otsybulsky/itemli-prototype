@@ -48,7 +48,8 @@ defmodule Itemli.Mixfile do
       {:cors_plug, "~> 1.5"},
       {:arbor, "~> 1.0.5"},
       {:httpoison, "~> 1.0"},
-      {:poolboy, "~> 1.5"}
+      {:poolboy, "~> 1.5"},
+      {:distillery, "~> 1.0.0"}
     ]
   end
 
