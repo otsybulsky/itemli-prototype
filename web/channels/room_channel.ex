@@ -140,6 +140,8 @@ defmodule Itemli.RoomChannel do
     
     current_layout = %{}
     current_layout_tag_ids = []
+    tag_ids = []
+
     case get_layout(user) do
       %{"layout": layout} ->
         case layout do
@@ -195,7 +197,7 @@ defmodule Itemli.RoomChannel do
     |> Repo.all
     |> Repo.preload([:tags])   
     
-    
+    articles = []
 
     case tag.articles_index do
       %{"index" => article_ids} ->
