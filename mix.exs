@@ -49,7 +49,7 @@ defmodule Itemli.Mixfile do
       {:arbor, "~> 1.0.5"},
       {:httpoison, "~> 1.0"},
       {:poolboy, "~> 1.5"},
-      {:distillery, "~> 1.0.0"}
+      {:distillery, "~> 1.5", runtime: false}
     ]
   end
 
