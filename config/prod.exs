@@ -24,20 +24,17 @@ config :libcluster,
         kubernetes_selector: "${LIBCLUSTER_KUBERNETES_SELECTOR}",
         kubernetes_node_basename: "${LIBCLUSTER_KUBERNETES_NODE_BASENAME}"]]]
 
-
-
 config :ueberauth, Ueberauth.Strategy.Facebook.OAuth,
-  client_id: System.get_env("ITEMLI_FACEBOOK_ID") ,
-  client_secret: System.get_env("ITEMLI_FACEBOOK_SECRET")
+  client_id: "${ITEMLI_FACEBOOK_ID}" ,
+  client_secret: "${ITEMLI_FACEBOOK_SECRET}"
 
 config :ueberauth, Ueberauth.Strategy.Github.OAuth,
-  client_id: System.get_env("ITEMLI_GITHUB_ID"),
-  client_secret: System.get_env("ITEMLI_GITHUB_SECRET") 
+  client_id: "${ITEMLI_GITHUB_ID}",
+  client_secret: "${ITEMLI_GITHUB_SECRET}" 
 
 config :ueberauth, Ueberauth.Strategy.Google.OAuth,
-  client_id: System.get_env("ITEMLI_GOOGLE_ID"),
-  client_secret: System.get_env("ITEMLI_GOOGLE_SECRET")
+  client_id: "${ITEMLI_GOOGLE_ID}",
+  client_secret: "${ITEMLI_GOOGLE_SECRET}"
 
 config :itemli,
-  token_secret: System.get_env("ITEMLI_TOKEN_SECRET")
-
+  token_secret: "${ITEMLI_TOKEN_SECRET}"
