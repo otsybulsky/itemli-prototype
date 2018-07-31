@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
@@ -61,11 +62,18 @@ class TagsProvider extends Component {
   }
 
   renderLayout() {
-    const { show_tags_list } = this.props
+    const { show_tags_list, articles_without_tag_count, tags } = this.props
+
+    let start_guide = ''
+
+    if (_.isEmpty(tags) && articles_without_tag_count === 0) {
+      start_guide = 'For start click on big red button and lets go!'
+    }
 
     if (show_tags_list) {
       return (
         <Row>
+          {start_guide}
           <Col s={4} className="tags-container">
             {this.renderUnbounds()}
             <Tags tag_ids={this.props.tag_ids} forceRefresh={Date.now()} />
@@ -76,6 +84,7 @@ class TagsProvider extends Component {
     } else {
       return (
         <Row>
+          {start_guide}
           <Col s={12}>{this.renderBody()}</Col>
         </Row>
       )
