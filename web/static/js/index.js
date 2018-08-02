@@ -5,18 +5,26 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { Provider } from 'react-redux'
-import { createStore, applyMiddleware} from 'redux'
+import { createStore, applyMiddleware } from 'redux'
+import logger from 'redux-logger'
+import thunk from 'redux-thunk'
 import reducers from './reducers'
 import App from './components/app'
+import LayoutProvider from './components/layout_provider'
 
-const createStoreWithMiddleware = applyMiddleware()(createStore)
+const createStoreWithMiddleware = applyMiddleware(thunk, logger)(createStore)
 
 ReactDOM.render(
-    <Provider store={
-            createStoreWithMiddleware(reducers,
-            window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__() //for dev only
-        )}>
-        <App />
-    </Provider>
-    , document.querySelector('.application')
+  <Provider
+    store={createStoreWithMiddleware(
+      reducers,
+      window.__REDUX_DEVTOOLS_EXTENSION__ &&
+        window.__REDUX_DEVTOOLS_EXTENSION__() //for dev only
+    )}
+  >
+    <LayoutProvider>
+      <App />
+    </LayoutProvider>
+  </Provider>,
+  document.querySelector('.application')
 )

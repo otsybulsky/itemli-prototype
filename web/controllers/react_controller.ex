@@ -6,4 +6,8 @@ defmodule Itemli.ReactController do
     def index(conn, _params) do
         render conn, "index.html"
     end
+
+    def blank(conn, _params) do
+        render conn, "blank.html"
+    end
 end

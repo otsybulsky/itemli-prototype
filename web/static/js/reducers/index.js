@@ -1,9 +1,12 @@
 import { combineReducers } from 'redux'
-
-const testReducer = () => { return null }
+import DataReducer from './data'
+import ChannelReducer from './channel'
+import InterfaceReducer from './interface'
 
 const rootReducer = combineReducers({
-    test: testReducer
+  data: DataReducer,
+  channel: ChannelReducer,
+  interface: InterfaceReducer
 })
 
 export default rootReducer

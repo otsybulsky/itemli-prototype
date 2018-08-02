@@ -1,3 +1,34 @@
-<h5>
-    Welcome to your links manager!
-</h5>
+
+
+<h5>what it is</h5>
+<p>This site is conceived and developed as a place to store and conveniently use tab sets for web browsers.</p> 
+
+<h5>why it is required</h5>
+<p>In web browser the address is opened in a separate tab. 
+Sometimes their open a lot. Sometimes too much. 
+This creates inconvenience when navigating between tabs, because they are horizontally arranged.
+But there is still a technical component. Each open tab takes away a certain amount of memory and processor. 
+The system begins to slow down (especially a phone or tablet). And who absorbed the resources? Yes, this is my ultra-fast browser, which has 56 tabs at the same time. 
+You need to do something to unlock the system. To do this, close the tabs now. 
+Will handy when you can save them somewhere to get back to this information later. And add some notes, comments, tags. And that it was all stored in the clouds, and access for each of my devices.
+The repository of various workspaces - reliable, convenient, constantly available.</p>
+
+<h5>how it works</h5>
+<p>To get the list of open tabs and save them, I made an extension for the browser. Just press one button and decide what to do next. For example, save all open tabs to a new list. If the operation succeeds, the repository tab, which already has this new list, and other previously saved tabs, is activated. Saved tabs are automatically closed in the current browser window. Now, to open the list of tabs from the repository, you also need to click one button. Be sure to enable popup windows for the repository, otherwise the tabs will not open.
+You can manually add tabs to the repository, import oneTab data.
+All data is stored in the cloud storage. Access - through authorization in well-known services (google, facebook, github).</p>
+
+
+<h5>how to start using</h5>
+<p>Download and install the extension for the browser you want - <a href="/files/itemli_ext-0.1-an+fx.xpi">Download addon Firefox</a>, <a href="">Chrome</a>. <br/> 
+Create your tab storage - sign in via google, facebook, github. <br/>
+Test the system - create a list of tabs through the browser and manually. <br/>
+Use in everyday life.</p>
+
+<h5>price</h5>
+<p>Now it's completely free. For some time.</p>
+
+<h5>feedback</h5>
+<p>Write to Oleg Tsybulskyi 
+<a href="mailto:itemli.proj@gmail.com?Subject=feedback itemli" target="_top">itemli.proj@gmail.com</a> for any questions</p>
+

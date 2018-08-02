@@ -19,8 +19,9 @@ use Mix.Config
 # If desired, both `http:` and `https:` keys can be
 # configured to run both http and https servers on
 # different ports.
-config :itemli, Itemli.Endpoint,
-  http: [port: 4000],
+config :itemli, Itemli.Endpoint,  
+  https: [port: 4000, keyfile: "priv/keys/localhost.key",
+  certfile: "priv/keys/localhost.crt"],
   debug_errors: true,
   code_reloader: true,
   check_origin: false,
@@ -60,6 +61,21 @@ config :cors_plug,
   max_age: 86400,
   methods: ["GET", "POST"]
 
-import_config "dev.secret.exs"
+
+
+config :ueberauth, Ueberauth.Strategy.Facebook.OAuth,
+  client_id: System.get_env("ITEMLI_FACEBOOK_ID") ,
+  client_secret: System.get_env("ITEMLI_FACEBOOK_SECRET")
+
+config :ueberauth, Ueberauth.Strategy.Github.OAuth,
+  client_id: System.get_env("ITEMLI_GITHUB_ID"),
+  client_secret: System.get_env("ITEMLI_GITHUB_SECRET") 
+
+config :ueberauth, Ueberauth.Strategy.Google.OAuth,
+  client_id: System.get_env("ITEMLI_GOOGLE_ID"),
+  client_secret: System.get_env("ITEMLI_GOOGLE_SECRET")
+
+config :itemli,
+  token_secret: System.get_env("ITEMLI_TOKEN_SECRET")
 
   

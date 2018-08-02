@@ -2,7 +2,7 @@ exports.config = {
   // See http://brunch.io/#documentation for docs.
   files: {
     javascripts: {
-      joinTo: "js/index.js"
+      joinTo: 'js/index.js'
 
       // To use a separate vendor.js bundle, specify two files path
       // http://brunch.io/docs/config#-files-
@@ -20,13 +20,13 @@ exports.config = {
       // }
     },
     stylesheets: {
-      joinTo: "css/app.css",
+      joinTo: 'css/app.css',
       order: {
-        after: ["web/static/css/app.css"] // concat app.css last
+        after: ['web/static/css/app.css'] // concat app.css last
       }
     },
     templates: {
-      joinTo: "js/index.js"
+      joinTo: 'js/index.js'
     }
   },
 
@@ -40,31 +40,29 @@ exports.config = {
   // Phoenix paths configuration
   paths: {
     // Dependencies and current project directories to watch
-    watched: [
-      "web/static",
-      "test/static"
-    ],
+    watched: ['web/static', 'test/static'],
 
     // Where to compile files to
-    public: "priv/static"
+    public: 'priv/static'
   },
 
   // Configure your plugins
   plugins: {
     babel: {
-      presets: ['latest','react'],
+      presets: ['react', 'es2015', 'stage-2'],
       // Do not use ES6 compiler in vendor code
-      ignore: [/web\/static\/vendor/]
+      ignore: [/web\/static\/vendor/],
+      plugins: ['transform-decorators-legacy']
     }
   },
 
   modules: {
     autoRequire: {
-      "js/index.js": ["web/static/js/index"]
+      'js/index.js': ['web/static/js/index']
     }
   },
 
   npm: {
     enabled: true
   }
-};
+}

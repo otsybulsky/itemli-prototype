@@ -1,1 +1,203 @@
-/* This file is for your main application css. */
+ul {
+  margin: 0;
+}
+i:hover {
+  color: red;
+}
+#fixedbutton {
+  position: fixed;
+  bottom: 0px;
+  right: 0px;
+}
+
+.drop-interface-tag {
+  width: auto;
+  padding: 3px;
+  background: gray;
+  float: left;
+  margin-right: 10px;
+}
+
+.tags-container,
+.articles-container,
+.form-container {
+  margin-top: 10px;
+}
+
+.tag-container {
+  border: 0px solid gray;
+  height: auto;
+  width: inherit;
+}
+.tag-collapsible {
+  background: bisque;
+}
+.tag {
+  height: auto;
+  min-height: 25px;
+}
+
+.articles-unbound {
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+.tag-header {
+  border-bottom: 1px red solid;
+  margin-bottom: 20px;
+}
+.tag-toolbar {
+  margin: 0;
+}
+.tag-body-toolbar {
+  cursor: pointer;
+}
+/* .tag-body-toolbar:hover {
+  background: lightgray;
+  color: #333;
+} */
+
+.tag-body h6,
+.tag-body .tag-body-toolbar,
+.tag-body-interface {
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 5px;
+}
+.tag-body-interface {
+  color: red;
+}
+.tag-body-interface i {
+  vertical-align: middle;
+}
+/* .tag-body-interface:hover {
+  color: white;
+  background: red;
+} */
+.hover-tag-body,
+.articles-unbound:hover,
+.article-drag-hover {
+  background: lightgray;
+  cursor: pointer;
+}
+.tag-body-selected {
+  background: green !important;
+  padding-left: 5px;
+}
+.tag-body-selected h6 {
+  color: white;
+}
+.tag-title {
+  font-weight: bold;
+  font-size: 1.2em;
+}
+
+.form-container h6 {
+  color: blue;
+}
+
+.tag-edit-input {
+  border-top: 0;
+  border-left: 0;
+  border-right: 0;
+  border-color: darkgreen;
+}
+
+.tag-edit-input-title {
+  font-size: 1.2em;
+}
+
+.tag-edit-label {
+  color: #333 !important;
+  font-size: 1.2rem !important;
+}
+
+.article {
+  border-bottom: 1px solid lightgray;
+}
+.article .row {
+  margin-bottom: 0 !important;
+}
+.article-item-more,
+.article-item-body {
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+.article-item-more {
+  padding-left: 5px;
+  padding-right: 15px;
+  color: gray;
+}
+.article-item-more:hover {
+  color: red !important;
+}
+.article-item-body {
+  color: #333;
+}
+.article-item-title {
+  color: #333;
+}
+.article:hover .article-item-more,
+.article-item-title {
+  color: black;
+}
+.article-description {
+  margin-left: 50px;
+}
+.block-with-text {
+  /* hide text if it more than N lines  */
+  overflow: hidden;
+  /* for set '...' in absolute position */
+  position: relative;
+  /* use this value to count block height */
+  line-height: 1.2em;
+  /* max-height = line-height (1.2) * lines max number (3) */
+  max-height: 3.6em;
+  /* fix problem when last visible word doesn't adjoin right side  */
+  text-align: justify;
+  /* place for '...' */
+  margin-right: -1em;
+  padding-right: 1em;
+}
+/* create the ... */
+.block-with-text:before {
+  /* points in the end */
+  content: '...';
+  /* absolute position */
+  position: absolute;
+  /* set position to right bottom corner of block */
+  right: 0;
+  bottom: 0;
+}
+/* hide ... if we have text, which is less than or equal to max lines */
+.block-with-text:after {
+  /* points in the end */
+  content: '';
+  /* absolute position */
+  position: absolute;
+  /* set position to right bottom corner of text */
+  right: 0;
+  /* set width and height */
+  width: 1em;
+  height: 1em;
+  margin-top: 0.2em;
+  /* bg color = bg color under block */
+  background: white;
+}
+.favicon {
+  margin-right: 5px;
+  position: inherit;
+  top: 18px;
+  left: 50px;
+  width: 32px;
+  cursor: move;
+}
+.article:hover .article-item-title {
+  font-weight: bold;
+}
+
+.article-edit-hover {
+  padding: 5px;
+  border: 1px red solid;
+  cursor: pointer;
+}

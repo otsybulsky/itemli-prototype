@@ -9,7 +9,7 @@ defmodule Itemli.Endpoint do
   # when deploying your static files in production.
   plug Plug.Static,
     at: "/", from: :itemli, gzip: false,
-    only: ~w(css fonts images js favicon.ico robots.txt)
+    only: ~w(css fonts images js favicon.ico robots.txt files)
 
   # Code reloading can be explicitly enabled under the
   # :code_reloader configuration of your endpoint.
@@ -36,7 +36,8 @@ defmodule Itemli.Endpoint do
   plug Plug.Session,
     store: :cookie,
     key: "_itemli_key",
-    signing_salt: "ylSQzPzx"
+    signing_salt: System.get_env("ITEMLI_COOKIES_SALT"), 
+    max_age: System.get_env("ITEMLI_COOKIES_MAX_AGE") |> String.to_integer
 
   plug CORSPlug #for access web-ext addon from browser, see config :cors_plug
   
