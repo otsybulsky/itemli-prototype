@@ -12,7 +12,7 @@ import { DragDropContext } from 'react-dnd'
 import MultiBackend from 'react-dnd-multi-backend'
 import HTML5toTouch from 'react-dnd-multi-backend/lib/HTML5toTouch'
 
-import { editArticle, editTag } from '../actions'
+import { editArticle, editTag, showTagsList } from '../actions'
 import { deleteTag } from '../socket'
 import ArticleEdit from './article_edit'
 
@@ -30,6 +30,10 @@ class Articles extends Component {
     return articles.map((article, i) => {
       return <Article index={i} key={article.id} article={article} />
     })
+  }
+
+  onShowTags(event) {
+    this.props.showTagsList()
   }
 
   onAddArticle(event) {
@@ -130,11 +134,29 @@ class Articles extends Component {
   }
 
   renderTag() {
-    const { tag_id, tags, article_edit_flag } = this.props
+    const {
+      tag_id,
+      tags,
+      article_edit_flag,
+      show_tags_list,
+      articles_without_tag_count,
+      tag_ids
+    } = this.props
+
+    if (!tag_id && !articles_without_tag_count) {
+      if (tag_ids.length > 0) {
+        this.props.fetchArticles(tag_ids[0].id)
+      }
+      return null
+    }
 
     if (article_edit_flag) {
       return null
     }
+
+    const data_tip_show_tags = show_tags_list
+      ? 'Hide tags list'
+      : 'Show tags list'
 
     let menuInterface
 
@@ -153,7 +175,6 @@ class Articles extends Component {
               open_in_browser
             </i>
           </a>
-          <ReactTooltip />
         </div>
       )
 
@@ -161,6 +182,23 @@ class Articles extends Component {
         <div className="tag-header">
           <div className="tag-body-toolbar">
             {menuInterface}
+            <a
+              className="tag-body-interface waves-effect waves-light btn-floating green"
+              data-tip={data_tip_show_tags}
+              onClick={ev => this.onShowTags(ev)}
+            >
+              <i className="material-icons">menu</i>
+            </a>
+            <a
+              id="btn-edit-tag"
+              className="right tag-body-interface waves-effect waves-light btn-floating blue"
+              data-tip="Edit current tag"
+              onClick={ev => this.onActionTag(ev)}
+            >
+              <i className="material-icons medium">edit</i>
+            </a>
+
+            <ReactTooltip />
             <h5
               className="tag-body-interface"
               onClick={ev => this.onActionTag(ev)}
@@ -169,7 +207,7 @@ class Articles extends Component {
             </h5>
           </div>
           {this.renderInterface(tags[tag_id])}
-          <p>{tags[tag_id].description}</p>
+          <div className="block-with-text">{tags[tag_id].description}</div>
         </div>
       )
     } else {
@@ -195,6 +233,14 @@ class Articles extends Component {
         <div className="tag-header">
           <div className="tag-body-toolbar">
             {menuInterface}
+            <a
+              className="tag-body-interface waves-effect waves-light btn-floating green"
+              data-tip={data_tip_show_tags}
+              onClick={ev => this.onShowTags(ev)}
+            >
+              <i className="material-icons">menu</i>
+            </a>
+            <ReactTooltip />
             <h5 className="tag-body-interface">Articles unbound</h5>
           </div>
         </div>
@@ -231,7 +277,10 @@ function mapStateToProps(store) {
     tags: store.data.tags,
     tag_id: store.data.current_tag_id,
     article_edit_flag: store.data.article_edit_flag,
-    fetch_articles_flag: store.data.fetch_articles_flag
+    fetch_articles_flag: store.data.fetch_articles_flag,
+    show_tags_list: store.interface.show_tags_list,
+    articles_without_tag_count: store.data.articles_without_tag_count,
+    tag_ids: store.data.tag_ids
   }
 }
 
@@ -243,6 +292,7 @@ export default connect(
     deleteArticlesUnbound,
     editArticle,
     editTag,
-    deleteTag
+    deleteTag,
+    showTagsList
   }
 )(Articles)

@@ -26,19 +26,20 @@
     <nav class="blue darken-4">
       <div class="nav-wrapper container">
         <a href="/" class="brand-logo left">
-          Itemli
+          itemli
         </a>
+        
         <ul class="right">
          <%= if @conn.assigns[:user] do %>
             <li>
-              <%= link "App", to: react_path(@conn, :index) %>
+              <%= link "app", to: react_path(@conn, :index) %>
             </li>
             <li>
-              <%= link "Sign Out", to: auth_path(@conn, :signout) %>
+              <%= link "sign Out", to: auth_path(@conn, :signout) %>
             </li>
           <% else %>
             <li>
-              <%= link "Sign in", to: main_path(@conn, :signin) %>              
+              <%= link "sign in", to: main_path(@conn, :signin) %>              
             </li>            
           <% end %>  
         </ul>

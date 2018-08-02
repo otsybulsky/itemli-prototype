@@ -9,13 +9,20 @@ import {
   ARTICLE_EDIT,
   ARTICLE_EDIT_CANCEL,
   ARTICLE_EDIT_ADD_TAG,
-  ARTICLE_EDIT_REMOVE_TAG
+  ARTICLE_EDIT_REMOVE_TAG,
+  TAGS_LIST_SHOW
 } from '../constants'
 
 export function testEvent() {
   return dispatch => {
     console.log('actions - test event')
     dispatch({ type: 'TEST' })
+  }
+}
+
+export function showTagsList() {
+  return {
+    type: TAGS_LIST_SHOW
   }
 }
 

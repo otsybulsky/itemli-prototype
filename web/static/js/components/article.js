@@ -8,6 +8,7 @@ import { editArticle } from '../actions'
 import { deleteArticle } from '../socket'
 
 import { Row, Col } from 'react-materialize'
+import ReactTooltip from 'react-tooltip'
 
 const itemSource = {
   beginDrag(props, monitor, component) {
@@ -79,6 +80,8 @@ class Article extends Component {
     return (
       <i
         className="material-icons small waves-effect waves-light article-item-more"
+        data-tip="Edit"
+        data-for={`edit-${this.props.article.id}`}
         onClick={ev => this.onEditClick(ev)}
       >
         content_paste
@@ -123,7 +126,7 @@ class Article extends Component {
       connectDropTarget
     } = this.props
 
-    const descr = description ? `description: ${description}` : ''
+    const descr = description ? description : ''
 
     const articleClass = isOverCurrent ? 'article-drag-hover' : 'article'
     const opacity = isDragging ? 0.25 : 1
@@ -141,9 +144,16 @@ class Article extends Component {
                 <div className="article-item-body">
                   <div className="article-item-title">
                     {this.renderEditInterface()}
+                    <ReactTooltip
+                      id={`edit-${this.props.article.id}`}
+                      place="left"
+                      effect="float"
+                    />
                     <img className="favicon" src={favicon} />
                     {title}
-                    <div className="truncate">{descr}</div>
+                    <div className="article-description block-with-text">
+                      {descr}
+                    </div>
                   </div>
                 </div>
               </a>

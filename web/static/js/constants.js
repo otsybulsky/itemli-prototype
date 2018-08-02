@@ -49,6 +49,8 @@ export const DELETE_ARTICLES_UNBOUND = 'DELETE_ARTICLES_UNBOUND'
 export const EXPORT_LAYOUT = 'EXPORT_LAYOUT'
 export const EXPORT_LAYOUT_OK = 'EXPORT_LAYOUT_OK'
 
+export const TAGS_LIST_SHOW = 'TAGS_LIST_SHOW'
+
 export const DndTypes = {
   TAG: 'DND_TAG',
   ARTICLE: 'DND_ARTICLE'

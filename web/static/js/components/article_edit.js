@@ -203,7 +203,11 @@ class ArticleEdit extends Component {
   }
 
   render() {
-    const { connectDropTarget, isOverCurrent } = this.props
+    const {
+      connectDropTarget,
+      isOverCurrent,
+      article_for_edit: { favicon }
+    } = this.props
 
     const formClass = isOverCurrent
       ? 'form-container article-edit-hover'
@@ -236,6 +240,7 @@ class ArticleEdit extends Component {
           <Row>
             <Col s={12}>
               <h6>Title</h6>
+              <img className="favicon" src={favicon} />
               <Textarea
                 className="tag-edit-input tag-edit-input-title"
                 autoFocus
@@ -296,11 +301,14 @@ function mapStateToProps(state) {
   }
 }
 
-export default connect(mapStateToProps, {
-  editArticleCancel,
-  editArticleApply,
-  deleteArticle,
-  articleEditAddTag,
-  articleEditRemoveTag,
-  dragElementEnd
-})(ArticleEdit)
+export default connect(
+  mapStateToProps,
+  {
+    editArticleCancel,
+    editArticleApply,
+    deleteArticle,
+    articleEditAddTag,
+    articleEditRemoveTag,
+    dragElementEnd
+  }
+)(ArticleEdit)

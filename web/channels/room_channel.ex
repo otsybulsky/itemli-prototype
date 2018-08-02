@@ -138,23 +138,26 @@ defmodule Itemli.RoomChannel do
   def handle_in("layout:fetch", %{}, socket) do
     user = socket.assigns.user
     
-    current_layout = %{}
-    current_layout_tag_ids = []
-    case get_layout(user) do
+    curr_ly = case get_layout(user) do
       %{"layout": layout} ->
         case layout do
           %{"tag_ids" => tag_list} ->
-            current_layout = layout
-            current_layout_tag_ids = current_layout["tag_ids"] 
+
             tag_ids = tag_list
             |> get_tag_ids
             |> List.flatten
+            
+            %{tag_ids: tag_ids, current_layout_tag_ids: layout["tag_ids"], current_layout: layout}
           _ ->
-            tag_ids =[]
+            %{}
         end
       _ ->
-        tag_ids = []
+        %{}
     end
+
+    current_layout =curr_ly.current_layout || %{}
+    tag_ids = curr_ly.tag_ids || []
+    current_layout_tag_ids = curr_ly.current_layout_tag_ids || []
     
     articles_without_tag = get_articles_without_tag(user) 
 
@@ -174,6 +177,7 @@ defmodule Itemli.RoomChannel do
 
     actual_layout = current_layout
     |> Map.put("tag_ids", new_tags ++ current_layout_tag_ids)
+
 
     {:reply, {:ok, %{layout: actual_layout, tags: tags, articles_without_tag_count: length(articles_without_tag)}}, socket}
   end
@@ -197,7 +201,7 @@ defmodule Itemli.RoomChannel do
     
     
 
-    case tag.articles_index do
+    articles = case tag.articles_index do
       %{"index" => article_ids} ->
 
         kw_articles = article_list
