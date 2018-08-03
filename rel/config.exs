@@ -1,8 +1,12 @@
+Path.join(["rel", "plugins", "*.exs"])
+|> Path.wildcard()
+|> Enum.map(&Code.eval_file(&1))
+
 use Mix.Releases.Config,
     # This sets the default release built by `mix release`
     default_release: :default,
     # This sets the default environment used by `mix release`
-    default_environment: :dev
+    default_environment: Mix.env()
 
 # For a full list of config options for both releases
 # and environments, visit https://hexdocs.pm/distillery/configuration.html
@@ -22,7 +26,6 @@ end
 environment :prod do
   set include_erts: true
   set include_src: false
-  set cookie: :"Op,>lagW/RTv^S_tV~7hqu&eQOkKSl<boD06@T2]m~X~v39_fUBL2_u|mz_|KLNf"
 end
 
 # You may define one or more releases in this file.
@@ -32,5 +35,8 @@ end
 
 release :itemli do
   set version: current_version(:itemli)
+  set applications: [
+    :runtime_tools
+  ]
 end
 
