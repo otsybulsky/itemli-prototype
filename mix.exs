@@ -20,7 +20,8 @@ defmodule Itemli.Mixfile do
   def application do
     [
       mod: {Itemli, []},
-      extra_applications: [:logger, :ueberauth, :ueberauth_github, :ueberauth_facebook, :ueberauth_google, :poolboy]
+      extra_applications: [:logger, :ueberauth, :ueberauth_github, :ueberauth_facebook, :ueberauth_google, :poolboy, :runtime_tools, :ssl],
+      included_applications: [:parse_trans]
     ]
   end
 
@@ -33,7 +34,7 @@ defmodule Itemli.Mixfile do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
-      {:phoenix, "~> 1.3.0-rc"},
+      {:phoenix, "~> 1.3.0"},
       {:phoenix_pubsub, "~> 1.0"},
       {:phoenix_ecto, "~> 3.2"},
       {:postgrex, ">= 0.0.0"},
@@ -49,6 +50,7 @@ defmodule Itemli.Mixfile do
       {:arbor, "~> 1.0.5"},
       {:httpoison, "~> 1.0"},
       {:poolboy, "~> 1.5"},
+      {:libcluster, "~> 2.1"},
       {:distillery, "~> 1.5", runtime: false}
     ]
   end
