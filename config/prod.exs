@@ -7,8 +7,8 @@ config :itemli, Itemli.Endpoint,
   server: true,
   secret_key_base: "${SECRET_KEY_BASE}"
 
-# config :logger, level: :info
-config :logger, :console, format: "[$level] $message\n"
+config :logger, level: :info
+# config :logger, :console, format: "[$level] $message\n"
 
 config :itemli, Itemli.Repo,
   adapter: Ecto.Adapters.Postgres,
