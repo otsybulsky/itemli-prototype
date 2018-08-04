@@ -149,10 +149,10 @@ defmodule Itemli.RoomChannel do
             
             %{tag_ids: tag_ids, current_layout_tag_ids: layout["tag_ids"], current_layout: layout}
           _ ->
-            %{tag_ids: [], current_layout_tag_ids: [], current_layout: ${}}
+            %{tag_ids: [], current_layout_tag_ids: [], current_layout: %{}}
         end
       _ ->
-        %{tag_ids: [], current_layout_tag_ids: [], current_layout: ${}}
+        %{tag_ids: [], current_layout_tag_ids: [], current_layout: %{}}
     end
 
     current_layout = curr_ly.current_layout
