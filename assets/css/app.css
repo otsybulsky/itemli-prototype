@@ -18,6 +18,10 @@ i:hover {
   margin-right: 10px;
 }
 
+.auth-button {
+  margin-bottom: 10px;
+}
+
 .tags-container,
 .articles-container,
 .form-container {

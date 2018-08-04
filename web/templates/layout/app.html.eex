@@ -7,7 +7,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Hello Itemli!</title>
+    <title>Itemli</title>
     <link rel="stylesheet" href="<%= static_path(@conn, "/css/app.css") %>">
     
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
