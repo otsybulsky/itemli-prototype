@@ -8,6 +8,7 @@
 erl_crash.dump
 
 # Static artifacts
+/assets/node_modules
 /node_modules
 
 # Since we are building assets from web/static,
@@ -22,10 +23,6 @@ erl_crash.dump
 # secrets file as long as you replace its contents by environment
 # variables.
 
-/config/gigalixir
-mix.lock
-package-lock.json
-/config/dev.secret.exs
 *.bat
 *.sh
-itemli
+/config/gigalixir
