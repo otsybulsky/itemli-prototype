@@ -50,7 +50,7 @@ defmodule Itemli.Mixfile do
       {:arbor, "~> 1.0.5"},
       {:httpoison, "~> 1.0"},
       {:poolboy, "~> 1.5"},
-      {:libcluster, "~> 2.1"},
+      {:libcluster, "~> 3.0"},
       {:distillery, "~> 1.5", runtime: false}
     ]
   end
