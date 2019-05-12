@@ -11,7 +11,6 @@ config :itemli,
 
 # Configures the endpoint
 config :itemli, Itemli.Endpoint,
-  force_ssl: [hsts: true],
   url: [host: "localhost"],
   secret_key_base: "I7MTm/d/gt+CyKum9ZIztvdLf1j9i/piBiktfKHgq5BWyPtifu9pBPuhpBJ49M1G",
   render_errors: [view: Itemli.ErrorView, accepts: ~w(html json)],
