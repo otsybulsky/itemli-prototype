@@ -80,7 +80,7 @@ const itemTarget = {
 class Tag extends Component {
   componentDidMount() {
     const img = new Image()
-    img.src = 'images/icons8-add-tag-48.png'
+    img.src = 'images/icons8-price-tag-16.png'
     img.onload = () => this.props.connectDragPreview(img)
   }
 

@@ -265,7 +265,7 @@ class Articles extends Component {
       <div className="articles-container">
         {this.renderArticleEditForm()}
         {this.renderTag()}
-        {this.renderArticles()}
+        <div className="article-list">{this.renderArticles()}</div>
       </div>
     )
   }

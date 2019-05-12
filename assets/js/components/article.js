@@ -45,6 +45,7 @@ const itemTarget = {
 }))
 @DragSource(DndTypes.ARTICLE, itemSource, (connect, monitor) => ({
   connectDragSource: connect.dragSource(),
+  connectDragPreview: connect.dragPreview(),
   isDragging: monitor.isDragging()
 }))
 class Article extends Component {
@@ -53,6 +54,12 @@ class Article extends Component {
     this.state = {
       onHover: false
     }
+  }
+
+  componentDidMount() {
+    const img = new Image()
+    img.src = 'images/icons8-price-tag-16.png'
+    img.onload = () => this.props.connectDragPreview(img)
   }
 
   componentWillReceiveProps(nextProps) {
