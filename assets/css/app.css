@@ -24,6 +24,7 @@ i:hover {
 
 .tags {
   overflow-y: auto;
+  overflow-x: hidden;
   height: 87vh;
 }
 
