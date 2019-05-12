@@ -22,10 +22,26 @@ i:hover {
   margin-bottom: 10px;
 }
 
+.tags {
+  overflow-y: auto;
+  height: 87vh;
+}
+
 .tags-container,
 .articles-container,
 .form-container {
   margin-top: 10px;
+}
+
+.articles-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.article-list {
+  height: 77vh;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .tag-container {
@@ -49,6 +65,7 @@ i:hover {
 .tag-header {
   border-bottom: 1px red solid;
   margin-bottom: 20px;
+  height: 70px;
 }
 .tag-toolbar {
   margin: 0;
